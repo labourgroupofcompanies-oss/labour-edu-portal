@@ -217,7 +217,7 @@ export default function AgentPortal() {
     // Navbar
     nav: { background: '#ffffff', borderBottom: '1px solid #e5e7eb', padding: '0 24px', height: '58px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 30 },
     navBrand: { display: 'flex', alignItems: 'center', gap: '10px' },
-    navLogo: { width: '34px', height: '34px', borderRadius: '8px', background: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    navLogo: { width: '38px', height: '38px', borderRadius: '10px', objectFit: 'contain', background: '#fff', border: '1px solid #e5e7eb', padding: '3px', display: 'block' },
     navTitle: { fontWeight: 800, fontSize: '15px', color: '#111827', letterSpacing: '-0.01em' },
     navSub: { fontSize: '11px', color: '#9ca3af', fontWeight: 400, marginTop: '1px' },
     navRight: { display: 'flex', alignItems: 'center', gap: '8px' },
@@ -280,6 +280,15 @@ export default function AgentPortal() {
     <div>
       {/* Hero */}
       <div style={{ textAlign: 'center', padding: '52px 20px 40px', maxWidth: '600px', margin: '0 auto' }}>
+        {/* Labour Edu Logo */}
+        <div style={{ marginBottom: '20px' }}>
+          <img
+            src="/logo.png"
+            alt="Labour Edu"
+            style={{ width: '72px', height: '72px', objectFit: 'contain', borderRadius: '16px', background: '#fff', border: '1px solid #e5e7eb', padding: '6px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}
+            onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = '/app-icon.png'; }}
+          />
+        </div>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#dcfce7', color: '#15803d', padding: '5px 14px', borderRadius: '999px', fontSize: '12px', fontWeight: 700, marginBottom: '20px', letterSpacing: '0.03em' }}>
           <i className="fa-solid fa-circle" style={{ fontSize: '7px' }}></i> PARTNER PROGRAM · OPEN
         </div>
@@ -1032,7 +1041,12 @@ export default function AgentPortal() {
       {/* Navbar */}
       <nav style={S.nav}>
         <div style={S.navBrand}>
-          <div style={S.navLogo}><i className="fa-solid fa-handshake" style={{ color: '#fff', fontSize: '15px' }}></i></div>
+          <img
+              src="/logo.png"
+              alt="Labour Edu"
+              style={S.navLogo}
+              onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = '/app-icon.png'; }}
+            />
           <div>
             <div style={S.navTitle}>Labour Edu <span style={{ color: '#16a34a' }}>Partners</span></div>
             <div style={S.navSub}>School Referral & Affiliate Program</div>

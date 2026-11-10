@@ -207,53 +207,53 @@ const BroadcastManager = () => {
 
   const getAudienceLabel = (aud) => {
     switch (aud) {
-      case 'headteacher': return '🏫 Headteachers Only';
-      case 'teacher': return '👨‍🏫 Teachers Only';
-      case 'parent': return '👨‍👩‍👧 Parents Portal';
-      case 'all': default: return '🌐 All Portals & Schools';
+      case 'headteacher': return 'Headteachers Only';
+      case 'teacher': return 'Teachers Only';
+      case 'parent': return 'Parents Portal';
+      case 'all': default: return 'All Portals & Schools';
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', color: '#18181b' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', color: '#fafafa' }}>
       
       {/* Header Banner */}
       <div style={{
-        padding: '2rem 2.25rem',
-        borderRadius: '20px',
+        padding: '1.75rem 2rem',
+        borderRadius: '16px',
         background: '#09090b',
-        border: '1px solid #27272a',
-        boxShadow: '0 8px 30px rgba(9, 9, 11, 0.15)',
+        border: '1px solid #222226',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: '1.25rem',
-        color: '#FFFFFF'
+        color: '#fafafa'
       }}>
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(37, 99, 235, 0.2)', border: '1px solid rgba(37, 99, 235, 0.4)', padding: '0.25rem 0.75rem', borderRadius: '999px', color: '#60a5fa', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.6rem' }}>
-            <i className="fas fa-bullhorn"></i> Nationwide Circulars &amp; Alerts
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.2)', padding: '0.2rem 0.65rem', borderRadius: '4px', color: '#38bdf8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.5rem' }}>
+            <i className="fas fa-bullhorn"></i> Circulars &amp; Alerts
           </div>
-          <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.85rem', fontWeight: 900, margin: 0, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
-            Platform Broadcast Dispatcher
+          <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.75rem', fontWeight: 700, margin: 0, color: '#fafafa', letterSpacing: '-0.02em' }}>
+            Broadcast Dispatcher
           </h1>
-          <p style={{ margin: '0.4rem 0 0', color: '#A1A1AA', fontSize: '0.9rem', maxWidth: '650px', lineHeight: 1.5 }}>
-            Publish urgent directives, GES announcements, and term notices instantly to Headteachers, Teachers, and Parents across all registered schools.
+          <p style={{ margin: '0.35rem 0 0', color: '#a1a1aa', fontSize: '0.88rem', maxWidth: '650px', lineHeight: 1.5 }}>
+            Publish directives, announcements, and term notices instantly to Headteachers, Teachers, and Parents across all registered schools.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '8px' }}>
           <button
             onClick={() => setActiveTab('list')}
             style={{
-              padding: '0.6rem 1.2rem',
-              borderRadius: '10px',
-              border: activeTab === 'list' ? '1px solid #2563eb' : '1px solid rgba(255, 255, 255, 0.15)',
-              background: activeTab === 'list' ? '#2563eb' : 'rgba(255, 255, 255, 0.08)',
-              color: '#FFFFFF',
-              fontWeight: 800,
-              fontSize: '0.85rem',
+              padding: '0.55rem 1.1rem',
+              borderRadius: '8px',
+              border: '1px solid',
+              borderColor: activeTab === 'list' ? '#38bdf8' : '#27272a',
+              background: activeTab === 'list' ? 'rgba(56, 189, 248, 0.12)' : '#18181c',
+              color: activeTab === 'list' ? '#38bdf8' : '#a1a1aa',
+              fontWeight: 600,
+              fontSize: '0.84rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -266,21 +266,20 @@ const BroadcastManager = () => {
           <button
             onClick={() => setActiveTab('compose')}
             style={{
-              padding: '0.6rem 1.3rem',
-              borderRadius: '10px',
+              padding: '0.55rem 1.2rem',
+              borderRadius: '8px',
               border: 'none',
-              background: activeTab === 'compose' ? '#10B981' : '#2563eb',
+              background: '#2563eb',
               color: '#FFFFFF',
-              fontWeight: 800,
-              fontSize: '0.85rem',
+              fontWeight: 600,
+              fontSize: '0.84rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)'
+              gap: '6px'
             }}
           >
-            <i className="fas fa-plus"></i> + Compose Dispatch
+            <i className="fas fa-plus"></i> Compose Dispatch
           </button>
         </div>
       </div>
@@ -288,30 +287,30 @@ const BroadcastManager = () => {
       {/* Success Notification Alert */}
       {successMessage && (
         <div style={{
-          background: '#ECFDF5',
-          border: '1px solid #A7F3D0',
-          color: '#065F46',
-          padding: '1rem 1.25rem',
-          borderRadius: '14px',
-          fontWeight: 700,
-          fontSize: '0.88rem',
+          background: 'rgba(16, 185, 129, 0.1)',
+          border: '1px solid rgba(16, 185, 129, 0.25)',
+          color: '#34d399',
+          padding: '0.85rem 1.15rem',
+          borderRadius: '8px',
+          fontWeight: 600,
+          fontSize: '0.85rem',
           display: 'flex',
           alignItems: 'center',
-          gap: '10px'
+          gap: '8px'
         }}>
-          <i className="fas fa-check-circle" style={{ fontSize: '1.1rem', color: '#10B981' }}></i>
+          <i className="fas fa-check-circle" style={{ fontSize: '1rem', color: '#34d399' }}></i>
           <span>{successMessage}</span>
         </div>
       )}
 
       {/* TAB 1: LIST ACTIVE BROADCASTS */}
       {activeTab === 'list' && (
-        <div style={{ background: '#FFFFFF', borderRadius: '18px', border: '1px solid #E4E4E7', padding: '1.6rem', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)' }}>
+        <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.35rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-            <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', fontSize: '1.15rem', color: '#09090b', fontWeight: 800 }}>
+            <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', fontSize: '1.05rem', color: '#fafafa', fontWeight: 600 }}>
               Broadcast Announcements Ledger
             </h3>
-            <span style={{ fontSize: '0.78rem', color: '#71717a', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.78rem', color: '#71717a' }}>
               Showing {broadcasts.length} system announcements
             </span>
           </div>
@@ -320,66 +319,66 @@ const BroadcastManager = () => {
             <div style={{ padding: '3rem', textAlign: 'center', color: '#71717a' }}>Loading broadcasts...</div>
           ) : broadcasts.length === 0 ? (
             <div style={{ padding: '3.5rem', textAlign: 'center', color: '#71717a' }}>
-              <i className="fas fa-bullhorn" style={{ fontSize: '2.5rem', color: '#D4D4D8', marginBottom: '0.75rem', display: 'block' }}></i>
-              <div style={{ fontWeight: 800, color: '#09090b' }}>No Broadcasts Dispatched Yet</div>
-              <p style={{ fontSize: '0.85rem', margin: '0.4rem 0 1rem 0' }}>Click "Compose Dispatch" to publish your first school-wide circular or GES directive.</p>
+              <i className="fas fa-bullhorn" style={{ fontSize: '2.5rem', color: '#52525b', marginBottom: '0.75rem', display: 'block' }}></i>
+              <div style={{ fontWeight: 600, color: '#fafafa' }}>No Broadcasts Dispatched Yet</div>
+              <p style={{ fontSize: '0.85rem', margin: '0.4rem 0 1rem 0' }}>Click "Compose Dispatch" to publish your first circular or directive.</p>
               <button
                 onClick={() => setActiveTab('compose')}
-                style={{ padding: '0.5rem 1rem', background: '#2563eb', color: 'white', borderRadius: '8px', border: 'none', fontWeight: 700, cursor: 'pointer' }}
+                style={{ padding: '0.5rem 1rem', background: '#2563eb', color: 'white', borderRadius: '6px', border: 'none', fontWeight: 600, cursor: 'pointer' }}
               >
                 + Compose First Broadcast
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {broadcasts.map((b) => {
                 const sev = getSeverityStyle(b.severity);
                 return (
                   <div
                     key={b.id}
                     style={{
-                      background: '#FAFAFA',
-                      border: `1.5px solid ${b.isActive ? '#E4E4E7' : '#F4F4F5'}`,
-                      borderLeft: `5px solid ${b.isActive ? sev.border : '#A1A1AA'}`,
-                      borderRadius: '14px',
-                      padding: '1.25rem',
+                      background: '#18181c',
+                      border: '1px solid #27272a',
+                      borderLeft: `3px solid ${b.isActive ? sev.border : '#52525b'}`,
+                      borderRadius: '8px',
+                      padding: '1.15rem',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '0.75rem',
+                      gap: '0.65rem',
                       opacity: b.isActive ? 1 : 0.65
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                        <span style={{ fontSize: '0.72rem', fontWeight: 800, padding: '0.2rem 0.55rem', borderRadius: '999px', background: sev.bg, color: sev.color }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 600, padding: '0.15rem 0.5rem', borderRadius: '4px', background: sev.bg, color: sev.color }}>
                           {sev.label}
                         </span>
-                        <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '0.2rem 0.55rem', borderRadius: '999px', background: '#E2E8F0', color: '#334155' }}>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 600, padding: '0.15rem 0.5rem', borderRadius: '4px', background: '#222226', color: '#a1a1aa' }}>
                           {getAudienceLabel(b.targetAudience)}
                         </span>
                         {b.bannerEnabled && (
-                          <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#2563eb' }}>
+                          <span style={{ fontSize: '0.68rem', fontWeight: 500, color: '#38bdf8' }}>
                             <i className="fas fa-flag"></i> Top Banner
                           </span>
                         )}
                         {b.modalEnabled && (
-                          <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#7c3aed' }}>
+                          <span style={{ fontSize: '0.68rem', fontWeight: 500, color: '#c084fc' }}>
                             <i className="fas fa-window-maximize"></i> Login Modal
                           </span>
                         )}
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <button
                           onClick={() => handleToggleActive(b.id, b.isActive)}
                           style={{
                             padding: '0.35rem 0.75rem',
-                            borderRadius: '7px',
-                            background: b.isActive ? '#DCFCE7' : '#F4F4F5',
-                            border: `1px solid ${b.isActive ? '#86EFAC' : '#E4E4E7'}`,
-                            color: b.isActive ? '#15803D' : '#71717a',
+                            borderRadius: '6px',
+                            background: b.isActive ? 'rgba(16, 185, 129, 0.12)' : '#222226',
+                            border: `1px solid ${b.isActive ? 'rgba(16, 185, 129, 0.25)' : '#27272a'}`,
+                            color: b.isActive ? '#34d399' : '#a1a1aa',
                             fontSize: '0.74rem',
-                            fontWeight: 800,
+                            fontWeight: 600,
                             cursor: 'pointer'
                           }}
                         >
@@ -390,12 +389,12 @@ const BroadcastManager = () => {
                           onClick={() => handleDelete(b.id)}
                           style={{
                             padding: '0.35rem 0.65rem',
-                            borderRadius: '7px',
-                            background: '#FEE2E2',
-                            border: '1px solid #FECACA',
-                            color: '#DC2626',
+                            borderRadius: '6px',
+                            background: 'rgba(239, 68, 68, 0.12)',
+                            border: '1px solid rgba(239, 68, 68, 0.25)',
+                            color: '#f87171',
                             fontSize: '0.74rem',
-                            fontWeight: 700,
+                            fontWeight: 600,
                             cursor: 'pointer'
                           }}
                           title="Delete announcement"
@@ -405,25 +404,25 @@ const BroadcastManager = () => {
                       </div>
                     </div>
 
-                    <div style={{ fontWeight: 800, fontSize: '1rem', color: '#09090b' }}>
+                    <div style={{ fontWeight: 600, fontSize: '0.96rem', color: '#fafafa' }}>
                       {b.title}
                     </div>
 
-                    <div style={{ fontSize: '0.86rem', color: '#4B5563', lineHeight: 1.5 }}>
+                    <div style={{ fontSize: '0.85rem', color: '#a1a1aa', lineHeight: 1.5 }}>
                       {b.content}
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', fontSize: '0.74rem', color: '#71717a', borderTop: '1px solid #E4E4E7', paddingTop: '0.6rem' }}>
-                      <div>Dispatched by: <strong>{b.author || 'Platform Super Admin'}</strong> · {new Date(b.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', fontSize: '0.74rem', color: '#71717a', borderTop: '1px solid #222226', paddingTop: '0.5rem' }}>
+                      <div>Dispatched by: <strong style={{ color: '#fafafa' }}>{b.author || 'Platform Super Admin'}</strong> · {new Date(b.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                         {b.blogUrl && (
-                          <span style={{ color: '#2563eb', fontWeight: 800, background: '#EFF6FF', padding: '0.15rem 0.5rem', borderRadius: '6px', border: '1px solid #BFDBFE' }}>
-                            <i className="fas fa-book-open"></i> Read More Link: {b.blogUrl}
+                          <span style={{ color: '#38bdf8', fontWeight: 600, background: 'rgba(56, 189, 248, 0.1)', padding: '0.15rem 0.5rem', borderRadius: '4px', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
+                            <i className="fas fa-book-open"></i> Read More: {b.blogUrl}
                           </span>
                         )}
                         {b.actionUrl && (
-                          <span style={{ color: '#059669', fontWeight: 700 }}>
-                            Action Link: {b.actionLabel} ({b.actionUrl})
+                          <span style={{ color: '#34d399', fontWeight: 500 }}>
+                            Action: {b.actionLabel} ({b.actionUrl})
                           </span>
                         )}
                       </div>
@@ -438,16 +437,16 @@ const BroadcastManager = () => {
 
       {/* TAB 2: COMPOSE NEW BROADCAST */}
       {activeTab === 'compose' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
           
           {/* Left Column: Form & Presets */}
-          <div style={{ background: '#FFFFFF', borderRadius: '18px', border: '1px solid #E4E4E7', padding: '1.75rem', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)' }}>
+          <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.5rem' }}>
             
             {/* Template Presets */}
-            <div style={{ marginBottom: '1.5rem', background: '#F8FAFC', padding: '1rem', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#334155', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <i className="fas fa-wand-magic-sparkles" style={{ color: '#2563eb' }}></i>
-                Quick Template Presets (1-Click Fill)
+            <div style={{ marginBottom: '1.25rem', background: '#18181c', padding: '0.85rem 1rem', borderRadius: '8px', border: '1px solid #27272a' }}>
+              <div style={{ fontSize: '0.74rem', fontWeight: 600, color: '#a1a1aa', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <i className="fas fa-wand-magic-sparkles" style={{ color: '#38bdf8' }}></i>
+                Template Presets
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                 {PRESET_TEMPLATES.map((tpl, i) => (
@@ -456,13 +455,13 @@ const BroadcastManager = () => {
                     type="button"
                     onClick={() => handleApplyTemplate(tpl)}
                     style={{
-                      background: '#FFFFFF',
-                      border: '1px solid #CBD5E1',
+                      background: '#121215',
+                      border: '1px solid #27272a',
                       padding: '0.35rem 0.65rem',
-                      borderRadius: '8px',
+                      borderRadius: '6px',
                       fontSize: '0.74rem',
-                      fontWeight: 700,
-                      color: '#0F172A',
+                      fontWeight: 600,
+                      color: '#fafafa',
                       cursor: 'pointer'
                     }}
                   >
@@ -472,32 +471,34 @@ const BroadcastManager = () => {
               </div>
             </div>
 
-            <form onSubmit={handleCreateBroadcast} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
+            <form onSubmit={handleCreateBroadcast} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label style={{ display: 'block', fontWeight: 800, fontSize: '0.84rem', color: '#09090b', marginBottom: '0.4rem' }}>
-                  Broadcast Announcement Title *
+                <label style={{ display: 'block', fontWeight: 600, fontSize: '0.76rem', color: '#a1a1aa', marginBottom: '0.35rem', textTransform: 'uppercase' }}>
+                  Broadcast Title *
                 </label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g., 🇬🇭 GES Academic Term 3 Score Entry Directive"
+                  placeholder="e.g., GES Academic Term Directive"
                   required
                   style={{
                     width: '100%',
-                    padding: '0.75rem 0.9rem',
-                    borderRadius: '10px',
-                    border: '1.5px solid #D4D4D8',
-                    fontSize: '0.88rem',
-                    fontWeight: 600
+                    padding: '0.65rem 0.85rem',
+                    borderRadius: '8px',
+                    border: '1px solid #27272a',
+                    background: '#18181c',
+                    color: '#fafafa',
+                    fontSize: '0.86rem',
+                    outline: 'none'
                   }}
                 />
               </div>
 
               {/* Target Audience & Severity in 2 columns */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.85rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontWeight: 800, fontSize: '0.84rem', color: '#09090b', marginBottom: '0.4rem' }}>
+                  <label style={{ display: 'block', fontWeight: 600, fontSize: '0.76rem', color: '#a1a1aa', marginBottom: '0.35rem', textTransform: 'uppercase' }}>
                     Target Audience
                   </label>
                   <select
@@ -505,48 +506,52 @@ const BroadcastManager = () => {
                     onChange={(e) => setTargetAudience(e.target.value)}
                     style={{
                       width: '100%',
-                      padding: '0.75rem',
-                      borderRadius: '10px',
-                      border: '1.5px solid #D4D4D8',
-                      fontSize: '0.84rem',
-                      fontWeight: 700,
-                      background: '#FFFFFF'
+                      padding: '0.65rem',
+                      borderRadius: '8px',
+                      border: '1px solid #27272a',
+                      fontSize: '0.82rem',
+                      fontWeight: 500,
+                      background: '#18181c',
+                      color: '#fafafa',
+                      outline: 'none'
                     }}
                   >
-                    <option value="all">🌐 All Schools &amp; Portals</option>
-                    <option value="headteacher">🏫 Headteachers Only</option>
-                    <option value="teacher">👨‍🏫 Teachers Only</option>
-                    <option value="parent">👨‍👩‍👧 Parents Only</option>
+                    <option value="all">All Schools &amp; Portals</option>
+                    <option value="headteacher">Headteachers Only</option>
+                    <option value="teacher">Teachers Only</option>
+                    <option value="parent">Parents Only</option>
                   </select>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontWeight: 800, fontSize: '0.84rem', color: '#09090b', marginBottom: '0.4rem' }}>
-                    Urgency &amp; Color Style
+                  <label style={{ display: 'block', fontWeight: 600, fontSize: '0.76rem', color: '#a1a1aa', marginBottom: '0.35rem', textTransform: 'uppercase' }}>
+                    Urgency Style
                   </label>
                   <select
                     value={severity}
                     onChange={(e) => setSeverity(e.target.value)}
                     style={{
                       width: '100%',
-                      padding: '0.75rem',
-                      borderRadius: '10px',
-                      border: '1.5px solid #D4D4D8',
-                      fontSize: '0.84rem',
-                      fontWeight: 700,
-                      background: '#FFFFFF'
+                      padding: '0.65rem',
+                      borderRadius: '8px',
+                      border: '1px solid #27272a',
+                      fontSize: '0.82rem',
+                      fontWeight: 500,
+                      background: '#18181c',
+                      color: '#fafafa',
+                      outline: 'none'
                     }}
                   >
-                    <option value="info">🔵 Information (Blue)</option>
-                    <option value="warning">🟠 GES / Important Notice (Amber)</option>
-                    <option value="urgent">🔴 Urgent Action Required (Red)</option>
-                    <option value="success">🟢 Milestone / Celebration (Green)</option>
+                    <option value="info">Information (Blue)</option>
+                    <option value="warning">Important Notice (Amber)</option>
+                    <option value="urgent">Urgent Action (Red)</option>
+                    <option value="success">System Milestone (Green)</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontWeight: 800, fontSize: '0.84rem', color: '#09090b', marginBottom: '0.4rem' }}>
+                <label style={{ display: 'block', fontWeight: 600, fontSize: '0.76rem', color: '#a1a1aa', marginBottom: '0.35rem', textTransform: 'uppercase' }}>
                   Announcement Message Body *
                 </label>
                 <textarea
@@ -557,51 +562,49 @@ const BroadcastManager = () => {
                   required
                   style={{
                     width: '100%',
-                    padding: '0.75rem 0.9rem',
-                    borderRadius: '10px',
-                    border: '1.5px solid #D4D4D8',
-                    fontSize: '0.88rem',
+                    padding: '0.65rem 0.85rem',
+                    borderRadius: '8px',
+                    border: '1px solid #27272a',
+                    background: '#18181c',
+                    color: '#fafafa',
+                    fontSize: '0.85rem',
                     lineHeight: 1.5,
-                    fontFamily: 'inherit'
+                    fontFamily: 'inherit',
+                    outline: 'none'
                   }}
                 />
               </div>
 
               {/* Blog Article Link (Read More Destination) */}
-              <div style={{ background: '#F0F9FF', border: '1.5px solid #BAE6FD', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ background: '#18181c', border: '1px solid #27272a', borderRadius: '8px', padding: '0.85rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px' }}>
-                  <label style={{ fontWeight: 800, fontSize: '0.84rem', color: '#0369A1', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <i className="fas fa-book-open" style={{ color: '#0284C7' }}></i>
-                    <span>Blog Guide Link (Attached to "Read More" Button)</span>
+                  <label style={{ fontWeight: 600, fontSize: '0.76rem', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '6px', textTransform: 'uppercase' }}>
+                    <i className="fas fa-book-open"></i>
+                    <span>Attached Blog Guide</span>
                   </label>
-                  <span style={{ fontSize: '0.72rem', color: '#0284C7', fontWeight: 600 }}>
-                    When clicked, users go straight to this blog guide
-                  </span>
                 </div>
 
                 {blogPosts.length > 0 && (
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#0369A1', marginBottom: '0.25rem' }}>
-                      ⚡ Quick Attach from Published Blog Articles &amp; Manuals:
-                    </label>
                     <select
                       onChange={(e) => handleSelectBlogPost(e.target.value)}
                       defaultValue=""
                       style={{
                         width: '100%',
-                        padding: '0.6rem 0.75rem',
-                        borderRadius: '8px',
-                        border: '1px solid #7DD3FC',
-                        background: '#FFFFFF',
+                        padding: '0.55rem 0.75rem',
+                        borderRadius: '6px',
+                        border: '1px solid #27272a',
+                        background: '#121215',
                         fontSize: '0.82rem',
-                        fontWeight: 600,
-                        color: '#0F172A'
+                        fontWeight: 500,
+                        color: '#fafafa',
+                        outline: 'none'
                       }}
                     >
                       <option value="">-- Choose a published blog post to link --</option>
                       {blogPosts.map((post) => (
                         <option key={post.id || post.slug} value={post.slug || post.id}>
-                          📖 {post.title} ({post.category || 'Guide'})
+                          {post.title} ({post.category || 'Guide'})
                         </option>
                       ))}
                     </select>
@@ -609,58 +612,56 @@ const BroadcastManager = () => {
                 )}
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#0369A1', marginBottom: '0.25rem' }}>
-                    Or Custom Blog URL / Slug:
-                  </label>
                   <input
                     type="text"
                     value={blogUrl}
                     onChange={(e) => setBlogUrl(e.target.value)}
-                    placeholder="e.g., /blog/ges-continuous-assessment-policy-guide or https://..."
+                    placeholder="e.g. /blog/ges-continuous-assessment-policy-guide"
                     style={{
                       width: '100%',
-                      padding: '0.65rem 0.75rem',
-                      borderRadius: '8px',
-                      border: '1px solid #7DD3FC',
-                      background: '#FFFFFF',
+                      padding: '0.55rem 0.75rem',
+                      borderRadius: '6px',
+                      border: '1px solid #27272a',
+                      background: '#121215',
                       fontSize: '0.84rem',
-                      fontWeight: 600
+                      color: '#fafafa',
+                      outline: 'none'
                     }}
                   />
                 </div>
               </div>
 
               {/* Action Button Link (Optional) */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.85rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontWeight: 700, fontSize: '0.8rem', color: '#09090b', marginBottom: '0.3rem' }}>
-                    Secondary Module Route (Optional)
+                  <label style={{ display: 'block', fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
+                    Secondary Route
                   </label>
                   <input
                     type="text"
                     value={actionUrl}
                     onChange={(e) => setActionUrl(e.target.value)}
-                    placeholder="e.g., /scores, /reports, /financials"
-                    style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.84rem' }}
+                    placeholder="e.g. /scores, /reports"
+                    style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #27272a', background: '#18181c', color: '#fafafa', fontSize: '0.84rem', outline: 'none' }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontWeight: 700, fontSize: '0.8rem', color: '#09090b', marginBottom: '0.3rem' }}>
-                    Secondary Button Label
+                  <label style={{ display: 'block', fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
+                    Secondary Label
                   </label>
                   <input
                     type="text"
                     value={actionLabel}
                     onChange={(e) => setActionLabel(e.target.value)}
                     placeholder="View Details"
-                    style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.84rem' }}
+                    style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #27272a', background: '#18181c', color: '#fafafa', fontSize: '0.84rem', outline: 'none' }}
                   />
                 </div>
               </div>
 
               {/* Delivery Display Checkboxes */}
-              <div style={{ display: 'flex', gap: '1.5rem', background: '#FAFAFA', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid #E4E4E7' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', fontWeight: 700, color: '#09090b', cursor: 'pointer' }}>
+              <div style={{ display: 'flex', gap: '1.25rem', background: '#18181c', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #27272a' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', fontWeight: 500, color: '#fafafa', cursor: 'pointer' }}>
                   <input
                     type="checkbox"
                     checked={bannerEnabled}
@@ -669,7 +670,7 @@ const BroadcastManager = () => {
                   <span>Show Top Pinned Banner</span>
                 </label>
 
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', fontWeight: 700, color: '#09090b', cursor: 'pointer' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', fontWeight: 500, color: '#fafafa', cursor: 'pointer' }}>
                   <input
                     type="checkbox"
                     checked={modalEnabled}
@@ -683,36 +684,35 @@ const BroadcastManager = () => {
                 type="submit"
                 disabled={submitting || !title.trim() || !content.trim()}
                 style={{
-                  padding: '0.85rem',
-                  borderRadius: '10px',
+                  padding: '0.75rem',
+                  borderRadius: '8px',
                   background: '#2563eb',
                   border: 'none',
                   color: '#FFFFFF',
-                  fontWeight: 900,
-                  fontSize: '0.92rem',
+                  fontWeight: 600,
+                  fontSize: '0.88rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 4px 15px rgba(37, 99, 235, 0.35)',
-                  marginTop: '0.5rem'
+                  marginTop: '0.25rem'
                 }}
               >
                 <i className="fas fa-paper-plane"></i>
-                {submitting ? 'Dispatching...' : 'Dispatch Broadcast to Schools Now'}
+                {submitting ? 'Dispatching...' : 'Dispatch Broadcast Now'}
               </button>
             </form>
           </div>
 
           {/* Right Column: Live Recipient Preview */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div style={{ background: '#09090b', borderRadius: '18px', border: '1px solid #27272a', padding: '1.5rem', color: '#FFFFFF' }}>
-              <div style={{ fontSize: '0.75rem', color: '#60A5FA', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.6rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.25rem', color: '#fafafa' }}>
+              <div style={{ fontSize: '0.74rem', color: '#38bdf8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.5rem' }}>
                 <i className="fas fa-eye"></i> Live Recipient Preview
               </div>
-              <div style={{ fontSize: '0.84rem', color: '#A1A1AA', marginBottom: '1.25rem' }}>
-                This is how the broadcast announcement banner will render at the top of <strong>{getAudienceLabel(targetAudience)}</strong> dashboards:
+              <div style={{ fontSize: '0.82rem', color: '#a1a1aa', marginBottom: '1rem' }}>
+                How the broadcast renders at the top of <strong>{getAudienceLabel(targetAudience)}</strong> dashboards:
               </div>
 
               {/* Preview Banner Box - iPhone iOS Translucent Glass Push Notification Style */}

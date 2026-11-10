@@ -114,6 +114,49 @@ https://app.laboureducation.com/agent/portal`;
   },
 
   /**
+   * Notification 4: Send Account Credentials & Access Link to Referrer via WhatsApp
+   */
+  formatAgentCredentialsAlert(agent, password = '') {
+    const agentName = agent.fullName || 'Partner';
+    const code = agent.referralCode || '';
+    const phone = agent.phone || '';
+    const portalUrl = `${window.location.origin}/agent/portal/${code}`;
+    const signupUrl = `${window.location.origin}/register?ref=${code}`;
+    const demoUrl = `${window.location.origin}/demo?ref=${code}`;
+
+    const displayPwd = (password && !password.startsWith('pbkdf2$'))
+      ? password
+      : (agent.password && !agent.password.startsWith('pbkdf2$'))
+        ? agent.password
+        : '[Your Chosen Secret Password]';
+
+    const text = 
+`👋 *Welcome to Labour Educational Partner Portal!*
+
+Hello *${agentName}*, your official partner account is ready.
+
+🔑 *Your Login Credentials:*
+• Phone / Code: \`${phone}\` or \`${code}\`
+• Password: \`${displayPwd}\`
+• Commission Rate: *${Number(agent.commissionRate || 50)}% for 1 Term*
+
+📲 *Access Your Partner Dashboard:*
+👉 ${portalUrl}
+
+🔗 *Your Unique Referral Links:*
+• School Registration: ${signupUrl}
+• School Demo Booking: ${demoUrl}
+
+Share your link or partner code with schools and earn 50% commission on every school's first subscription payment!`;
+
+    return {
+      recipientPhone: phone,
+      text,
+      url: this.createWhatsAppUrl(phone, text)
+    };
+  },
+
+  /**
    * Headteacher Pitch & Demo invitation scripts (For Agent Marketing Kit)
    */
   getMarketingScripts(agent) {

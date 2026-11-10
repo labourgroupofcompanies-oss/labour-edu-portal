@@ -1173,7 +1173,7 @@ const healUniqueConflict = async (opError, item, payload) => {
               if (existingScore?.id) {
                 await supabase.from('report_scores').update(r).eq('id', existingScore.id);
               } else {
-                await supabase.from('report_scores').upsert(r).catch(() => null);
+                await supabase.from('report_scores').upsert(r);
               }
             } catch (_) {}
           }

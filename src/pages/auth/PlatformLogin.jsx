@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../store/AuthContext';
 import authService from '../../services/authService';
 
@@ -26,7 +26,7 @@ const PlatformLogin = () => {
       await login(email.trim(), password);
       const user = await authService.getCurrentUser();
       
-      const isSuper = user?.role === 'super_admin' || user?.role === 'platform_developer' || user?.isPlatformDeveloper || (user?.email || '').toLowerCase() === 'shrtgallery3@gmail.com';
+      const isSuper = user?.role === 'super_admin' || user?.role === 'platform_developer' || user?.isPlatformDeveloper === true;
       if (!isSuper) {
         await authService.logout();
         throw new Error('Access denied: This portal is strictly restricted to Super Administrators and Platform Developers.');
@@ -211,13 +211,6 @@ const PlatformLogin = () => {
             )}
           </button>
         </form>
-
-        <div style={{ marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid #27272a', textAlign: 'center', fontSize: '0.8rem', color: '#71717a' }}>
-          Need initial Super Admin access?{' '}
-          <Link to="/register" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 700 }}>
-            Register Platform Key
-          </Link>
-        </div>
       </div>
     </div>
   );

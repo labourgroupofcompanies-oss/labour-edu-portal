@@ -108,7 +108,7 @@ const SdkDownloads = () => {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
         {/* Left List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {SDK_LIST.map(sdk => (
@@ -117,22 +117,22 @@ const SdkDownloads = () => {
               onClick={() => setSelectedSdk(sdk.id)}
               style={{
                 padding: '1.25rem',
-                borderRadius: '14px',
-                background: selectedSdk === sdk.id ? 'rgba(56, 189, 248, 0.12)' : '#0f172a',
-                border: `1px solid ${selectedSdk === sdk.id ? 'rgba(56, 189, 248, 0.4)' : 'rgba(255, 255, 255, 0.08)'}`,
+                borderRadius: '12px',
+                background: selectedSdk === sdk.id ? 'rgba(37, 99, 235, 0.12)' : '#121215',
+                border: `1px solid ${selectedSdk === sdk.id ? '#2563eb' : '#222226'}`,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.15s ease'
               }}
             >
-              <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', color: sdk.color, flexShrink: 0 }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(255,255,255,0.04)', border: '1px solid #222226', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', color: sdk.color, flexShrink: 0 }}>
                 <i className={`fab ${sdk.icon.startsWith('fa-') ? 'fas' : 'fab'} ${sdk.icon}`}></i>
               </div>
               <div>
-                <div style={{ fontWeight: 700, color: 'white', fontSize: '0.9rem' }}>{sdk.name}</div>
-                <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>{sdk.version}</div>
+                <div style={{ fontWeight: 600, color: '#fafafa', fontSize: '0.88rem' }}>{sdk.name}</div>
+                <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>{sdk.version}</div>
               </div>
             </div>
           ))}
@@ -140,42 +140,42 @@ const SdkDownloads = () => {
 
         {/* Right Active Detail */}
         <div style={{
-          background: '#0f172a',
-          borderRadius: '16px',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          padding: '2rem',
+          background: '#121215',
+          borderRadius: '12px',
+          border: '1px solid #222226',
+          padding: '1.5rem',
           display: 'flex',
           flexDirection: 'column',
-          gap: '1.5rem'
+          gap: '1.25rem'
         }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '0.5rem' }}>
-              <h2 style={{ fontFamily: 'Outfit, sans-serif', margin: 0, color: 'white' }}>{activeSdk.name}</h2>
-              <span style={{ padding: '0.2rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 800, background: 'rgba(56,189,248,0.15)', color: '#38bdf8' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+              <h2 style={{ fontFamily: 'Outfit, sans-serif', margin: 0, color: '#fafafa', fontSize: '1.25rem', fontWeight: 700 }}>{activeSdk.name}</h2>
+              <span style={{ padding: '0.2rem 0.55rem', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, background: 'rgba(37,99,235,0.12)', color: '#60a5fa', border: '1px solid rgba(37,99,235,0.25)' }}>
                 {activeSdk.version}
               </span>
             </div>
-            <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: 0, lineHeight: 1.6 }}>{activeSdk.desc}</p>
+            <p style={{ color: '#a1a1aa', fontSize: '0.88rem', margin: 0, lineHeight: 1.5 }}>{activeSdk.desc}</p>
           </div>
 
           {/* Installation Command */}
           <div>
-            <div style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700, marginBottom: '0.4rem' }}>Installation Package</div>
-            <div style={{ background: '#1e293b', padding: '0.85rem 1.25rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.08)', fontFamily: 'monospace', color: '#34d399', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span>{activeSdk.installCmd}</span>
+            <div style={{ fontSize: '0.8rem', color: '#a1a1aa', fontWeight: 600, marginBottom: '0.4rem' }}>Installation Package</div>
+            <div style={{ background: '#18181c', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #222226', fontFamily: 'monospace', color: '#34d399', fontSize: '0.88rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', flexWrap: 'wrap' }}>
+              <span style={{ wordBreak: 'break-all' }}>{activeSdk.installCmd}</span>
               <button
                 onClick={() => handleCopy(activeSdk.installCmd, `cmd-${activeSdk.id}`)}
-                style={{ padding: '0.4rem 0.75rem', borderRadius: '6px', background: copiedId === `cmd-${activeSdk.id}` ? '#10B981' : '#2563eb', border: 'none', color: 'white', fontWeight: 700, fontSize: '0.78rem', cursor: 'pointer' }}
+                style={{ padding: '0.4rem 0.75rem', borderRadius: '6px', background: copiedId === `cmd-${activeSdk.id}` ? 'rgba(52,211,153,0.15)' : '#2563eb', border: copiedId === `cmd-${activeSdk.id}` ? '1px solid rgba(52,211,153,0.3)' : 'none', color: copiedId === `cmd-${activeSdk.id}` ? '#34d399' : 'white', fontWeight: 600, fontSize: '0.78rem', cursor: 'pointer', flexShrink: 0 }}
               >
-                {copiedId === `cmd-${activeSdk.id}` ? 'Copied!' : 'Copy'}
+                {copiedId === `cmd-${activeSdk.id}` ? 'Copied' : 'Copy'}
               </button>
             </div>
           </div>
 
           {/* Quickstart Snippet */}
           <div>
-            <div style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700, marginBottom: '0.4rem' }}>Quickstart Code Example</div>
-            <pre style={{ background: '#090d16', padding: '1.25rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', color: '#38bdf8', fontFamily: 'monospace', fontSize: '0.85rem', lineHeight: 1.5, margin: 0, overflowX: 'auto' }}>
+            <div style={{ fontSize: '0.8rem', color: '#a1a1aa', fontWeight: 600, marginBottom: '0.4rem' }}>Quickstart Code Example</div>
+            <pre style={{ background: '#0d0d10', padding: '1rem', borderRadius: '8px', border: '1px solid #222226', color: '#38bdf8', fontFamily: 'monospace', fontSize: '0.82rem', lineHeight: 1.5, margin: 0, overflowX: 'auto' }}>
               {activeSdk.snippet}
             </pre>
           </div>

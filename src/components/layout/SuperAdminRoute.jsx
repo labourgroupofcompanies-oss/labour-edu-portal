@@ -15,7 +15,7 @@ const SuperAdminRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  const isSuper = user.role === 'super_admin' || user.role === 'platform_developer' || user.isPlatformDeveloper || (user.email || '').toLowerCase() === 'shrtgallery3@gmail.com';
+  const isSuper = user.role === 'super_admin' || user.role === 'platform_developer' || user.isPlatformDeveloper === true;
   if (!isSuper) {
     return <AccessDenied403 />;
   }

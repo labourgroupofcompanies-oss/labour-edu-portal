@@ -50,29 +50,26 @@ const OperationsLayout = () => {
     }
   ];
 
-  const isDarkPage = location.pathname.includes('/referrals');
-
   return (
-    <div className="operations-layout-root" style={{ display: 'flex', width: '100%', minHeight: 'calc(100vh - 58px)', background: isDarkPage ? '#09090b' : '#FAFAFA', flexDirection: 'column' }}>
+    <div className="operations-layout-root" style={{ display: 'flex', width: '100%', minHeight: 'calc(100vh - 56px)', background: '#09090b', flexDirection: 'column' }}>
       <style>{`
         .operations-sidebar {
           width: 240px;
           min-width: 240px;
           background: #09090b;
-          border-right: 1px solid #27272a;
+          border-right: 1px solid #1f1f23;
           display: flex;
           flex-direction: column;
           position: sticky;
-          top: 58px;
-          height: calc(100vh - 58px);
+          top: 56px;
+          height: calc(100vh - 56px);
           z-index: 40;
-          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
           transition: transform 0.25s ease-in-out;
         }
         .operations-mobile-topbar {
           display: none;
           background: #09090b;
-          border-bottom: 1px solid #27272a;
+          border-bottom: 1px solid #1f1f23;
           padding: 0.75rem 1rem;
           color: #ffffff;
           align-items: center;
@@ -83,10 +80,11 @@ const OperationsLayout = () => {
         }
         .operations-main-outlet {
           flex: 1;
-          padding: 2rem;
+          padding: 1.75rem;
           overflow-y: auto;
           min-width: 0;
-          background: ${isDarkPage ? '#09090b' : '#FAFAFA'};
+          background: #09090b;
+          color: #fafafa;
         }
         .operations-backdrop {
           display: none;
@@ -217,14 +215,14 @@ const OperationsLayout = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        padding: '0.55rem 0.75rem',
-                        borderRadius: '10px',
-                        color: isActive ? '#FFFFFF' : '#A1A1AA',
-                        background: isActive ? 'linear-gradient(135deg, #2563EB, #1D4ED8)' : 'transparent',
-                        fontWeight: isActive ? 800 : 600,
-                        fontSize: '0.84rem',
+                        padding: '0.5rem 0.75rem',
+                        borderRadius: '8px',
+                        color: isActive ? '#FFFFFF' : '#94a3b8',
+                        background: isActive ? '#1c1c22' : 'transparent',
+                        fontWeight: isActive ? 600 : 500,
+                        fontSize: '0.82rem',
                         textDecoration: 'none',
-                        boxShadow: isActive ? '0 4px 14px rgba(37, 99, 235, 0.4)' : 'none',
+                        border: isActive ? '1px solid #2e2e36' : '1px solid transparent',
                         transition: 'all 0.15s ease',
                         position: 'relative'
                       })}

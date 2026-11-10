@@ -75,52 +75,19 @@ export const walletLedgerService = {
     // 2. Direct Supabase Cloud Update (Authoritative)
     if (navigator.onLine) {
       try {
-        // Fetch current authoritative wallet_balance from report_schools
-        const { data: cloudSchool } = await supabase
-          .from('report_schools')
-          .select('id, wallet_balance')
-          .eq('id', cleanSchoolId)
-          .maybeSingle();
-
-        const currentCloudBal = Number(cloudSchool?.wallet_balance || 0);
-        calculatedNewBal = Math.max(0, currentCloudBal + numAmount);
-
-        // Direct insert to wallet_transactions table with balance_before and balance_after
-        const walletTxPayload = {
-          school_id: cleanSchoolId,
-          transaction_type: numAmount >= 0 ? 'CREDIT' : 'DEBIT',
-          currency: 'GHS',
-          amount: Math.abs(numAmount),
-          balance_before: currentCloudBal,
-          balance_after: calculatedNewBal,
-          reference: txRecord.reference,
-          description: txRecord.type === 'REFERRAL_REWARD'
-            ? 'Referral Reward Credit (+GH₵20.00)'
-            : (txRecord.type === 'WELCOME_BONUS'
-              ? 'Welcome Bonus Credit (+GH₵10.00)'
-              : (txRecord.type === 'REFERRAL_DEDUCTION'
-                ? `Referral Reward Deduction (-GH₵${Math.abs(numAmount).toFixed(2)})${metadata?.reason ? `: ${metadata.reason}` : ''}`
-                : (numAmount < 0 ? 'Wallet Debit' : 'Wallet Credit'))),
-          created_by: txRecord.processedBy
-        };
-
-        let { error: insertErr } = await supabase.from('wallet_transactions').insert([walletTxPayload]);
-        if (insertErr) {
-          try {
-            await supabase.from('platform_wallet_transactions').insert([walletTxPayload]);
-          } catch (_) {}
-        }
-
-        // Update report_schools.wallet_balance in Supabase
-        const { error: updErr } = await supabase
-          .from('report_schools')
-          .update({ wallet_balance: calculatedNewBal })
-          .eq('id', cleanSchoolId);
-
-        if (updErr) {
-          console.warn('[WalletLedger] Direct report_schools balance update notice:', updErr);
-        } else {
-          console.log(`[WalletLedger] Cloud wallet_balance successfully updated for school ${cleanSchoolId}: GH₵ ${calculatedNewBal}`);
+        // Use atomic server-side transaction to prevent race conditions and client-side tampering
+        const { data: rpcResult, error: rpcErr } = await supabase.rpc('atomic_wallet_transaction', {
+          p_school_id: cleanSchoolId,
+          p_amount: numAmount,
+          p_reference: txRecord.reference,
+          p_description: txRecord.type,
+          p_created_by: txRecord.processedBy
+        });
+        if (!rpcErr && rpcResult !== null) {
+          calculatedNewBal = Number(rpcResult);
+          console.log(`[WalletLedger] Atomic transaction completed. New balance: GH₵ ${calculatedNewBal}`);
+        } else if (rpcErr) {
+          console.warn('[WalletLedger] Atomic transaction notice:', rpcErr.message);
         }
       } catch (cloudErr) {
         console.warn('[WalletLedger] Supabase cloud operation notice:', cloudErr);

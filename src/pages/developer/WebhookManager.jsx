@@ -269,7 +269,8 @@ const WebhookManager = () => {
       {/* TAB 2: DELIVERY LOGS & INSPECTOR */}
       {activeTab === 'history' && (
         <div style={{ background: '#0f172a', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.08)', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
             <thead>
               <tr style={{ background: 'rgba(255, 255, 255, 0.03)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', color: '#64748b', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 <th style={{ padding: '1rem' }}>Event Trigger</th>
@@ -336,6 +337,7 @@ const WebhookManager = () => {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 

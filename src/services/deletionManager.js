@@ -355,7 +355,7 @@ class DeletionManager {
     await db.teacherAssignments.delete(aId);
 
     if (navigator.onLine && supId) {
-      supabase.from('report_teacher_assignments').delete().eq('id', supId).catch(() => null);
+      supabase.from('report_teacher_assignments').delete().eq('id', supId).then(null, () => null);
     }
 
     if (supId) {
@@ -380,7 +380,7 @@ class DeletionManager {
     await db.classSubjects.delete(csId);
 
     if (navigator.onLine && supId) {
-      supabase.from('report_class_subjects').delete().eq('id', supId).catch(() => null);
+      supabase.from('report_class_subjects').delete().eq('id', supId).then(null, () => null);
     }
 
     if (supId) {

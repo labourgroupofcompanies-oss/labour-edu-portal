@@ -85,7 +85,7 @@ const ApiAnalytics = () => {
           </div>
 
           {/* Extra Metrics */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+          <div className="content-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
             {[
               { label: 'Requests Today', value: totalToday.toLocaleString(), color: '#38bdf8' },
               { label: 'Avg Response Time', value: metrics?.avgResponseTimeMs > 0 ? `${metrics.avgResponseTimeMs}ms` : '—', color: '#fbbf24' },
@@ -99,7 +99,7 @@ const ApiAnalytics = () => {
           </div>
 
           {/* Endpoints & Consumers */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+          <div className="content-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
             {/* Top Endpoints */}
             <div style={{ background: '#0f172a', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', padding: '1.5rem' }}>
               <h3 style={{ margin: '0 0 1rem', fontFamily: 'Outfit, sans-serif', fontSize: '1.1rem', color: 'white' }}>

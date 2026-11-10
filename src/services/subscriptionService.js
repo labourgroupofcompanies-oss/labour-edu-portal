@@ -767,6 +767,20 @@ const subscriptionService = {
 
         if (!error && data) {
           if (data.status === 'PAID' || data.success) {
+            // Process 50% commission if this school was referred by an individual agent (1-term only)
+            const paidAmt = Number(termFee || data.amount_paid || data.term_fee || data.amount || 0);
+            if (paidAmt > 0) {
+              try {
+                await agentReferralService.processSubscriptionCommission(schoolId, {
+                  subscriptionAmount: paidAmt,
+                  academicYear,
+                  term,
+                  billId
+                });
+              } catch (commErr) {
+                console.warn('[subscriptionService] Error processing commission after RPC payment:', commErr);
+              }
+            }
             return data;
           }
           if (data.status === 'INSUFFICIENT_FUNDS') {

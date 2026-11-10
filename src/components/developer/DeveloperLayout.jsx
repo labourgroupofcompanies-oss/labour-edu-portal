@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../store/AuthContext';
 
@@ -7,6 +7,12 @@ const DeveloperLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeEnv, setActiveEnv] = useState('production');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const devNavItems = [
     { to: '/platform/developer', icon: 'fa-gauge-high', label: 'Dashboard', end: true },
@@ -30,15 +36,65 @@ const DeveloperLayout = () => {
   ];
 
   return (
-    <div style={{
+    <div className="dev-layout-root" style={{
       display: 'flex',
       minHeight: '100vh',
       background: '#09090b',
       color: '#e2e8f0',
-      fontFamily: 'Inter, sans-serif'
+      fontFamily: 'Inter, sans-serif',
+      width: '100%'
     }}>
+      {/* Mobile Top Bar */}
+      <div className="dev-mobile-topbar" style={{
+        display: 'none',
+        background: '#09090b',
+        borderBottom: '1px solid #27272a',
+        padding: '0.75rem 1rem',
+        color: '#ffffff',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        position: 'sticky',
+        top: 0,
+        zIndex: 35
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '0.8rem' }}>
+            <i className="fas fa-terminal" />
+          </div>
+          <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '0.92rem' }}>
+            Developer Portal
+          </span>
+        </div>
+
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          style={{
+            background: 'rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '8px',
+            color: '#ffffff',
+            padding: '0.45rem 0.85rem',
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          <i className={`fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'}`} />
+          <span>{mobileMenuOpen ? 'Close' : 'Menu'}</span>
+        </button>
+      </div>
+
+      {/* Backdrop for Mobile Drawer */}
+      <div
+        className={`dev-backdrop ${mobileMenuOpen ? 'open' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+      />
+
       {/* Developer Portal Sidebar */}
-      <aside style={{
+      <aside className={`dev-sidebar ${mobileMenuOpen ? 'open' : ''}`} style={{
         width: '280px',
         minWidth: '280px',
         background: '#09090b',
@@ -52,38 +108,61 @@ const DeveloperLayout = () => {
       }}>
         {/* Header Logo */}
         <div style={{
-          padding: '1.5rem 1.25rem',
+          padding: '1.25rem 1.25rem',
           borderBottom: '1px solid #27272a',
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'space-between',
           gap: '12px'
         }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '12px',
-            background: '#2563eb',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '1.2rem',
-            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)'
-          }}>
-            <i className="fas fa-terminal"></i>
-          </div>
-          <div>
-            <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '1.05rem', color: '#FFFFFF' }}>
-              Platform Developer
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '12px',
+              background: '#2563eb',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '1.1rem',
+              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)'
+            }}>
+              <i className="fas fa-terminal"></i>
             </div>
-            <div style={{ fontSize: '0.68rem', color: '#2563eb', fontWeight: 700, letterSpacing: '0.05em' }}>
-              SUPER ADMIN CONSOLE
+            <div>
+              <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '1rem', color: '#FFFFFF' }}>
+                Platform Developer
+              </div>
+              <div style={{ fontSize: '0.68rem', color: '#2563eb', fontWeight: 700, letterSpacing: '0.05em' }}>
+                SUPER ADMIN CONSOLE
+              </div>
             </div>
           </div>
+
+          {/* Close button for mobile inside sidebar */}
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="mobile-only"
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: 'none',
+              borderRadius: '6px',
+              color: '#a1a1aa',
+              width: '28px',
+              height: '28px',
+              cursor: 'pointer',
+              display: 'none',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <i className="fas fa-xmark"></i>
+          </button>
         </div>
 
         {/* Environment Badge Switcher */}
-        <div style={{ padding: '1rem 1.25rem 0.5rem' }}>
+        <div style={{ padding: '0.85rem 1.25rem 0.5rem' }}>
           <div style={{
             display: 'flex',
             background: 'rgba(255, 255, 255, 0.05)',
@@ -149,16 +228,17 @@ const DeveloperLayout = () => {
                 <NavLink
                   to={item.to}
                   end={item.end}
+                  onClick={() => setMobileMenuOpen(false)}
                   style={({ isActive }) => ({
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
-                    padding: '0.65rem 0.85rem',
+                    padding: '0.6rem 0.85rem',
                     borderRadius: '10px',
                     color: isActive ? '#FFFFFF' : '#71717a',
                     background: isActive ? '#2563eb' : 'transparent',
                     fontWeight: isActive ? 700 : 500,
-                    fontSize: '0.88rem',
+                    fontSize: '0.85rem',
                     textDecoration: 'none',
                     transition: 'all 0.2s ease'
                   })}
@@ -170,7 +250,7 @@ const DeveloperLayout = () => {
             ))}
           </ul>
 
-          <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #27272a' }}>
+          <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #27272a' }}>
             <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem', paddingLeft: '0.5rem' }}>
               System Integrations
             </div>
@@ -178,7 +258,10 @@ const DeveloperLayout = () => {
               {systemQuickLinks.map(link => (
                 <li key={link.label}>
                   <button
-                    onClick={() => navigate(link.path)}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      navigate(link.path);
+                    }}
                     style={{
                       width: '100%',
                       display: 'flex',
@@ -208,30 +291,30 @@ const DeveloperLayout = () => {
 
         {/* User Footer */}
         <div style={{
-          padding: '1rem',
+          padding: '0.85rem 1rem',
           borderTop: '1px solid #27272a',
           background: 'rgba(9, 9, 11, 0.8)'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.65rem' }}>
             <div style={{
-              width: '36px',
-              height: '36px',
+              width: '32px',
+              height: '32px',
               borderRadius: '50%',
               background: '#2563eb',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: 'white',
-              fontSize: '0.85rem',
+              fontSize: '0.8rem',
               fontWeight: 700
             }}>
               SA
             </div>
             <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#f8fafc', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f8fafc', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
                 {user?.fullName || 'Super Admin'}
               </div>
-              <div style={{ fontSize: '0.68rem', color: '#2563eb' }}>
+              <div style={{ fontSize: '0.65rem', color: '#2563eb' }}>
                 Full Platform Scope
               </div>
             </div>
@@ -241,12 +324,12 @@ const DeveloperLayout = () => {
             onClick={() => navigate('/')}
             style={{
               width: '100%',
-              padding: '0.5rem',
+              padding: '0.45rem',
               borderRadius: '8px',
               background: 'rgba(255, 255, 255, 0.05)',
               border: '1px solid #27272a',
               color: '#A1A1AA',
-              fontSize: '0.78rem',
+              fontSize: '0.75rem',
               fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
@@ -256,55 +339,55 @@ const DeveloperLayout = () => {
             }}
           >
             <i className="fas fa-arrow-left"></i>
-            Exit to School Dashboard
+            <span>Exit to School Dashboard</span>
           </button>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, background: '#09090b' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, background: '#09090b', width: '100%' }}>
         {/* Top Header */}
-        <header style={{
-          height: '64px',
+        <header className="dev-header" style={{
+          height: '56px',
           background: '#09090b',
           borderBottom: '1px solid #27272a',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 2rem',
+          padding: '0 1.5rem',
           position: 'sticky',
           top: 0,
           zIndex: 30
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: '#71717a' }}>
+          <div className="dev-header-breadcrumb" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: '#71717a', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
             <span onClick={() => navigate('/platform/developer')} style={{ cursor: 'pointer', color: '#2563eb' }}>Developer Portal</span>
-            <i className="fas fa-chevron-right" style={{ fontSize: '0.65rem' }}></i>
-            <span style={{ color: '#f1f5f9', fontWeight: 600 }}>
+            <i className="fas fa-chevron-right" style={{ fontSize: '0.65rem', flexShrink: 0 }}></i>
+            <span style={{ color: '#f1f5f9', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {location.pathname === '/platform/developer' ? 'Dashboard Overview' : location.pathname.split('/').pop().replace('-', ' ').toUpperCase()}
             </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
-              padding: '0.35rem 0.85rem',
+              gap: '6px',
+              padding: '0.28rem 0.65rem',
               borderRadius: '9999px',
               background: 'rgba(16, 185, 129, 0.15)',
               border: '1px solid rgba(16, 185, 129, 0.3)',
               color: '#10B981',
-              fontSize: '0.75rem',
+              fontSize: '0.72rem',
               fontWeight: 700
             }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 8px #10B981' }}></span>
-              API v1.2.0 • Active
+              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 6px #10B981' }}></span>
+              <span>v1.2.0</span>
             </div>
           </div>
         </header>
 
         {/* Outlet Page Content */}
-        <main style={{ flex: 1, padding: '2rem', overflowY: 'auto' }}>
+        <main className="dev-main-content" style={{ flex: 1, padding: '2rem', overflowY: 'auto' }}>
           <Outlet context={{ activeEnv }} />
         </main>
       </div>

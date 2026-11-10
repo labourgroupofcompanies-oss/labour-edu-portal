@@ -128,80 +128,80 @@ const OperationsSchoolAnalytics = () => {
   const offsetC = 100 - hPct - wPct;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', paddingBottom: '3rem', color: '#18181b' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', paddingBottom: '3rem', color: '#fafafa' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.75rem', fontWeight: 800, color: '#09090b', margin: 0 }}>
-            Platform School Performance Analytics
+          <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.75rem', fontWeight: 700, color: '#fafafa', margin: 0, letterSpacing: '-0.02em' }}>
+            School Performance Analytics
           </h1>
-          <p style={{ color: '#71717a', fontSize: '0.88rem', margin: '0.25rem 0 0' }}>
-            Executive visual analysis, regional health breakdown, and real-time operational telemetry across all Ghanaian basic schools.
+          <p style={{ color: '#a1a1aa', fontSize: '0.88rem', margin: '0.25rem 0 0' }}>
+            Visual analysis, regional health breakdown, and real-time operational telemetry across all schools.
           </p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <select
             value={selectedRegion}
             onChange={e => setSelectedRegion(e.target.value)}
-            style={{ padding: '0.6rem 1rem', borderRadius: '10px', background: '#FFFFFF', border: '1px solid #E4E4E7', color: '#09090b', fontSize: '0.85rem', fontWeight: 700, outline: 'none' }}
+            style={{ padding: '0.55rem 0.95rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.85rem', fontWeight: 500, outline: 'none' }}
           >
             <option value="all">All Regions</option>
             {regionRows.map(r => (
               <option key={r.region} value={r.region}>{r.region}</option>
             ))}
           </select>
-          <button onClick={loadData} style={{ padding: '0.6rem 1.25rem', borderRadius: '10px', background: '#09090b', border: 'none', color: '#FFFFFF', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <i className="fas fa-sync-alt"></i> Refresh Data
+          <button onClick={loadData} style={{ padding: '0.55rem 1.15rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <i className="fas fa-sync-alt" style={{ color: '#38bdf8' }}></i> Refresh
           </button>
         </div>
       </div>
 
       {loading ? (
-        <div style={{ padding: '2rem 1rem', background: '#FFFFFF', borderRadius: '20px', border: '1px solid #E4E4E7' }}>
+        <div style={{ padding: '3rem 1rem', background: '#121215', borderRadius: '12px', border: '1px solid #222226' }}>
           <LogoPreloader fullScreen={false} size="md" />
         </div>
       ) : (
         <>
           {/* Key KPI Metrics Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.85rem' }}>
             {[
-              { label: 'Total Onboarded Schools', value: metrics?.totalSchools ?? 0, icon: 'fa-school', color: '#2563eb', bg: '#EFF6FF' },
-              { label: 'Enrolled Learners', value: (metrics?.totalLearners ?? 0).toLocaleString(), icon: 'fa-user-graduate', color: '#0284c7', bg: '#F0F9FF' },
-              { label: 'Teaching Staff', value: (metrics?.totalStaff ?? 0).toLocaleString(), icon: 'fa-chalkboard-teacher', color: '#7c3aed', bg: '#F5F3FF' },
-              { label: 'Overall Score Entry %', value: `${metrics?.overallScoreCompletionPct ?? 0}%`, icon: 'fa-pen-to-square', color: metrics?.overallScoreCompletionPct >= 80 ? '#10B981' : '#F59E0B', bg: metrics?.overallScoreCompletionPct >= 80 ? '#ECFDF5' : '#FFFBEB' },
-              { label: 'Report Cards Released', value: (metrics?.totalReportsGenerated ?? 0).toLocaleString(), icon: 'fa-file-invoice', color: '#EF4444', bg: '#FEF2F2' },
-              { label: 'Platform Avg Health', value: `${metrics?.avgHealthScore ?? 0}%`, icon: 'fa-heart-pulse', color: metrics?.avgHealthScore >= 80 ? '#10B981' : '#EF4444', bg: metrics?.avgHealthScore >= 80 ? '#ECFDF5' : '#FEF2F2' },
+              { label: 'Onboarded Schools', value: metrics?.totalSchools ?? 0, icon: 'fa-school', color: '#38bdf8' },
+              { label: 'Enrolled Learners', value: (metrics?.totalLearners ?? 0).toLocaleString(), icon: 'fa-user-graduate', color: '#818cf8' },
+              { label: 'Teaching Staff', value: (metrics?.totalStaff ?? 0).toLocaleString(), icon: 'fa-chalkboard-user', color: '#c084fc' },
+              { label: 'Score Entry %', value: `${metrics?.overallScoreCompletionPct ?? 0}%`, icon: 'fa-pen-to-square', color: metrics?.overallScoreCompletionPct >= 80 ? '#34d399' : '#fbbf24' },
+              { label: 'Reports Released', value: (metrics?.totalReportsGenerated ?? 0).toLocaleString(), icon: 'fa-file-invoice', color: '#f87171' },
+              { label: 'Platform Avg Health', value: `${metrics?.avgHealthScore ?? 0}%`, icon: 'fa-heart-pulse', color: metrics?.avgHealthScore >= 80 ? '#34d399' : '#f87171' },
             ].map((c, i) => (
-              <div key={i} style={{ padding: '1.25rem', borderRadius: '14px', background: '#FFFFFF', border: '1px solid #E4E4E7', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)' }}>
-                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: c.bg, color: c.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>
+              <div key={i} style={{ padding: '1.1rem 1.15rem', borderRadius: '12px', background: '#121215', border: '1px solid #222226', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: `${c.color}15`, color: c.color, border: `1px solid ${c.color}25`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>
                   <i className={`fas ${c.icon}`}></i>
                 </div>
                 <div>
                   <div style={{ fontSize: '0.68rem', color: '#71717a', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{c.label}</div>
-                  <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.4rem', fontWeight: 800, color: '#09090b', marginTop: '2px' }}>{c.value}</div>
+                  <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.35rem', fontWeight: 700, color: '#fafafa', marginTop: '2px' }}>{c.value}</div>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Visual Performance Charts & Insights Container */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
+          <div className="content-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
             
             {/* Visual Donut Chart: School Health Status */}
-            <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid #E4E4E7', padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
-              <h3 style={{ margin: '0 0 1.25rem', fontFamily: 'Outfit, sans-serif', color: '#09090b', fontSize: '1.05rem', width: '100%', textAlign: 'left', fontWeight: 800 }}>
+            <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.35rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <h3 style={{ margin: '0 0 1.25rem', fontFamily: 'Outfit, sans-serif', color: '#fafafa', fontSize: '1rem', width: '100%', textAlign: 'left', fontWeight: 600 }}>
                 School Health Distribution
               </h3>
 
-              <div style={{ position: 'relative', width: '180px', height: '180px', margin: '0.5rem 0' }}>
+              <div style={{ position: 'relative', width: '170px', height: '170px', margin: '0.5rem 0' }}>
                 <svg viewBox="0 0 36 36" style={{ width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
-                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#F4F4F5" strokeWidth="3.8" />
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#222226" strokeWidth="3.8" />
 
                   {hPct > 0 && (
                     <path
                       d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       fill="none"
-                      stroke="#10B981"
+                      stroke="#34d399"
                       strokeWidth="3.8"
                       strokeDasharray={strokeDasharrayH}
                       strokeDashoffset="0"
@@ -212,7 +212,7 @@ const OperationsSchoolAnalytics = () => {
                     <path
                       d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       fill="none"
-                      stroke="#F59E0B"
+                      stroke="#fbbf24"
                       strokeWidth="3.8"
                       strokeDasharray={strokeDasharrayW}
                       strokeDashoffset={-offsetW}
@@ -223,7 +223,7 @@ const OperationsSchoolAnalytics = () => {
                     <path
                       d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       fill="none"
-                      stroke="#EF4444"
+                      stroke="#f87171"
                       strokeWidth="3.8"
                       strokeDasharray={strokeDasharrayC}
                       strokeDashoffset={-offsetC}
@@ -232,52 +232,52 @@ const OperationsSchoolAnalytics = () => {
                 </svg>
 
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-                  <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.75rem', fontWeight: 800, color: '#09090b', lineHeight: 1 }}>{metrics?.totalSchools || 0}</div>
-                  <div style={{ fontSize: '0.7rem', color: '#71717a', marginTop: '4px', textTransform: 'uppercase', fontWeight: 700 }}>Total Schools</div>
+                  <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.65rem', fontWeight: 700, color: '#fafafa', lineHeight: 1 }}>{metrics?.totalSchools || 0}</div>
+                  <div style={{ fontSize: '0.68rem', color: '#71717a', marginTop: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Total Schools</div>
                 </div>
               </div>
 
               {/* Legend Breakdown */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', marginTop: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.82rem', padding: '0.4rem 0.75rem', borderRadius: '8px', background: '#ECFDF5', border: '1px solid #D1FAE5' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#10B981', fontWeight: 700 }}>
-                    <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10B981' }} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', padding: '0.45rem 0.75rem', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#34d399', fontWeight: 600 }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#34d399' }} />
                     Healthy (≥80%)
                   </div>
-                  <div style={{ fontWeight: 800, color: '#10B981' }}>{metrics?.healthyCount || 0}</div>
+                  <div style={{ fontWeight: 700, color: '#34d399' }}>{metrics?.healthyCount || 0}</div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.82rem', padding: '0.4rem 0.75rem', borderRadius: '8px', background: '#FFFBEB', border: '1px solid #FEF3C7' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#F59E0B', fontWeight: 700 }}>
-                    <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#F59E0B' }} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', padding: '0.45rem 0.75rem', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fbbf24', fontWeight: 600 }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fbbf24' }} />
                     Warning (60-79%)
                   </div>
-                  <div style={{ fontWeight: 800, color: '#F59E0B' }}>{metrics?.warningCount || 0}</div>
+                  <div style={{ fontWeight: 700, color: '#fbbf24' }}>{metrics?.warningCount || 0}</div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.82rem', padding: '0.4rem 0.75rem', borderRadius: '8px', background: '#FEF2F2', border: '1px solid #FEE2E2' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#EF4444', fontWeight: 700 }}>
-                    <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#EF4444' }} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', padding: '0.45rem 0.75rem', borderRadius: '6px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f87171', fontWeight: 600 }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f87171' }} />
                     Critical (&lt;60%)
                   </div>
-                  <div style={{ fontWeight: 800, color: '#EF4444' }}>{metrics?.criticalCount || 0}</div>
+                  <div style={{ fontWeight: 700, color: '#f87171' }}>{metrics?.criticalCount || 0}</div>
                 </div>
               </div>
             </div>
 
             {/* Automated Data Analysis & Executive Insights Feed */}
-            <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid #E4E4E7', padding: '1.5rem', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
+            <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.35rem', display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', color: '#09090b', fontSize: '1.05rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <i className="fas fa-brain" style={{ color: '#2563eb' }}></i>
+                <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', color: '#fafafa', fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <i className="fas fa-brain" style={{ color: '#38bdf8' }}></i>
                   Data Analysis &amp; Operational Insights
                 </h3>
-                <span style={{ fontSize: '0.7rem', color: '#2563eb', background: '#EFF6FF', border: '1px solid #DBEAFE', padding: '3px 10px', borderRadius: '6px', fontWeight: 800 }}>
+                <span style={{ fontSize: '0.7rem', color: '#38bdf8', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.2)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
                   Automated Synthesis
                 </span>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, overflowY: 'auto' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, overflowY: 'auto' }}>
                 {executiveInsights.length === 0 ? (
                   <div style={{ padding: '2rem', textAlign: 'center', color: '#71717a', fontSize: '0.85rem' }}>
                     No insights generated yet. Onboard schools to begin receiving data analysis.
@@ -287,19 +287,19 @@ const OperationsSchoolAnalytics = () => {
                     <div
                       key={idx}
                       style={{
-                        padding: '0.9rem 1.1rem',
-                        borderRadius: '12px',
-                        background: ins.type === 'positive' ? '#ECFDF5' : ins.type === 'negative' ? '#FEF2F2' : ins.type === 'warning' ? '#FFFBEB' : '#EFF6FF',
-                        border: `1px solid ${ins.type === 'positive' ? '#D1FAE5' : ins.type === 'negative' ? '#FEE2E2' : ins.type === 'warning' ? '#FEF3C7' : '#DBEAFE'}`,
+                        padding: '0.85rem 1rem',
+                        borderRadius: '8px',
+                        background: '#18181c',
+                        border: '1px solid #27272a',
                         display: 'flex',
                         alignItems: 'flex-start',
                         gap: '12px',
                       }}
                     >
-                      <i className={`fas ${ins.icon}`} style={{ fontSize: '1.1rem', marginTop: '2px', color: ins.type === 'positive' ? '#10B981' : ins.type === 'negative' ? '#EF4444' : ins.type === 'warning' ? '#F59E0B' : '#2563eb', flexShrink: 0 }}></i>
+                      <i className={`fas ${ins.icon}`} style={{ fontSize: '1rem', marginTop: '2px', color: ins.type === 'positive' ? '#34d399' : ins.type === 'negative' ? '#f87171' : ins.type === 'warning' ? '#fbbf24' : '#38bdf8', flexShrink: 0 }}></i>
                       <div>
-                        <div style={{ fontWeight: 800, color: '#09090b', fontSize: '0.88rem' }}>{ins.title}</div>
-                        <div style={{ fontSize: '0.82rem', color: '#71717a', marginTop: '3px', lineHeight: 1.45 }}>{ins.description}</div>
+                        <div style={{ fontWeight: 600, color: '#fafafa', fontSize: '0.85rem' }}>{ins.title}</div>
+                        <div style={{ fontSize: '0.8rem', color: '#a1a1aa', marginTop: '2px', lineHeight: 1.45 }}>{ins.description}</div>
                       </div>
                     </div>
                   ))
@@ -309,14 +309,14 @@ const OperationsSchoolAnalytics = () => {
           </div>
 
           {/* Regional Visual Performance Chart & Matrix */}
-          <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid #E4E4E7', padding: '1.5rem', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
+          <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.35rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
-                <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', color: '#09090b', fontSize: '1.1rem', fontWeight: 800 }}>
+                <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', color: '#fafafa', fontSize: '1.05rem', fontWeight: 600 }}>
                   Regional Educational Performance Matrix
                 </h3>
                 <p style={{ color: '#71717a', fontSize: '0.8rem', margin: '0.2rem 0 0' }}>
-                  Comparison of school volume, student enrollment, teacher ratio, and score completion progress per region.
+                  School volume, student enrollment, teacher ratio, and score completion progress per region.
                 </p>
               </div>
             </div>
@@ -326,39 +326,39 @@ const OperationsSchoolAnalytics = () => {
                 No regional data recorded yet.
               </div>
             ) : (
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
+              <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.84rem' }}>
                   <thead>
-                    <tr style={{ background: '#FAFAFA', borderBottom: '1px solid #E4E4E7', color: '#71717a', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Region</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Schools</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Enrolled Learners</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Teaching Staff</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Student : Teacher Ratio</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Score Entry Completion</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Avg Health</th>
+                    <tr style={{ background: '#18181c', borderBottom: '1px solid #222226', color: '#a1a1aa', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      <th style={{ padding: '0.85rem 1rem', fontWeight: 600 }}>Region</th>
+                      <th style={{ padding: '0.85rem 1rem', fontWeight: 600 }}>Schools</th>
+                      <th style={{ padding: '0.85rem 1rem', fontWeight: 600 }}>Learners</th>
+                      <th style={{ padding: '0.85rem 1rem', fontWeight: 600 }}>Staff</th>
+                      <th style={{ padding: '0.85rem 1rem', fontWeight: 600 }}>Student : Staff</th>
+                      <th style={{ padding: '0.85rem 1rem', fontWeight: 600 }}>Score Entry Completion</th>
+                      <th style={{ padding: '0.85rem 1rem', fontWeight: 600 }}>Avg Health</th>
                     </tr>
                   </thead>
                   <tbody>
                     {regionRows.map((r, i) => (
-                      <tr key={i} style={{ borderBottom: '1px solid #F4F4F5', color: '#18181b' }}>
-                        <td style={{ padding: '0.85rem 1rem', fontWeight: 800, color: '#09090b' }}>{r.region}</td>
-                        <td style={{ padding: '0.85rem 1rem', color: '#2563eb', fontWeight: 800 }}>{r.schools}</td>
-                        <td style={{ padding: '0.85rem 1rem', color: '#09090b', fontWeight: 800 }}>{r.learners.toLocaleString()}</td>
-                        <td style={{ padding: '0.85rem 1rem', color: '#71717a' }}>{r.staff}</td>
-                        <td style={{ padding: '0.85rem 1rem', fontFamily: 'monospace', color: '#09090b', fontWeight: 700 }}>
+                      <tr key={i} style={{ borderBottom: '1px solid #1f1f23', color: '#fafafa' }}>
+                        <td style={{ padding: '0.85rem 1rem', fontWeight: 600, color: '#fafafa' }}>{r.region}</td>
+                        <td style={{ padding: '0.85rem 1rem', color: '#38bdf8', fontWeight: 600 }}>{r.schools}</td>
+                        <td style={{ padding: '0.85rem 1rem', color: '#fafafa', fontWeight: 600 }}>{r.learners.toLocaleString()}</td>
+                        <td style={{ padding: '0.85rem 1rem', color: '#a1a1aa' }}>{r.staff}</td>
+                        <td style={{ padding: '0.85rem 1rem', fontFamily: 'monospace', color: '#a1a1aa' }}>
                           {r.studentTeacherRatio > 0 ? `${r.studentTeacherRatio} : 1` : '—'}
                         </td>
                         <td style={{ padding: '0.85rem 1rem', minWidth: '180px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <div style={{ flex: 1, height: '7px', background: '#F4F4F5', borderRadius: '4px', overflow: 'hidden' }}>
-                              <div style={{ height: '100%', width: `${r.scorePct}%`, background: r.scorePct >= 80 ? '#10B981' : r.scorePct >= 50 ? '#F59E0B' : '#EF4444', borderRadius: '4px' }} />
+                            <div style={{ flex: 1, height: '6px', background: '#27272a', borderRadius: '4px', overflow: 'hidden' }}>
+                              <div style={{ height: '100%', width: `${r.scorePct}%`, background: r.scorePct >= 80 ? '#34d399' : r.scorePct >= 50 ? '#fbbf24' : '#f87171', borderRadius: '4px' }} />
                             </div>
-                            <span style={{ color: r.scorePct >= 80 ? '#10B981' : r.scorePct >= 50 ? '#F59E0B' : '#EF4444', fontWeight: 800, fontSize: '0.82rem', minWidth: '36px' }}>{r.scorePct}%</span>
+                            <span style={{ color: r.scorePct >= 80 ? '#34d399' : r.scorePct >= 50 ? '#fbbf24' : '#f87171', fontWeight: 600, fontSize: '0.8rem', minWidth: '36px' }}>{r.scorePct}%</span>
                           </div>
                         </td>
                         <td style={{ padding: '0.85rem 1rem' }}>
-                          <span style={{ color: r.avgHealth >= 80 ? '#10B981' : r.avgHealth >= 60 ? '#F59E0B' : '#EF4444', fontWeight: 900, fontFamily: 'Outfit, sans-serif', fontSize: '1rem' }}>
+                          <span style={{ color: r.avgHealth >= 80 ? '#34d399' : r.avgHealth >= 60 ? '#fbbf24' : '#f87171', fontWeight: 700, fontFamily: 'Outfit, sans-serif', fontSize: '0.95rem' }}>
                             {r.avgHealth}%
                           </span>
                         </td>
@@ -371,10 +371,10 @@ const OperationsSchoolAnalytics = () => {
           </div>
 
           {/* School Performance Ranking & Detail Inspection */}
-          <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid #E4E4E7', padding: '1.5rem', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
+          <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.35rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
-                <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', color: '#09090b', fontSize: '1.1rem', fontWeight: 800 }}>
+                <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', color: '#fafafa', fontSize: '1.05rem', fontWeight: 600 }}>
                   School Performance Leaderboard &amp; Inspection
                 </h3>
                 <p style={{ color: '#71717a', fontSize: '0.8rem', margin: '0.2rem 0 0' }}>
@@ -382,14 +382,14 @@ const OperationsSchoolAnalytics = () => {
                 </p>
               </div>
 
-              <div style={{ position: 'relative', width: '240px' }}>
-                <i className="fas fa-search" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#A1A1AA', fontSize: '0.8rem' }}></i>
+              <div style={{ position: 'relative', width: '220px' }}>
+                <i className="fas fa-search" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#71717a', fontSize: '0.8rem' }}></i>
                 <input
                   type="text"
-                  placeholder="Filter schools by name…"
+                  placeholder="Filter schools..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  style={{ width: '100%', padding: '0.5rem 0.85rem 0.5rem 2rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#09090b', fontSize: '0.82rem', boxSizing: 'border-box', outline: 'none' }}
+                  style={{ width: '100%', padding: '0.45rem 0.85rem 0.45rem 2rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.82rem', boxSizing: 'border-box', outline: 'none' }}
                 />
               </div>
             </div>
@@ -399,37 +399,37 @@ const OperationsSchoolAnalytics = () => {
                 No schools match your active region or search filter.
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {filteredSchools.map((s, idx) => (
                   <div
                     key={s.id}
                     onClick={() => navigate(`/platform/operations/schools/${s.id}`)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.9rem 1.1rem', borderRadius: '12px', background: '#FFFFFF', border: '1px solid #E4E4E7', cursor: 'pointer', transition: 'all 0.15s ease' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = '#FAFAFA'; e.currentTarget.style.borderColor = '#2563eb'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = '#FFFFFF'; e.currentTarget.style.borderColor = '#E4E4E7'; }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem 1rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', cursor: 'pointer', transition: 'border-color 0.15s ease' }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#38bdf8'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#27272a'; }}
                   >
-                    <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: '#EFF6FF', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.78rem', flexShrink: 0 }}>
+                    <div style={{ width: '26px', height: '26px', borderRadius: '6px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.75rem', flexShrink: 0 }}>
                       #{idx + 1}
                     </div>
 
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 800, color: '#09090b', fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.name}</div>
-                      <div style={{ fontSize: '0.75rem', color: '#71717a', marginTop: '2px' }}>
+                      <div style={{ fontWeight: 600, color: '#fafafa', fontSize: '0.88rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.name}</div>
+                      <div style={{ fontSize: '0.74rem', color: '#71717a', marginTop: '1px' }}>
                         {s.region || 'Ghana'} • {s.learners_count} learners • {s.staff_count} staff
                       </div>
                     </div>
 
-                    <div style={{ width: '180px', flexShrink: 0 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#71717a', marginBottom: '4px', fontWeight: 600 }}>
-                        <span>Health Progress</span>
-                        <span style={{ fontWeight: 800 }}>{s.health?.healthStatus}</span>
+                    <div style={{ width: '160px', flexShrink: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#71717a', marginBottom: '4px', fontWeight: 500 }}>
+                        <span>Progress</span>
+                        <span style={{ fontWeight: 600 }}>{s.health?.healthStatus}</span>
                       </div>
-                      <div style={{ height: '7px', background: '#F4F4F5', borderRadius: '4px', overflow: 'hidden' }}>
-                        <div style={{ height: '100%', width: `${s.health?.totalScore || 0}%`, background: s.health?.healthStatus === 'Healthy' ? '#10B981' : s.health?.healthStatus === 'Warning' ? '#F59E0B' : '#EF4444', borderRadius: '4px' }} />
+                      <div style={{ height: '6px', background: '#27272a', borderRadius: '4px', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${s.health?.totalScore || 0}%`, background: s.health?.healthStatus === 'Healthy' ? '#34d399' : s.health?.healthStatus === 'Warning' ? '#fbbf24' : '#f87171', borderRadius: '4px' }} />
                       </div>
                     </div>
 
-                    <div style={{ minWidth: '54px', textAlign: 'right', fontFamily: 'Outfit, sans-serif', fontWeight: 900, color: s.health?.healthStatus === 'Healthy' ? '#10B981' : s.health?.healthStatus === 'Warning' ? '#F59E0B' : '#EF4444', fontSize: '1.1rem' }}>
+                    <div style={{ minWidth: '48px', textAlign: 'right', fontFamily: 'Outfit, sans-serif', fontWeight: 700, color: s.health?.healthStatus === 'Healthy' ? '#34d399' : s.health?.healthStatus === 'Warning' ? '#fbbf24' : '#f87171', fontSize: '1rem' }}>
                       {s.health?.totalScore || 0}%
                     </div>
                   </div>

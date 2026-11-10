@@ -82,23 +82,23 @@ const SandboxEnvironment = () => {
       </div>
 
       {/* Generator Card */}
-      <div style={{ background: '#0f172a', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', padding: '1.75rem' }}>
-        <h3 style={{ fontFamily: 'Outfit, sans-serif', margin: '0 0 1.25rem', color: 'white' }}>Mock School Data Generator</h3>
+      <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.5rem' }}>
+        <h3 style={{ fontFamily: 'Outfit, sans-serif', margin: '0 0 1.25rem', color: '#fafafa', fontSize: '1.1rem', fontWeight: 700 }}>Mock School Data Generator</h3>
         <form onSubmit={handleGenerateSandbox} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end', flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: '260px' }}>
-            <label style={{ display: 'block', fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.4rem' }}>Sandbox School Name</label>
+            <label style={{ display: 'block', fontSize: '0.8rem', color: '#a1a1aa', marginBottom: '0.4rem', fontWeight: 600 }}>Sandbox School Name</label>
             <input
               type="text"
               required
               value={schoolName}
               onChange={e => setSchoolName(e.target.value)}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', color: 'white', fontSize: '0.9rem' }}
+              style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.88rem' }}
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            style={{ padding: '0.75rem 1.5rem', borderRadius: '10px', background: '#f59e0b', border: 'none', color: '#0f172a', fontWeight: 800, fontSize: '0.9rem', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+            style={{ padding: '0.65rem 1.25rem', borderRadius: '8px', background: '#2563eb', border: 'none', color: '#ffffff', fontWeight: 600, fontSize: '0.85rem', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
           >
             <i className={`fas ${loading ? 'fa-spinner fa-spin' : 'fa-wand-magic-sparkles'}`}></i>
             Generate Mock Data
@@ -107,27 +107,27 @@ const SandboxEnvironment = () => {
             type="button"
             onClick={handleClearSandbox}
             disabled={loading || existingRecords.length === 0}
-            style={{ padding: '0.75rem 1.25rem', borderRadius: '10px', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5', fontWeight: 700, fontSize: '0.9rem', cursor: (loading || existingRecords.length === 0) ? 'not-allowed' : 'pointer', opacity: existingRecords.length === 0 ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: '8px' }}
+            style={{ padding: '0.65rem 1.25rem', borderRadius: '8px', background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171', fontWeight: 600, fontSize: '0.85rem', cursor: (loading || existingRecords.length === 0) ? 'not-allowed' : 'pointer', opacity: existingRecords.length === 0 ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: '8px' }}
           >
             <i className="fas fa-trash-can"></i>
-            Purge All ({existingRecords.length} records)
+            Purge All ({existingRecords.length})
           </button>
         </form>
 
         {statusMsg && (
-          <div style={{ marginTop: '1rem', padding: '0.85rem 1rem', borderRadius: '8px', background: statusType === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)', border: `1px solid ${statusType === 'success' ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`, color: statusType === 'success' ? '#34d399' : '#fca5a5', fontSize: '0.85rem', fontWeight: 600 }}>
+          <div style={{ marginTop: '1rem', padding: '0.85rem 1rem', borderRadius: '8px', background: statusType === 'success' ? 'rgba(52,211,153,0.1)' : 'rgba(239,68,68,0.1)', border: `1px solid ${statusType === 'success' ? 'rgba(52,211,153,0.25)' : 'rgba(239,68,68,0.25)'}`, color: statusType === 'success' ? '#34d399' : '#f87171', fontSize: '0.85rem', fontWeight: 500 }}>
             {statusMsg}
           </div>
         )}
       </div>
 
       {/* Existing Sandbox Records */}
-      <div style={{ background: '#0f172a', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', padding: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-          <h3 style={{ fontFamily: 'Outfit, sans-serif', margin: 0, color: 'white', fontSize: '1.05rem' }}>
+      <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <h3 style={{ fontFamily: 'Outfit, sans-serif', margin: 0, color: '#fafafa', fontSize: '1.05rem', fontWeight: 700 }}>
             Sandbox Data Store
           </h3>
-          <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+          <span style={{ fontSize: '0.75rem', color: '#71717a' }}>
             {existingRecords.length} record{existingRecords.length !== 1 ? 's' : ''} in database
           </span>
         </div>
@@ -137,24 +137,24 @@ const SandboxEnvironment = () => {
             <LogoPreloader fullScreen={false} size="sm" />
           </div>
         ) : existingRecords.length === 0 ? (
-          <div style={{ padding: '2.5rem', textAlign: 'center', color: '#64748b' }}>
-            <i className="fas fa-flask" style={{ fontSize: '2rem', marginBottom: '0.75rem', color: '#334155' }}></i>
-            <div style={{ color: '#cbd5e1', fontWeight: 700 }}>Sandbox Store is Empty</div>
-            <div style={{ fontSize: '0.82rem', marginTop: '0.5rem' }}>Use the generator above to create a mock school dataset for API testing.</div>
+          <div style={{ padding: '2.5rem', textAlign: 'center', color: '#71717a' }}>
+            <i className="fas fa-flask" style={{ fontSize: '2rem', marginBottom: '0.75rem', color: '#3f3f46' }}></i>
+            <div style={{ color: '#fafafa', fontWeight: 600 }}>Sandbox Store is Empty</div>
+            <div style={{ fontSize: '0.82rem', marginTop: '0.5rem', color: '#a1a1aa' }}>Use the generator above to create a mock school dataset for API testing.</div>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
             {existingRecords.map(rec => (
-              <div key={rec.id} style={{ background: '#1e293b', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div key={rec.id} style={{ background: '#18181c', padding: '1rem', borderRadius: '8px', border: '1px solid #222226' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                  <span style={{ padding: '0.2rem 0.55rem', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', background: 'rgba(245,158,11,0.15)', color: '#fbbf24', border: '1px solid rgba(245,158,11,0.3)' }}>
+                  <span style={{ padding: '0.2rem 0.55rem', borderRadius: '4px', fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', background: 'rgba(245,158,11,0.12)', color: '#fbbf24', border: '1px solid rgba(245,158,11,0.25)' }}>
                     {rec.entity_type}
                   </span>
-                  <span style={{ fontSize: '0.68rem', color: '#64748b' }}>
+                  <span style={{ fontSize: '0.68rem', color: '#71717a' }}>
                     {new Date(rec.created_at).toLocaleDateString('en-GH', { dateStyle: 'short' })}
                   </span>
                 </div>
-                <pre style={{ background: '#090d16', padding: '0.75rem', borderRadius: '8px', color: '#38bdf8', fontFamily: 'monospace', fontSize: '0.72rem', margin: 0, overflowX: 'auto', maxHeight: '140px', overflow: 'auto' }}>
+                <pre style={{ background: '#0d0d10', border: '1px solid #222226', padding: '0.75rem', borderRadius: '6px', color: '#38bdf8', fontFamily: 'monospace', fontSize: '0.72rem', margin: 0, overflowX: 'auto', maxHeight: '140px', overflow: 'auto' }}>
                   {JSON.stringify(rec.data, null, 2)}
                 </pre>
               </div>
@@ -165,20 +165,20 @@ const SandboxEnvironment = () => {
 
       {/* Newly Generated Preview */}
       {sandboxData && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-          <div style={{ background: '#0f172a', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', padding: '1.5rem' }}>
-            <h3 style={{ margin: '0 0 1rem', fontFamily: 'Outfit, sans-serif', color: '#f59e0b', fontSize: '1.05rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+          <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.25rem' }}>
+            <h3 style={{ margin: '0 0 1rem', fontFamily: 'Outfit, sans-serif', color: '#fafafa', fontSize: '0.98rem', fontWeight: 700 }}>
               Generated Learners Roster
             </h3>
-            <pre style={{ background: '#090d16', padding: '1rem', borderRadius: '10px', color: '#38bdf8', fontFamily: 'monospace', fontSize: '0.82rem', margin: 0, overflowX: 'auto' }}>
+            <pre style={{ background: '#0d0d10', border: '1px solid #222226', padding: '1rem', borderRadius: '8px', color: '#38bdf8', fontFamily: 'monospace', fontSize: '0.8rem', margin: 0, overflowX: 'auto' }}>
               {JSON.stringify(sandboxData.mockLearners, null, 2)}
             </pre>
           </div>
-          <div style={{ background: '#0f172a', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', padding: '1.5rem' }}>
-            <h3 style={{ margin: '0 0 1rem', fontFamily: 'Outfit, sans-serif', color: '#f59e0b', fontSize: '1.05rem' }}>
+          <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.25rem' }}>
+            <h3 style={{ margin: '0 0 1rem', fontFamily: 'Outfit, sans-serif', color: '#fafafa', fontSize: '0.98rem', fontWeight: 700 }}>
               Generated Assessment Scores
             </h3>
-            <pre style={{ background: '#090d16', padding: '1rem', borderRadius: '10px', color: '#a78bfa', fontFamily: 'monospace', fontSize: '0.82rem', margin: 0, overflowX: 'auto' }}>
+            <pre style={{ background: '#0d0d10', border: '1px solid #222226', padding: '1rem', borderRadius: '8px', color: '#a78bfa', fontFamily: 'monospace', fontSize: '0.8rem', margin: 0, overflowX: 'auto' }}>
               {JSON.stringify(sandboxData.mockScores, null, 2)}
             </pre>
           </div>

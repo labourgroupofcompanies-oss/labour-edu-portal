@@ -1,184 +1,321 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getOperationsAnalyticsMetrics, getSchoolsDirectory } from '../../services/operationsService';
+import {
+  getPlatformTelemetry,
+  getSchoolsDirectory,
+  seedDemoSchoolTelemetry
+} from '../../services/operationsService';
 import LogoPreloader from '../../components/common/LogoPreloader';
+import { usePlatformNotifications } from '../../context/PlatformNotificationContext';
 
 const OperationsDashboard = () => {
   const navigate = useNavigate();
-  const [metrics, setMetrics] = useState(null);
-  const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [metrics, setMetrics] = useState(null);
+  const [schools, setSchools] = useState([]);
+  const { notifications, unreadCount } = usePlatformNotifications();
 
-  const loadData = useCallback(async (force = false) => {
+  const loadData = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setLoading(true);
+
     try {
-      const [m, list] = await Promise.all([
-        getOperationsAnalyticsMetrics(),
-        getSchoolsDirectory(force)
+      const [telemetry, directory] = await Promise.all([
+        getPlatformTelemetry(),
+        getSchoolsDirectory()
       ]);
-      setMetrics(m);
-      setSchools(list);
+      setMetrics(telemetry);
+      setSchools(directory || []);
     } catch (err) {
-      console.warn('[OperationsDashboard] Error loading data:', err);
+      console.error('[OperationsDashboard] Load error:', err);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   }, []);
 
-  useEffect(() => { loadData(); }, [loadData]);
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleRefresh = () => {
-    setRefreshing(true);
     loadData(true);
+  };
+
+  const handleSeedDemoSchool = async () => {
+    if (!window.confirm('Load a demonstration school into the local database? This creates "Achimota Basic School" with simulated health factors.')) {
+      return;
+    }
+    try {
+      await seedDemoSchoolTelemetry();
+      await loadData(true);
+    } catch (e) {
+      console.error('[OperationsDashboard] Error seeding demo school:', e);
+    }
   };
 
   const getHealthBadge = (healthStatus, score) => {
     switch (healthStatus) {
-      case 'Healthy':  return { bg: '#ECFDF5', color: '#10B981', border: '#D1FAE5', label: `Healthy (${score}%)` };
-      case 'Warning':  return { bg: '#FFFBEB', color: '#F59E0B', border: '#FEF3C7', label: `Warning (${score}%)` };
+      case 'Healthy':
+        return { bg: 'rgba(16, 185, 129, 0.1)', color: '#34d399', border: 'rgba(16, 185, 129, 0.25)', label: `Healthy (${score}%)` };
+      case 'Warning':
+        return { bg: 'rgba(245, 158, 11, 0.1)', color: '#fbbf24', border: 'rgba(245, 158, 11, 0.25)', label: `Warning (${score}%)` };
       case 'Critical': default:
-        return { bg: '#FEF2F2', color: '#EF4444', border: '#FEE2E2', label: `Critical (${score}%)` };
+        return { bg: 'rgba(239, 68, 68, 0.1)', color: '#f87171', border: 'rgba(239, 68, 68, 0.25)', label: `Critical (${score}%)` };
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', color: '#18181b' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', color: '#fafafa' }}>
 
-      {/* Hero Banner */}
+      {/* Header Bar */}
       <div style={{
-        padding: '2rem 2.25rem',
-        borderRadius: '20px',
-        background: '#09090b',
-        border: '1px solid #27272a',
-        boxShadow: '0 8px 30px rgba(9, 9, 11, 0.15)',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        flexWrap: 'wrap', gap: '1.25rem', color: '#FFFFFF'
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '1rem',
+        paddingBottom: '1.25rem',
+        borderBottom: '1px solid #1f1f23'
       }}>
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(37, 99, 235, 0.2)', border: '1px solid rgba(37, 99, 235, 0.4)', padding: '0.25rem 0.75rem', borderRadius: '999px', color: '#60a5fa', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.6rem' }}>
-            <i className="fas fa-tower-observation"></i> Live Command Hub
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.25rem' }}>
+            <h1 style={{ fontSize: '1.45rem', fontWeight: 700, margin: 0, color: '#fafafa', letterSpacing: '-0.02em' }}>
+              Operations Overview
+            </h1>
+            <span style={{ fontSize: '0.65rem', fontWeight: 700, background: 'rgba(16, 185, 129, 0.12)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.25)', padding: '0.15rem 0.5rem', borderRadius: '999px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Live Telemetry
+            </span>
           </div>
-          <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.85rem', fontWeight: 900, margin: 0, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
-            Platform Operations Center
-          </h1>
-          <p style={{ margin: '0.4rem 0 0', color: '#A1A1AA', fontSize: '0.9rem', maxWidth: '650px', lineHeight: 1.5 }}>
-            Real-time school health scoring, automated sync telemetry, remote interventions, and support administration across all registered schools.
+          <p style={{ margin: 0, color: '#a1a1aa', fontSize: '0.85rem' }}>
+            Multi-school continuous assessment tracking, sync telemetry, and remote tenant health.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button
             onClick={() => navigate('/platform/operations/runbook')}
-            style={{ padding: '0.65rem 1.2rem', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.4)', color: '#60a5fa', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s ease' }}
+            style={{
+              padding: '0.45rem 0.85rem',
+              borderRadius: '8px',
+              background: '#141418',
+              border: '1px solid #27272a',
+              color: '#d4d4d8',
+              fontWeight: 600,
+              fontSize: '0.8rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
           >
-            <i className="fas fa-book-bookmark" style={{ color: '#60a5fa' }}></i>
-            Runbook & Docs
+            <i className="fas fa-book-bookmark" style={{ color: '#3b82f6', fontSize: '0.75rem' }}></i>
+            <span>Runbook</span>
           </button>
+
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            style={{ padding: '0.65rem 1.2rem', borderRadius: '10px', background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#FFFFFF', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s ease' }}
+            style={{
+              padding: '0.45rem 0.85rem',
+              borderRadius: '8px',
+              background: '#141418',
+              border: '1px solid #27272a',
+              color: '#d4d4d8',
+              fontWeight: 600,
+              fontSize: '0.8rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
           >
-            <i className={`fas fa-sync-alt ${refreshing ? 'fa-spin' : ''}`} style={{ color: '#2563eb' }}></i>
-            {refreshing ? 'Refreshing…' : 'Refresh Telemetry'}
+            <i className={`fas fa-rotate ${refreshing ? 'fa-spin' : ''}`} style={{ fontSize: '0.75rem', color: '#a1a1aa' }}></i>
+            <span>{refreshing ? 'Updating…' : 'Refresh'}</span>
           </button>
+
           <button
             onClick={() => navigate('/platform/operations/schools')}
-            style={{ padding: '0.65rem 1.3rem', borderRadius: '10px', background: '#2563eb', color: '#FFFFFF', border: 'none', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)', transition: 'all 0.2s ease' }}
+            style={{
+              padding: '0.45rem 0.95rem',
+              borderRadius: '8px',
+              background: '#2563eb',
+              color: '#ffffff',
+              border: '1px solid #1d4ed8',
+              fontWeight: 600,
+              fontSize: '0.8rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
           >
-            <i className="fas fa-school"></i>
-            View All Schools
+            <i className="fas fa-school" style={{ fontSize: '0.75rem' }}></i>
+            <span>Schools Directory</span>
           </button>
         </div>
       </div>
 
       {loading ? (
-        <div style={{ padding: '2rem 1rem', background: '#FFFFFF', borderRadius: '20px', border: '1px solid #E4E4E7' }}>
+        <div style={{ padding: '3rem 1rem', background: '#121215', borderRadius: '12px', border: '1px solid #222226' }}>
           <LogoPreloader fullScreen={false} size="md" />
         </div>
       ) : (
         <>
           {/* Summary Metric Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.85rem' }}>
             {[
-              { label: 'REGISTERED SCHOOLS', value: metrics?.totalSchools ?? 0, sub: `${(metrics?.totalLearners ?? 0).toLocaleString()} learners`, color: '#09090b', accent: '#2563eb' },
-              { label: 'TOTAL LEARNERS', value: (metrics?.totalLearners ?? 0).toLocaleString(), sub: `${metrics?.totalStaff ?? 0} teaching staff`, color: '#09090b', accent: '#0284c7' },
-              { label: 'HEALTHY SCHOOLS (≥80%)', value: metrics?.healthyCount ?? 0, sub: 'Optimal sync & entry', color: '#10B981', accent: '#10B981' },
-              { label: 'WARNING STATUS (60–79%)', value: metrics?.warningCount ?? 0, sub: 'Needs attention', color: '#F59E0B', accent: '#F59E0B' },
-              { label: 'CRITICAL SCHOOLS (<60%)', value: metrics?.criticalCount ?? 0, sub: 'Intervention required', color: '#EF4444', accent: '#EF4444' },
-              { label: 'ACTIVE SUBSCRIPTIONS', value: metrics?.activeSubscriptions ?? 0, sub: `${metrics?.trialSubscriptions ?? 0} on trial`, color: '#7c3aed', accent: '#7c3aed' },
-              { label: 'AVG PLATFORM HEALTH', value: `${metrics?.avgHealthScore ?? 0}%`, sub: 'Across all schools', color: '#2563eb', accent: '#2563eb' },
-              { label: 'OPEN SUPPORT TICKETS', value: metrics?.openTickets ?? 0, sub: 'Requiring response', color: metrics?.openTickets > 0 ? '#F59E0B' : '#10B981', accent: metrics?.openTickets > 0 ? '#F59E0B' : '#10B981' },
+              { label: 'Registered Schools', value: metrics?.totalSchools ?? 0, sub: `${(metrics?.totalLearners ?? 0).toLocaleString()} learners`, icon: 'fa-school', to: '/platform/operations/schools' },
+              { label: 'Total Learners', value: (metrics?.totalLearners ?? 0).toLocaleString(), sub: `${metrics?.totalStaff ?? 0} teaching staff`, icon: 'fa-user-group', to: '/platform/operations/analytics' },
+              { label: 'Healthy Schools (≥80%)', value: metrics?.healthyCount ?? 0, sub: 'Optimal sync status', icon: 'fa-circle-check', color: '#34d399', to: '/platform/operations/schools' },
+              { label: 'Warning Status (60–79%)', value: metrics?.warningCount ?? 0, sub: 'Review needed', icon: 'fa-triangle-exclamation', color: '#fbbf24', to: '/platform/operations/schools' },
+              { label: 'Critical Schools (<60%)', value: metrics?.criticalCount ?? 0, sub: 'Intervention required', icon: 'fa-circle-exclamation', color: '#f87171', to: '/platform/operations/schools' },
+              { label: 'Active Subscriptions', value: metrics?.activeSubscriptions ?? 0, sub: `${metrics?.trialSubscriptions ?? 0} on trial`, icon: 'fa-receipt', to: '/platform/operations/subscriptions' },
+              { label: 'Average Health', value: `${metrics?.avgHealthScore ?? 0}%`, sub: 'Across active directory', icon: 'fa-chart-line', to: '/platform/operations/analytics' },
+              { label: 'Support Tickets', value: metrics?.openTickets ?? 0, sub: metrics?.openTickets > 0 ? 'Pending response' : 'Inbox clear', icon: 'fa-headset', color: metrics?.openTickets > 0 ? '#fbbf24' : '#34d399', to: '/platform/operations/support' },
             ].map((card, i) => (
-              <div key={i} style={{ padding: '1.25rem', borderRadius: '16px', background: '#FFFFFF', border: '1px solid #E4E4E7', borderLeft: `4px solid ${card.accent}`, boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)' }}>
-                <div style={{ fontSize: '0.68rem', color: '#71717a', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{card.label}</div>
-                <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.75rem', fontWeight: 800, color: card.color, marginTop: '5px' }}>{card.value}</div>
-                <div style={{ fontSize: '0.73rem', color: '#71717a', marginTop: '3px', fontWeight: 600 }}>{card.sub}</div>
+              <div
+                key={i}
+                onClick={() => card.to && navigate(card.to)}
+                style={{
+                  padding: '1rem 1.15rem',
+                  borderRadius: '10px',
+                  background: '#121215',
+                  border: '1px solid #222226',
+                  cursor: card.to ? 'pointer' : 'default',
+                  transition: 'border-color 0.15s ease, transform 0.15s ease'
+                }}
+                onMouseEnter={e => { if (card.to) { e.currentTarget.style.borderColor = '#38383f'; } }}
+                onMouseLeave={e => { if (card.to) { e.currentTarget.style.borderColor = '#222226'; } }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#a1a1aa', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{card.label}</span>
+                  <i className={`fas ${card.icon}`} style={{ fontSize: '0.75rem', color: card.color || '#71717a' }}></i>
+                </div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: card.color || '#fafafa', marginTop: '4px', letterSpacing: '-0.02em' }}>
+                  {card.value}
+                </div>
+                <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>{card.sub}</div>
               </div>
             ))}
           </div>
 
-          {/* Score Completion Progress Bar */}
-          {metrics && (
-            <div style={{ background: '#FFFFFF', borderRadius: '18px', border: '1px solid #E4E4E7', padding: '1.6rem', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                <div style={{ color: '#09090b', fontWeight: 800, fontSize: '0.98rem', fontFamily: 'Outfit, sans-serif', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <i className="fas fa-chart-line" style={{ color: '#2563eb' }}></i> Platform-Wide Score Entry Completion
-                </div>
-                <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.25rem', fontWeight: 900, color: '#10B981' }}>
-                  {metrics.overallScoreCompletionPct}%
-                </div>
+          {/* Hub Shortcuts */}
+          <div style={{
+            background: '#121215',
+            borderRadius: '10px',
+            border: '1px solid #222226',
+            padding: '0.95rem 1.25rem',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '0.85rem'
+          }}>
+            <div>
+              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fafafa' }}>
+                Platform Operations Modules
               </div>
-              <div style={{ background: '#F4F4F5', borderRadius: '999px', height: '10px', overflow: 'hidden' }}>
-                <div style={{
-                  height: '100%',
-                  width: `${metrics.overallScoreCompletionPct}%`,
-                  background: metrics.overallScoreCompletionPct >= 80 ? '#10B981' : metrics.overallScoreCompletionPct >= 60 ? '#F59E0B' : '#EF4444',
-                  borderRadius: '999px',
-                  transition: 'width 0.8s ease'
-                }} />
-              </div>
-              <div style={{ fontSize: '0.76rem', color: '#71717a', marginTop: '0.6rem', fontWeight: 600 }}>
-                {metrics.totalReportsGenerated} report summaries generated across {metrics.totalSchools} schools
+              <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '1px' }}>
+                Quick jumps into administrative controls and registries
               </div>
             </div>
-          )}
 
-          {/* Live School Health Table */}
-          <div style={{ background: '#FFFFFF', borderRadius: '18px', border: '1px solid #E4E4E7', padding: '1.6rem', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-              <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', fontSize: '1.15rem', color: '#09090b', fontWeight: 800 }}>
-                Live School Health &amp; Status Monitor
-              </h3>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+              <button
+                onClick={() => navigate('/platform/operations/referrals')}
+                style={{ padding: '0.4rem 0.75rem', borderRadius: '7px', background: '#18181c', border: '1px solid #27272a', color: '#d4d4d8', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <i className="fa-solid fa-gift" style={{ color: '#f59e0b', fontSize: '0.75rem' }}></i>
+                <span>Referrers</span>
+              </button>
+              <button
+                onClick={() => navigate('/platform/operations/broadcasts')}
+                style={{ padding: '0.4rem 0.75rem', borderRadius: '7px', background: '#18181c', border: '1px solid #27272a', color: '#d4d4d8', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <i className="fa-solid fa-bullhorn" style={{ color: '#f97316', fontSize: '0.75rem' }}></i>
+                <span>Broadcasts</span>
+              </button>
+              <button
+                onClick={() => navigate('/platform/operations/ges-radar')}
+                style={{ padding: '0.4rem 0.75rem', borderRadius: '7px', background: '#18181c', border: '1px solid #27272a', color: '#d4d4d8', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <i className="fa-solid fa-satellite-dish" style={{ color: '#06b6d4', fontSize: '0.75rem' }}></i>
+                <span>GES Radar</span>
+              </button>
+              <button
+                onClick={() => navigate('/platform/operations/interventions')}
+                style={{ padding: '0.4rem 0.75rem', borderRadius: '7px', background: '#18181c', border: '1px solid #27272a', color: '#d4d4d8', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <i className="fa-solid fa-user-shield" style={{ color: '#818cf8', fontSize: '0.75rem' }}></i>
+                <span>Interventions</span>
+              </button>
+              <button
+                onClick={() => navigate('/platform/operations/calendar')}
+                style={{ padding: '0.4rem 0.75rem', borderRadius: '7px', background: '#18181c', border: '1px solid #27272a', color: '#d4d4d8', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <i className="fa-solid fa-calendar-alt" style={{ color: '#f472b6', fontSize: '0.75rem' }}></i>
+                <span>Calendar</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Schools Table Card */}
+          <div style={{ background: '#121215', borderRadius: '10px', border: '1px solid #222226', overflow: 'hidden' }}>
+            <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #1f1f23', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '0.92rem', fontWeight: 700, color: '#fafafa' }}>
+                  School Health Telemetry Monitor
+                </h3>
+                <div style={{ fontSize: '0.75rem', color: '#71717a', marginTop: '2px' }}>
+                  Live scores entry rates and operational status by school
+                </div>
+              </div>
               <button
                 onClick={() => navigate('/platform/operations/schools')}
-                style={{ background: 'transparent', border: 'none', color: '#2563eb', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer' }}
+                style={{ background: 'transparent', border: 'none', color: '#3b82f6', fontWeight: 600, fontSize: '0.78rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
-                Full Directory →
+                <span>Directory</span>
+                <i className="fas fa-arrow-right" style={{ fontSize: '0.65rem' }}></i>
               </button>
             </div>
 
             {schools.length === 0 ? (
-              <div style={{ padding: '3.5rem', textAlign: 'center', color: '#71717a' }}>
-                <i className="fas fa-school" style={{ fontSize: '2.5rem', marginBottom: '0.75rem', color: '#A1A1AA', display: 'block' }}></i>
-                <div style={{ color: '#09090b', fontWeight: 800, marginBottom: '0.5rem' }}>No Schools Registered Yet</div>
-                <div style={{ fontSize: '0.82rem' }}>
-                  Schools register themselves via the Onboarding page. Once registered, they appear here.
+              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#71717a' }}>
+                <i className="fas fa-school" style={{ fontSize: '2rem', marginBottom: '0.75rem', color: '#3f3f46', display: 'block' }}></i>
+                <div style={{ color: '#d4d4d8', fontWeight: 600, marginBottom: '0.35rem', fontSize: '0.95rem' }}>No Schools in Database</div>
+                <div style={{ fontSize: '0.8rem', maxWidth: '380px', margin: '0 auto 1rem auto' }}>
+                  Schools register through the onboarding flow. You can load simulated school data to inspect the monitor.
+                </div>
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={() => navigate('/platform/operations/schools')}
+                    style={{ padding: '0.45rem 0.95rem', borderRadius: '7px', background: '#2563eb', color: '#fff', border: 'none', fontWeight: 600, fontSize: '0.78rem', cursor: 'pointer' }}
+                  >
+                    Schools Directory
+                  </button>
+                  <button
+                    onClick={handleSeedDemoSchool}
+                    style={{ padding: '0.45rem 0.95rem', borderRadius: '7px', background: '#18181c', color: '#d4d4d8', border: '1px solid #27272a', fontWeight: 600, fontSize: '0.78rem', cursor: 'pointer' }}
+                  >
+                    Load Demo Data
+                  </button>
                 </div>
               </div>
             ) : (
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.84rem' }}>
+              <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                <table style={{ width: '100%', minWidth: '780px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.82rem' }}>
                   <thead>
-                    <tr style={{ background: '#FAFAFA', borderBottom: '1px solid #E4E4E7', color: '#71717a', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>School Name</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Region</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Health Score</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Learners</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Scores Submitted</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Subscription</th>
-                      <th style={{ padding: '0.85rem 1rem', fontWeight: 800 }}>Reports</th>
-                      <th style={{ padding: '0.85rem 1rem', textAlign: 'right', fontWeight: 800 }}>Action</th>
+                    <tr style={{ background: '#0e0e11', borderBottom: '1px solid #1f1f23', color: '#71717a', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      <th style={{ padding: '0.75rem 1rem', fontWeight: 600 }}>School</th>
+                      <th style={{ padding: '0.75rem 1rem', fontWeight: 600 }}>Region</th>
+                      <th style={{ padding: '0.75rem 1rem', fontWeight: 600 }}>Health Score</th>
+                      <th style={{ padding: '0.75rem 1rem', fontWeight: 600 }}>Learners</th>
+                      <th style={{ padding: '0.75rem 1rem', fontWeight: 600 }}>Score Entry</th>
+                      <th style={{ padding: '0.75rem 1rem', fontWeight: 600 }}>Billing</th>
+                      <th style={{ padding: '0.75rem 1rem', fontWeight: 600 }}>Reports</th>
+                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600 }}>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -188,47 +325,47 @@ const OperationsDashboard = () => {
                         ? Math.round((s.submitted_scores_count / s.total_scores_count) * 100)
                         : 0;
                       return (
-                        <tr key={s.id} style={{ borderBottom: '1px solid #F4F4F5', color: '#18181b' }}>
+                        <tr key={s.id} style={{ borderBottom: '1px solid #18181b', color: '#e4e4e7' }}>
                           <td style={{ padding: '0.85rem 1rem' }}>
-                            <div style={{ fontWeight: 800, color: '#09090b', fontSize: '0.9rem' }}>{s.name}</div>
+                            <div style={{ fontWeight: 600, color: '#fafafa', fontSize: '0.86rem' }}>{s.name}</div>
                             <div style={{ fontSize: '0.72rem', color: '#71717a' }}>HT: {s.headteacher}</div>
                           </td>
-                          <td style={{ padding: '0.85rem 1rem', color: '#18181b' }}>
+                          <td style={{ padding: '0.85rem 1rem', color: '#d4d4d8' }}>
                             <div>{s.region}</div>
-                            <div style={{ fontSize: '0.72rem', color: '#71717a' }}>{s.circuit}</div>
+                            <div style={{ fontSize: '0.7rem', color: '#71717a' }}>{s.circuit}</div>
                           </td>
                           <td style={{ padding: '0.85rem 1rem' }}>
-                            <span style={{ padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 800, background: badge.bg, color: badge.color, border: `1px solid ${badge.border}` }}>
-                              ● {badge.label}
+                            <span style={{ padding: '0.2rem 0.55rem', borderRadius: '5px', fontSize: '0.72rem', fontWeight: 600, background: badge.bg, color: badge.color, border: `1px solid ${badge.border}` }}>
+                              {badge.label}
                             </span>
                           </td>
-                          <td style={{ padding: '0.85rem 1rem', fontWeight: 700, color: '#2563eb' }}>
+                          <td style={{ padding: '0.85rem 1rem', fontWeight: 600, color: '#38bdf8' }}>
                             {s.learners_count}
                           </td>
                           <td style={{ padding: '0.85rem 1rem' }}>
-                            <div style={{ color: scorePct >= 80 ? '#10B981' : scorePct >= 50 ? '#F59E0B' : '#EF4444', fontWeight: 700 }}>
+                            <div style={{ color: scorePct >= 80 ? '#34d399' : scorePct >= 50 ? '#fbbf24' : '#f87171', fontWeight: 600 }}>
                               {s.submitted_scores_count} / {s.total_scores_count} ({scorePct}%)
                             </div>
                           </td>
                           <td style={{ padding: '0.85rem 1rem' }}>
-                            <span style={{ color: s.subscription_status === 'Active' ? '#10B981' : s.subscription_status === 'Trial' ? '#F59E0B' : '#EF4444', fontWeight: 700 }}>
+                            <span style={{ color: s.subscription_status === 'Active' ? '#34d399' : s.subscription_status === 'Trial' ? '#fbbf24' : '#f87171', fontWeight: 500 }}>
                               {s.subscription_status} ({s.subscription_tier})
                             </span>
                           </td>
                           <td style={{ padding: '0.85rem 1rem' }}>
-                            <div style={{ color: s.reports_released ? '#10B981' : '#71717a', fontWeight: 600 }}>
-                              {s.reports_released ? '✓ Released' : '⊘ Locked'}
+                            <div style={{ color: s.reports_released ? '#34d399' : '#71717a', fontWeight: 500 }}>
+                              {s.reports_released ? 'Released' : 'Locked'}
                             </div>
                             <div style={{ fontSize: '0.7rem', color: '#71717a' }}>
-                              {s.reports_count} summaries
+                              {s.reports_count} cards
                             </div>
                           </td>
                           <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}>
                             <button
                               onClick={() => navigate(`/platform/operations/schools/${s.id}`)}
-                              style={{ padding: '0.45rem 0.85rem', borderRadius: '8px', background: '#09090b', border: 'none', color: '#FFFFFF', fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s' }}
+                              style={{ padding: '0.35rem 0.75rem', borderRadius: '6px', background: '#1c1c22', border: '1px solid #27272a', color: '#d4d4d8', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}
                             >
-                              Inspect &amp; Support →
+                              Inspect
                             </button>
                           </td>
                         </tr>
@@ -239,114 +376,70 @@ const OperationsDashboard = () => {
               </div>
             )}
           </div>
-          {/* Live Platform Activity & Notification Stream */}
+
+          {/* Activity Stream */}
           <div style={{
-            background: 'linear-gradient(135deg, #09090b 0%, #18181b 100%)',
-            borderRadius: '18px',
-            border: '1px solid #27272a',
-            padding: '1.6rem',
-            color: '#FFFFFF',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.2)'
+            background: '#121215',
+            borderRadius: '10px',
+            border: '1px solid #222226',
+            padding: '1.25rem'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.15rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.9rem' }}>
-                  <i className="fas fa-tower-broadcast"></i>
-                </div>
-                <div>
-                  <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', fontSize: '1.15rem', color: '#FFFFFF', fontWeight: 800 }}>
-                    Live Platform Alerts &amp; Activity Stream
-                  </h3>
-                  <div style={{ fontSize: '0.72rem', color: '#A1A1AA', marginTop: '2px' }}>
-                    Real-time notifications for school registrations, support tickets, billing events, and telemetry updates.
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <i className="fas fa-tower-broadcast" style={{ color: '#3b82f6', fontSize: '0.82rem' }}></i>
+                <h3 style={{ margin: 0, fontSize: '0.88rem', color: '#fafafa', fontWeight: 600 }}>
+                  Recent Operations Feed
+                </h3>
+              </div>
+              <span style={{ fontSize: '0.72rem', color: '#71717a' }}>
+                {notifications.length} alerts logged
+              </span>
+            </div>
+
+            {notifications.length === 0 ? (
+              <div style={{ padding: '1.5rem', textAlign: 'center', color: '#71717a', fontSize: '0.8rem' }}>
+                No active notifications in queue. System operations running normally.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {notifications.slice(0, 6).map((notif, index) => (
+                  <div
+                    key={notif.id || index}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0.65rem 0.85rem',
+                      borderRadius: '7px',
+                      background: notif.is_read ? '#0e0e11' : '#17171c',
+                      border: '1px solid #1f1f23',
+                      gap: '12px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                      <div style={{
+                        width: '7px',
+                        height: '7px',
+                        borderRadius: '50%',
+                        background: notif.severity === 'critical' ? '#ef4444' : notif.severity === 'warning' ? '#f59e0b' : '#3b82f6',
+                        flexShrink: 0
+                      }}></div>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#fafafa', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {notif.title}
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#71717a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {notif.body}
+                        </div>
+                      </div>
+                    </div>
+                    <span style={{ fontSize: '0.68rem', color: '#52525b', flexShrink: 0 }}>
+                      {new Date(notif.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
                   </div>
-                </div>
+                ))}
               </div>
-
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  onClick={() => navigate('/platform/operations/support')}
-                  style={{ background: '#27272a', border: '1px solid #3f3f46', color: '#E4E4E7', padding: '0.4rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}
-                >
-                  <i className="fas fa-headset" style={{ marginRight: '6px', color: '#F87171' }}></i>
-                  Support Hub
-                </button>
-                <button
-                  onClick={() => navigate('/platform/operations/subscriptions')}
-                  style={{ background: '#27272a', border: '1px solid #3f3f46', color: '#E4E4E7', padding: '0.4rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}
-                >
-                  <i className="fas fa-receipt" style={{ marginRight: '6px', color: '#34D399' }}></i>
-                  Billing Hub
-                </button>
-              </div>
-            </div>
-
-            {/* Quick Live Alerts Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.9rem' }}>
-              <div
-                onClick={() => navigate('/platform/operations/schools')}
-                style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '1rem', cursor: 'pointer', transition: 'all 0.2s ease' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#60A5FA', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    <i className="fas fa-school-flag" style={{ marginRight: '5px' }}></i> Schools Alert
-                  </span>
-                  <span style={{ fontSize: '0.68rem', color: '#10B981', background: 'rgba(16, 185, 129, 0.15)', padding: '0.1rem 0.45rem', borderRadius: '999px', fontWeight: 800 }}>LIVE</span>
-                </div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FAFAFA' }}>
-                  {metrics?.totalSchools ?? 0} Schools Connected
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#A1A1AA', marginTop: '3px' }}>
-                  Click to inspect new school onboarding &amp; credentials.
-                </div>
-              </div>
-
-              <div
-                onClick={() => navigate('/platform/operations/support')}
-                style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '1rem', cursor: 'pointer', transition: 'all 0.2s ease' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#F87171', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    <i className="fas fa-headset" style={{ marginRight: '5px' }}></i> Support Tickets
-                  </span>
-                  <span style={{ fontSize: '0.68rem', color: metrics?.openTickets > 0 ? '#F59E0B' : '#10B981', background: metrics?.openTickets > 0 ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.15)', padding: '0.1rem 0.45rem', borderRadius: '999px', fontWeight: 800 }}>
-                    {metrics?.openTickets ?? 0} OPEN
-                  </span>
-                </div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FAFAFA' }}>
-                  {metrics?.openTickets > 0 ? `${metrics.openTickets} tickets awaiting response` : 'No urgent support requests'}
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#A1A1AA', marginTop: '3px' }}>
-                  Click to open Support &amp; Remote Interventions Hub.
-                </div>
-              </div>
-
-              <div
-                onClick={() => navigate('/platform/operations/subscriptions')}
-                style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '1rem', cursor: 'pointer', transition: 'all 0.2s ease' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#34D399', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    <i className="fas fa-credit-card" style={{ marginRight: '5px' }}></i> Billing &amp; Subscriptions
-                  </span>
-                  <span style={{ fontSize: '0.68rem', color: '#34D399', background: 'rgba(52, 211, 153, 0.15)', padding: '0.1rem 0.45rem', borderRadius: '999px', fontWeight: 800 }}>
-                    {metrics?.activeSubscriptions ?? 0} ACTIVE
-                  </span>
-                </div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FAFAFA' }}>
-                  {metrics?.trialSubscriptions ?? 0} Onboarding Trials · MoMo Ready
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#A1A1AA', marginTop: '3px' }}>
-                  Click to review Paystack &amp; Mobile Money deposits.
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </>
       )}

@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS public.platform_referral_agents (
     full_name TEXT NOT NULL,
     phone TEXT NOT NULL UNIQUE,
     email TEXT,
+    password TEXT,
     referral_code TEXT NOT NULL UNIQUE,
     commission_rate NUMERIC(5, 2) NOT NULL DEFAULT 50.00,
     max_terms INTEGER NOT NULL DEFAULT 1,
@@ -22,6 +23,9 @@ CREATE TABLE IF NOT EXISTS public.platform_referral_agents (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Ensure password column exists if table was previously created
+ALTER TABLE public.platform_referral_agents ADD COLUMN IF NOT EXISTS password TEXT;
 
 -- 2. Create Agent Commissions Table (Strictly 1 Term per School)
 CREATE TABLE IF NOT EXISTS public.platform_agent_commissions (

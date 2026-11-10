@@ -19,11 +19,11 @@ const renderMarkdown = (text) => {
 
       elements.push(
         <div key={`${keyPrefix}-tbl`} style={{ overflowX: 'auto', margin: '0.85rem 0' }}>
-          <table style={{ width: '100%', fontSize: '0.82rem', borderCollapse: 'collapse', border: '1px solid #E4E4E7', background: '#ffffff', borderRadius: '10px', overflow: 'hidden' }}>
+          <table style={{ width: '100%', fontSize: '0.82rem', borderCollapse: 'collapse', border: '1px solid #222226', background: '#121215', borderRadius: '8px', overflow: 'hidden' }}>
             <thead>
-              <tr style={{ background: '#f4f4f5', borderBottom: '2px solid #E4E4E7' }}>
+              <tr style={{ background: '#18181c', borderBottom: '1px solid #222226' }}>
                 {isHeader.split('|').filter(c => c.trim()).map((col, idx) => (
-                  <th key={idx} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 800, color: '#18181b' }}>
+                  <th key={idx} style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: '#a1a1aa', fontSize: '0.75rem', textTransform: 'uppercase' }}>
                     {formatInline(col.trim())}
                   </th>
                 ))}
@@ -31,9 +31,9 @@ const renderMarkdown = (text) => {
             </thead>
             <tbody>
               {dataRows.map((row, rIdx) => (
-                <tr key={rIdx} style={{ borderBottom: '1px solid #f4f4f5', background: rIdx % 2 === 0 ? '#fff' : '#fafafa' }}>
+                <tr key={rIdx} style={{ borderBottom: '1px solid #1f1f23', background: '#121215' }}>
                   {row.split('|').filter(c => c.trim()).map((cell, cIdx) => (
-                    <td key={cIdx} style={{ padding: '8px 12px', color: '#27272a' }}>
+                    <td key={cIdx} style={{ padding: '8px 12px', color: '#fafafa' }}>
                       {formatInline(cell.trim())}
                     </td>
                   ))}
@@ -68,7 +68,7 @@ const renderMarkdown = (text) => {
         <Link
           key={idx++}
           to={url}
-          style={{ color: '#2563eb', fontWeight: 700, textDecoration: 'underline' }}
+          style={{ color: '#38bdf8', fontWeight: 600, textDecoration: 'underline' }}
         >
           {label}
         </Link>
@@ -87,7 +87,6 @@ const renderMarkdown = (text) => {
     if (!text) return text;
 
     // Tokenize bold (**text** or __text__), inline code (`code`), and italic (*text* or _text_)
-    // Regex matches: `code` OR **bold** OR *italic*
     const tokenRegex = /(`([^`]+)`|\*\*([^*]+)\*\*|\*([^*]+)\*|_([^_]+)_)/g;
     const segments = [];
     let last = 0;
@@ -95,7 +94,6 @@ const renderMarkdown = (text) => {
 
     while ((match = tokenRegex.exec(text)) !== null) {
       if (match.index > last) {
-        // Clean any stray formatting characters from plain text segment
         const plain = text.substring(last, match.index).replace(/[*#_`]/g, '');
         if (plain) segments.push(plain);
       }
@@ -104,12 +102,13 @@ const renderMarkdown = (text) => {
         // Inline code: `code`
         segments.push(
           <code key={`${key}-c-${match.index}`} style={{
-            background: '#f4f4f5',
-            color: '#09090b',
+            background: '#18181c',
+            border: '1px solid #27272a',
+            color: '#38bdf8',
             padding: '2px 6px',
             borderRadius: '4px',
             fontSize: '0.85em',
-            fontWeight: 600,
+            fontWeight: 500,
             fontFamily: 'monospace'
           }}>
             {match[2]}
@@ -118,7 +117,7 @@ const renderMarkdown = (text) => {
       } else if (match[3]) {
         // Bold: **bold**
         segments.push(
-          <strong key={`${key}-b-${match.index}`} style={{ fontWeight: 700, color: '#09090b' }}>
+          <strong key={`${key}-b-${match.index}`} style={{ fontWeight: 600, color: '#fafafa' }}>
             {match[3].replace(/[*#_`]/g, '')}
           </strong>
         );
@@ -126,7 +125,7 @@ const renderMarkdown = (text) => {
         // Italic: *italic* or _italic_
         const italicContent = (match[4] || match[5]).replace(/[*#_`]/g, '');
         segments.push(
-          <span key={`${key}-i-${match.index}`} style={{ fontStyle: 'italic', color: '#52525b' }}>
+          <span key={`${key}-i-${match.index}`} style={{ fontStyle: 'italic', color: '#a1a1aa' }}>
             {italicContent}
           </span>
         );
@@ -161,19 +160,19 @@ const renderMarkdown = (text) => {
 
       if (headingLevel <= 2) {
         elements.push(
-          <h2 key={index} style={{ margin: '1.1rem 0 0.5rem', fontSize: '1.15rem', fontWeight: 800, color: '#09090b', letterSpacing: '-0.01em' }}>
+          <h2 key={index} style={{ margin: '1rem 0 0.4rem', fontSize: '1.1rem', fontWeight: 700, color: '#fafafa', letterSpacing: '-0.01em' }}>
             {formatInline(headingText)}
           </h2>
         );
       } else if (headingLevel === 3) {
         elements.push(
-          <h3 key={index} style={{ margin: '0.95rem 0 0.45rem', fontSize: '1.05rem', fontWeight: 800, color: '#18181b' }}>
+          <h3 key={index} style={{ margin: '0.85rem 0 0.35rem', fontSize: '1rem', fontWeight: 600, color: '#fafafa' }}>
             {formatInline(headingText)}
           </h3>
         );
       } else {
         elements.push(
-          <h4 key={index} style={{ margin: '0.8rem 0 0.35rem', fontSize: '0.92rem', fontWeight: 800, color: '#27272a' }}>
+          <h4 key={index} style={{ margin: '0.75rem 0 0.3rem', fontSize: '0.9rem', fontWeight: 600, color: '#e4e4e7' }}>
             {formatInline(headingText)}
           </h4>
         );
@@ -185,8 +184,8 @@ const renderMarkdown = (text) => {
     if (/^[-•*]\s+/.test(trimmed)) {
       const listContent = trimmed.replace(/^[-•*]\s+/, '');
       elements.push(
-        <div key={index} style={{ display: 'flex', gap: '8px', margin: '4px 0', fontSize: '0.88rem', lineHeight: 1.6, color: '#27272a' }}>
-          <span style={{ color: '#2563eb', fontWeight: 'bold' }}>&bull;</span>
+        <div key={index} style={{ display: 'flex', gap: '8px', margin: '4px 0', fontSize: '0.86rem', lineHeight: 1.6, color: '#fafafa' }}>
+          <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>&bull;</span>
           <span style={{ flex: 1 }}>{formatInline(listContent)}</span>
         </div>
       );
@@ -198,8 +197,8 @@ const renderMarkdown = (text) => {
       const numberMatch = trimmed.match(/^(\d+)\.\s+/)[1];
       const listContent = trimmed.replace(/^\d+\.\s+/, '');
       elements.push(
-        <div key={index} style={{ display: 'flex', gap: '8px', margin: '4px 0', fontSize: '0.88rem', lineHeight: 1.6, color: '#27272a' }}>
-          <span style={{ color: '#2563eb', fontWeight: 700, minWidth: '18px' }}>{numberMatch}.</span>
+        <div key={index} style={{ display: 'flex', gap: '8px', margin: '4px 0', fontSize: '0.86rem', lineHeight: 1.6, color: '#fafafa' }}>
+          <span style={{ color: '#38bdf8', fontWeight: 600, minWidth: '18px' }}>{numberMatch}.</span>
           <span style={{ flex: 1 }}>{formatInline(listContent)}</span>
         </div>
       );
@@ -208,13 +207,13 @@ const renderMarkdown = (text) => {
 
     // Empty lines
     if (trimmed === '') {
-      elements.push(<div key={index} style={{ height: '8px' }} />);
+      elements.push(<div key={index} style={{ height: '6px' }} />);
       return;
     }
 
     // Regular paragraphs
     elements.push(
-      <p key={index} style={{ margin: '6px 0', fontSize: '0.88rem', lineHeight: 1.6, color: '#18181b' }}>
+      <p key={index} style={{ margin: '4px 0', fontSize: '0.86rem', lineHeight: 1.6, color: '#fafafa' }}>
         {formatInline(trimmed)}
       </p>
     );
@@ -327,45 +326,43 @@ Key Features:
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)', background: '#FAFAFA' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)', background: '#09090b', color: '#fafafa' }}>
       <style>{`
         .topic-pill {
-          background: #ffffff;
-          border: 1px solid #E4E4E7;
-          border-radius: 12px;
-          padding: 0.65rem 0.9rem;
+          background: #121215;
+          border: 1px solid #222226;
+          border-radius: 8px;
+          padding: 0.6rem 0.85rem;
           display: flex;
           align-items: center;
           gap: 10px;
           cursor: pointer;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 1px 3px rgba(9, 9, 11, 0.04);
+          transition: all 0.15s ease;
         }
         .topic-pill:hover {
-          border-color: #2563eb;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+          border-color: #38bdf8;
+          background: #18181c;
         }
         .chat-prompt-chip {
-          background: #ffffff;
-          border: 1px solid #E4E4E7;
-          color: #27272a;
-          border-radius: 9999px;
+          background: #18181c;
+          border: 1px solid #27272a;
+          color: #a1a1aa;
+          border-radius: 6px;
           padding: 5px 12px;
-          font-size: 0.78rem;
-          font-weight: 600;
+          font-size: 0.76rem;
+          font-weight: 500;
           cursor: pointer;
           transition: all 0.15s ease;
         }
         .chat-prompt-chip:hover {
-          background: #2563eb;
-          border-color: #2563eb;
-          color: #ffffff;
+          background: rgba(56, 189, 248, 0.12);
+          border-color: #38bdf8;
+          color: #38bdf8;
         }
         .ops-agent-sidebar {
           width: 280px;
-          background: #ffffff;
-          border-right: 1px solid #E4E4E7;
+          background: #0d0d10;
+          border-right: 1px solid #222226;
           padding: 1.25rem;
           display: flex;
           flex-direction: column;
@@ -380,43 +377,40 @@ Key Features:
         }
       `}</style>
 
-      {/* ── Page Header (Onyx + Cobalt Blue Banner) ── */}
+      {/* ── Page Header ── */}
       <div style={{
-        padding: '1.25rem 2rem',
+        padding: '1rem 1.5rem',
         background: '#09090b',
-        borderBottom: '1px solid #27272a',
+        borderBottom: '1px solid #222226',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: '1rem',
-        color: '#ffffff'
+        color: '#fafafa'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
-            width: '42px',
-            height: '42px',
-            borderRadius: '12px',
-            background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
-            color: '#ffffff',
+            width: '38px',
+            height: '38px',
+            borderRadius: '10px',
+            background: 'rgba(56, 189, 248, 0.1)',
+            border: '1px solid rgba(56, 189, 248, 0.2)',
+            color: '#38bdf8',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1.25rem',
-            boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)'
+            fontSize: '1.1rem'
           }}>
             <i className="fas fa-headset" />
           </div>
           <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(37, 99, 235, 0.2)', border: '1px solid rgba(37, 99, 235, 0.4)', padding: '0.15rem 0.55rem', borderRadius: '999px', color: '#60a5fa', fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>
-              <i className="fas fa-bolt" /> Zero API Cost • Local Intelligence
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.2)', padding: '0.15rem 0.5rem', borderRadius: '4px', color: '#38bdf8', fontSize: '0.68rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '2px' }}>
+              <i className="fas fa-bolt" /> Local Intelligence
             </div>
-            <h1 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit, sans-serif' }}>
+            <h1 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: '#fafafa', fontFamily: 'Outfit, sans-serif', letterSpacing: '-0.02em' }}>
               Operations Assistant
             </h1>
-            <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#A1A1AA' }}>
-              Real-time platform intelligence &amp; autonomous query agent
-            </p>
           </div>
         </div>
 
@@ -425,33 +419,33 @@ Key Features:
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            background: unresolvedCount > 0 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.15)',
-            color: unresolvedCount > 0 ? '#fca5a5' : '#6ee7b7',
-            border: unresolvedCount > 0 ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '9999px',
-            padding: '4px 12px',
+            background: unresolvedCount > 0 ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.12)',
+            color: unresolvedCount > 0 ? '#f87171' : '#34d399',
+            border: unresolvedCount > 0 ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(16, 185, 129, 0.2)',
+            borderRadius: '6px',
+            padding: '4px 10px',
             fontSize: '0.75rem',
-            fontWeight: 700
+            fontWeight: 600
           }}>
             <span style={{
-              width: '7px',
-              height: '7px',
+              width: '6px',
+              height: '6px',
               borderRadius: '50%',
-              background: unresolvedCount > 0 ? '#EF4444' : '#10B981'
+              background: unresolvedCount > 0 ? '#f87171' : '#34d399'
             }} />
-            {unresolvedCount > 0 ? `${unresolvedCount} System Error${unresolvedCount > 1 ? 's' : ''} Detected` : 'Internal Telemetry & DB Online'}
+            {unresolvedCount > 0 ? `${unresolvedCount} Error${unresolvedCount > 1 ? 's' : ''}` : 'Telemetry Online'}
           </span>
 
           <button
             type="button"
             onClick={() => setMessages([messages[0]])}
             style={{
-              padding: '0.45rem 0.9rem',
-              borderRadius: '8px',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              color: '#ffffff',
-              fontWeight: 700,
+              padding: '0.45rem 0.85rem',
+              borderRadius: '6px',
+              background: '#18181c',
+              border: '1px solid #27272a',
+              color: '#a1a1aa',
+              fontWeight: 600,
               fontSize: '0.78rem',
               cursor: 'pointer',
               display: 'inline-flex',
@@ -461,7 +455,7 @@ Key Features:
             }}
             title="Reset Chat Session"
           >
-            <i className="fas fa-rotate-left" /> Clear Chat
+            <i className="fas fa-rotate-left" /> Clear
           </button>
         </div>
       </div>
@@ -471,11 +465,11 @@ Key Features:
 
         {/* ── Left Sidebar: Quick Prompts & Categories ── */}
         <div className="ops-agent-sidebar">
-          <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            Quick Operations Prompts
+          <div style={{ fontSize: '0.72rem', fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Quick Prompts
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {QUICK_TOPICS.map((topic, idx) => (
               <div
                 key={idx}
@@ -483,20 +477,20 @@ Key Features:
                 onClick={() => handleSend(topic.query)}
               >
                 <div style={{
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '8px',
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '6px',
                   background: `${topic.color}15`,
                   color: topic.color,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '0.8rem',
+                  fontSize: '0.78rem',
                   flexShrink: 0
                 }}>
                   <i className={`fas ${topic.icon}`} />
                 </div>
-                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#18181b' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 500, color: '#e4e4e7' }}>
                   {topic.title}
                 </div>
               </div>
@@ -506,37 +500,37 @@ Key Features:
           <div style={{
             marginTop: 'auto',
             padding: '0.85rem',
-            background: '#FAFAFA',
-            border: '1px solid #E4E4E7',
-            borderRadius: '12px',
+            background: '#121215',
+            border: '1px solid #222226',
+            borderRadius: '8px',
             fontSize: '0.75rem',
             color: '#71717a',
             lineHeight: 1.5
           }}>
-            <strong style={{ color: '#18181b', display: 'block', marginBottom: '2px' }}>
-              💡 Natural Language Tips:
+            <strong style={{ color: '#fafafa', display: 'block', marginBottom: '2px' }}>
+              Natural Language Tips:
             </strong>
-            Type questions like <em>"Search for St. Paul"</em>, <em>"Who has low balance?"</em>, or <em>"Show open tickets"</em>.
+            Ask questions like <em>"Which schools need attention?"</em>, <em>"Who has low balance?"</em>, or <em>"Show open tickets"</em>.
           </div>
         </div>
 
         {/* ── Center: Interactive Chat Feed ── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#FAFAFA' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#09090b' }}>
           {unresolvedCount > 0 && (
             <div style={{
-              background: '#FEF2F2',
-              borderBottom: '1px solid #FECACA',
-              padding: '10px 2rem',
+              background: 'rgba(239, 68, 68, 0.1)',
+              borderBottom: '1px solid rgba(239, 68, 68, 0.2)',
+              padding: '8px 1.5rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              fontSize: '0.84rem',
-              color: '#991B1B'
+              fontSize: '0.82rem',
+              color: '#f87171'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <i className="fas fa-triangle-exclamation" style={{ color: '#EF4444', fontSize: '1.05rem' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <i className="fas fa-triangle-exclamation" style={{ color: '#f87171' }} />
                 <span>
-                  <strong>Active Error Telemetry:</strong> {unresolvedCount} unresolved system error{unresolvedCount > 1 ? 's' : ''} detected during runtime.
+                  <strong>Telemetry:</strong> {unresolvedCount} unresolved system error{unresolvedCount > 1 ? 's' : ''} detected.
                 </span>
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -544,33 +538,33 @@ Key Features:
                   type="button"
                   onClick={() => handleSend('Show recent system errors')}
                   style={{
-                    background: '#DC2626',
+                    background: '#dc2626',
                     color: '#ffffff',
                     border: 'none',
-                    borderRadius: '8px',
-                    padding: '4px 12px',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
+                    borderRadius: '6px',
+                    padding: '3px 10px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
                     cursor: 'pointer'
                   }}
                 >
-                  Inspect Errors
+                  Inspect
                 </button>
                 <button
                   type="button"
                   onClick={() => handleSend('Run 5-pillar system diagnostics')}
                   style={{
-                    background: '#ffffff',
-                    color: '#7f1d1d',
-                    border: '1px solid #fca5a5',
-                    borderRadius: '8px',
-                    padding: '4px 12px',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
+                    background: '#18181c',
+                    color: '#f87171',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    borderRadius: '6px',
+                    padding: '3px 10px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
                     cursor: 'pointer'
                   }}
                 >
-                  Run Diagnostics
+                  Diagnostics
                 </button>
               </div>
             </div>
@@ -579,26 +573,25 @@ Key Features:
           <div style={{
             flex: 1,
             overflowY: 'auto',
-            padding: '1.5rem 2rem',
+            padding: '1.5rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1.25rem'
+            gap: '1rem'
           }}>
             {messages.map((m, idx) => (
-              <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <div style={{
                   display: 'flex',
                   justifyContent: m.sender === 'user' ? 'flex-end' : 'flex-start'
                 }}>
                   <div style={{
                     maxWidth: '82%',
-                    borderRadius: m.sender === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-                    padding: m.sender === 'user' ? '0.75rem 1.25rem' : '1.1rem 1.4rem',
-                    background: m.sender === 'user' ? '#09090b' : '#ffffff',
-                    color: m.sender === 'user' ? '#ffffff' : '#18181b',
-                    fontSize: '0.88rem',
-                    border: m.sender === 'user' ? 'none' : '1px solid #E4E4E7',
-                    boxShadow: '0 2px 10px rgba(9, 9, 11, 0.04)'
+                    borderRadius: m.sender === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
+                    padding: m.sender === 'user' ? '0.7rem 1.15rem' : '1rem 1.25rem',
+                    background: m.sender === 'user' ? '#2563eb' : '#121215',
+                    color: '#ffffff',
+                    fontSize: '0.86rem',
+                    border: m.sender === 'user' ? 'none' : '1px solid #222226',
                   }}>
                     {m.sender === 'user' ? (
                       <span style={{ fontWeight: 500 }}>{m.text}</span>
@@ -612,16 +605,16 @@ Key Features:
                   <div style={{
                     fontSize: '0.7rem',
                     color: '#71717a',
-                    paddingLeft: m.sender === 'user' ? '0' : '8px',
+                    paddingLeft: m.sender === 'user' ? '0' : '6px',
                     textAlign: m.sender === 'user' ? 'right' : 'left'
                   }}>
-                    ⚡ Database response time: <strong>{m.queryTimeMs}ms</strong>
+                    Database query: <strong>{m.queryTimeMs}ms</strong>
                   </div>
                 )}
 
                 {/* Suggestions pill list */}
                 {m.suggestions && m.suggestions.length > 0 && idx === messages.length - 1 && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '6px' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '4px' }}>
                     {m.suggestions.map((s, sIdx) => (
                       <button
                         key={sIdx}
@@ -638,9 +631,9 @@ Key Features:
             ))}
 
             {loading && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#71717a', fontSize: '0.85rem', padding: '0.75rem' }}>
-                <i className="fas fa-spinner fa-spin" style={{ color: '#2563eb', fontSize: '1rem' }} />
-                <span>Querying Supabase and local cache...</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#71717a', fontSize: '0.82rem', padding: '0.5rem' }}>
+                <i className="fas fa-spinner fa-spin" style={{ color: '#38bdf8', fontSize: '0.9rem' }} />
+                <span>Querying telemetry and database...</span>
               </div>
             )}
 
@@ -649,40 +642,32 @@ Key Features:
 
           {/* ── Input Bar ── */}
           <div style={{
-            padding: '1.25rem 2rem',
-            background: '#ffffff',
-            borderTop: '1px solid #E4E4E7'
+            padding: '1rem 1.5rem',
+            background: '#121215',
+            borderTop: '1px solid #222226'
           }}>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSend();
               }}
-              style={{ display: 'flex', gap: '12px', alignItems: 'center' }}
+              style={{ display: 'flex', gap: '10px', alignItems: 'center' }}
             >
               <input
                 type="text"
-                placeholder="Ask Operations Copilot any question (e.g., 'Which schools need attention?', 'Search St. Marys', 'Total students')..."
+                placeholder="Ask Operations Assistant (e.g. 'Which schools need attention?', 'Search St. Paul')..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 style={{
                   flex: 1,
-                  padding: '0.85rem 1.25rem',
-                  borderRadius: '12px',
-                  border: '1.5px solid #E4E4E7',
-                  fontSize: '0.9rem',
+                  padding: '0.75rem 1.15rem',
+                  borderRadius: '8px',
+                  border: '1px solid #27272a',
+                  fontSize: '0.86rem',
                   outline: 'none',
-                  background: '#FAFAFA',
-                  color: '#18181b',
-                  transition: 'all 0.2s ease'
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#2563eb';
-                  e.target.style.background = '#ffffff';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = '#E4E4E7';
-                  e.target.style.background = '#FAFAFA';
+                  background: '#18181c',
+                  color: '#fafafa',
+                  transition: 'border-color 0.15s ease'
                 }}
               />
               <button
@@ -692,17 +677,16 @@ Key Features:
                   background: '#2563eb',
                   color: '#ffffff',
                   border: 'none',
-                  borderRadius: '12px',
-                  padding: '0.85rem 1.5rem',
+                  borderRadius: '8px',
+                  padding: '0.75rem 1.25rem',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  fontWeight: 800,
-                  fontSize: '0.88rem',
+                  fontWeight: 600,
+                  fontSize: '0.84rem',
                   cursor: 'pointer',
                   opacity: (!query.trim() || loading) ? 0.5 : 1,
-                  boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)',
-                  transition: 'all 0.2s ease'
+                  transition: 'background 0.15s ease'
                 }}
               >
                 <span>Ask</span>

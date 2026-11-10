@@ -1,42 +1,35 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../store/AuthContext';
-import subscriptionService from '../../services/subscriptionService';
 import {
   getSchoolsDirectory,
   getSchoolTimelineEvents,
   overrideReportRelease,
   toggleReadOnlyMode,
   updateSchoolSubscription,
-  recordSupportIntervention,
-  recordSchoolTimelineEvent,
-  getSupportTickets,
-  createSupportTicket,
-  addTicketMessage,
+  createSupportTicket
 } from '../../services/operationsService';
+import subscriptionService from '../../services/subscriptionService';
 import LogoPreloader from '../../components/common/LogoPreloader';
+import { useAuth } from '../../store/AuthContext';
 
 const SchoolDetailView = () => {
   const { schoolId } = useParams();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [school, setSchool] = useState(null);
   const [timeline, setTimeline] = useState([]);
   const [tickets, setTickets] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState('health'); // 'health' | 'timeline' | 'support'
+  const [activeTab, setActiveTab] = useState('health');
 
-  // Subscription modal
+  // Modals
   const [showSubModal, setShowSubModal] = useState(false);
   const [subTier, setSubTier] = useState('Standard');
   const [subStatus, setSubStatus] = useState('Active');
-  const [subRenewal, setSubRenewal] = useState('2026-12-31');
-
-  // Support notice modal
   const [showMsgModal, setShowMsgModal] = useState(false);
   const [msgTitle, setMsgTitle] = useState('');
-  const [msgCategory, setMsgCategory] = useState('General Support');
+  const [msgCategory, setMsgCategory] = useState('System Notice');
   const [msgPriority, setMsgPriority] = useState('Medium');
   const [messageText, setMessageText] = useState('');
 
@@ -44,8 +37,8 @@ const SchoolDetailView = () => {
     setLoading(true);
     try {
       const [list, allTickets] = await Promise.all([
-        getSchoolsDirectory(true),
-        getSupportTickets(),
+        getSchoolsDirectory(),
+        subscriptionService.getAllSupportTickets()
       ]);
 
       const found = list.find(x => x.id === schoolId);
@@ -110,24 +103,9 @@ const SchoolDetailView = () => {
     }
   };
 
-  const handleSaveSubscription = async (e) => {
-    e.preventDefault();
-    if (!school) return;
-    setSaving(true);
-    try {
-      await updateSchoolSubscription(school.id, school.name, subTier, subStatus, subRenewal);
-      setShowSubModal(false);
-      await loadData();
-    } catch (err) {
-      alert(`Error updating subscription: ${err.message}`);
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const handleToggleFreeTrial = async () => {
     if (!school) return;
-    const isTerminated = school.first_term_free_terminated;
+    const isTerminated = Boolean(school.first_term_free_terminated);
     const actionMsg = isTerminated
       ? `Re-enable Free First Term for "${school.name}"?`
       : `Terminate Free First Term for "${school.name}"? This will require immediate subscription payment starting now.`;
@@ -137,14 +115,30 @@ const SchoolDetailView = () => {
     setSaving(true);
     try {
       if (isTerminated) {
-        await subscriptionService.restoreSchoolFreeTrial(school.id, 'Platform Developer');
+        await subscriptionService.restoreSchoolFreeTrial(school.id, 'Platform Operator');
       } else {
-        await subscriptionService.terminateSchoolFreeTrial(school.id, true, 'Platform Developer');
+        await subscriptionService.terminateSchoolFreeTrial(school.id, true, 'Platform Operator');
       }
       setSchool(prev => ({ ...prev, first_term_free_terminated: !isTerminated }));
       await loadData();
     } catch (err) {
-      alert(`Error updating free trial status: ${err.message}`);
+      alert(`Error: ${err.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSaveSubscription = async (e) => {
+    e.preventDefault();
+    if (!school) return;
+    setSaving(true);
+    try {
+      await updateSchoolSubscription(school.id, school.name, subTier, subStatus);
+      setShowSubModal(false);
+      await loadData();
+      alert('Subscription profile updated successfully!');
+    } catch (err) {
+      alert(`Error updating subscription: ${err.message}`);
     } finally {
       setSaving(false);
     }
@@ -154,7 +148,7 @@ const SchoolDetailView = () => {
 
   const handleLaunchHeadteacherPortal = async () => {
     if (!school) return;
-    if (!window.confirm(`Launch Live Remote Access as Headteacher for "${school.name}"?\n\nYou will enter the school portal with full administrative rights to inspect learners, input scores, diagnose settings, or generate reports.`)) return;
+    if (!window.confirm(`Launch Live Remote Access as Headteacher for "${school.name}"?\n\nYou will enter the school portal with administrative rights to inspect learners, input scores, diagnose settings, or generate reports.`)) return;
 
     try {
       await startImpersonation(school.id, school.name);
@@ -190,8 +184,8 @@ const SchoolDetailView = () => {
     return (
       <div style={{ padding: '4rem', textAlign: 'center', color: '#71717a' }}>
         <i className="fas fa-circle-exclamation" style={{ fontSize: '2.5rem', color: '#EF4444', marginBottom: '1rem', display: 'block' }}></i>
-        <h2 style={{ color: '#09090b', margin: '0 0 0.5rem' }}>School Not Found</h2>
-        <button onClick={() => navigate('/platform/operations/schools')} style={{ padding: '0.65rem 1.25rem', borderRadius: '10px', background: '#09090b', color: '#FFFFFF', border: 'none', fontWeight: 700, cursor: 'pointer' }}>
+        <h2 style={{ color: '#fafafa', margin: '0 0 0.5rem' }}>School Not Found</h2>
+        <button onClick={() => navigate('/platform/operations/schools')} style={{ padding: '0.55rem 1.15rem', borderRadius: '8px', background: '#1c1c22', color: '#fafafa', border: '1px solid #27272a', fontWeight: 600, cursor: 'pointer' }}>
           Back to Directory
         </button>
       </div>
@@ -206,156 +200,152 @@ const SchoolDetailView = () => {
   const isTrialTerminated = school.first_term_free_terminated;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', color: '#18181b' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', color: '#fafafa' }}>
 
       {/* Back + Title */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', paddingBottom: '1.25rem', borderBottom: '1px solid #1f1f23' }}>
         <div>
           <button
             onClick={() => navigate('/platform/operations/schools')}
-            style={{ background: 'transparent', border: 'none', color: '#2563eb', fontSize: '0.85rem', fontWeight: 800, cursor: 'pointer', marginBottom: '0.4rem', padding: 0, display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ background: 'transparent', border: 'none', color: '#3b82f6', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', marginBottom: '0.35rem', padding: 0, display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            ← Back to Schools Directory
+            <i className="fas fa-arrow-left" style={{ fontSize: '0.7rem' }}></i>
+            <span>Back to Schools Directory</span>
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.75rem', fontWeight: 800, color: '#09090b', margin: 0 }}>
+            <h1 style={{ fontSize: '1.45rem', fontWeight: 700, color: '#fafafa', margin: 0, letterSpacing: '-0.02em' }}>
               {school.name}
             </h1>
             {!isTrialTerminated && (
-              <span style={{ background: '#FFFBEB', border: '1px solid #FEF3C7', color: '#F59E0B', fontSize: '0.72rem', fontWeight: 900, padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
-                🎁 FIRST TERM FREE
+              <span style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)', color: '#fbbf24', fontSize: '0.7rem', fontWeight: 600, padding: '0.15rem 0.5rem', borderRadius: '6px' }}>
+                First Term Free
               </span>
             )}
           </div>
-          <p style={{ color: '#71717a', fontSize: '0.88rem', margin: '0.25rem 0 0' }}>
-            {school.region} • {school.district} • {school.circuit} • HT: <strong style={{ color: '#09090b' }}>{school.headteacher}</strong>
+          <p style={{ color: '#a1a1aa', fontSize: '0.82rem', margin: '0.2rem 0 0' }}>
+            {school.region} • {school.district} • {school.circuit} • HT: <strong style={{ color: '#fafafa' }}>{school.headteacher}</strong>
           </p>
         </div>
 
-        {/* Action Buttons */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        {/* Action Controls */}
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           <button
             onClick={handleLaunchHeadteacherPortal}
             disabled={saving}
             title="Launch interactive remote support session inside this school's headteacher portal"
             style={{
-              padding: '0.6rem 1.15rem',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)',
+              padding: '0.45rem 0.85rem',
+              borderRadius: '7px',
+              background: '#2563eb',
               border: 'none',
               color: '#FFFFFF',
-              fontWeight: 800,
-              fontSize: '0.82rem',
+              fontWeight: 600,
+              fontSize: '0.78rem',
               cursor: saving ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              boxShadow: '0 4px 12px rgba(79, 70, 229, 0.35)'
+              gap: '6px'
             }}
           >
-            <i className="fas fa-right-to-bracket" />
-            Launch Headteacher Portal
+            <i className="fas fa-arrow-up-right-from-square" style={{ fontSize: '0.7rem' }}></i>
+            <span>Remote Portal</span>
           </button>
 
           <button
             onClick={handleToggleFreeTrial}
             disabled={saving}
-            title="Developer Control to terminate or restore free trial"
-            style={{ padding: '0.6rem 1.1rem', borderRadius: '10px', background: isTrialTerminated ? '#ECFDF5' : '#FEF2F2', border: `1px solid ${isTrialTerminated ? '#D1FAE5' : '#FEE2E2'}`, color: isTrialTerminated ? '#10B981' : '#EF4444', fontWeight: 800, fontSize: '0.82rem', cursor: saving ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '0.45rem 0.8rem', borderRadius: '7px', background: '#18181c', border: '1px solid #27272a', color: isTrialTerminated ? '#34d399' : '#f87171', fontWeight: 600, fontSize: '0.78rem', cursor: saving ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            <i className={`fas ${isTrialTerminated ? 'fa-undo' : 'fa-ban'}`}></i>
-            {isTrialTerminated ? 'Restore Free Trial' : 'Terminate Free Trial'}
+            <i className={`fas ${isTrialTerminated ? 'fa-rotate-left' : 'fa-ban'}`} style={{ fontSize: '0.7rem' }}></i>
+            <span>{isTrialTerminated ? 'Restore Trial' : 'End Trial'}</span>
           </button>
 
           <button
             onClick={handleToggleReportRelease}
             disabled={saving}
-            style={{ padding: '0.6rem 1.1rem', borderRadius: '10px', background: school.reports_released ? '#FEF2F2' : '#ECFDF5', border: `1px solid ${school.reports_released ? '#FEE2E2' : '#D1FAE5'}`, color: school.reports_released ? '#EF4444' : '#10B981', fontWeight: 800, fontSize: '0.82rem', cursor: saving ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '0.45rem 0.8rem', borderRadius: '7px', background: '#18181c', border: '1px solid #27272a', color: school.reports_released ? '#f87171' : '#34d399', fontWeight: 600, fontSize: '0.78rem', cursor: saving ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            <i className={`fas ${school.reports_released ? 'fa-lock' : 'fa-unlock'}`}></i>
-            {school.reports_released ? 'Lock Reports' : 'Release Reports'}
+            <i className={`fas ${school.reports_released ? 'fa-lock' : 'fa-unlock'}`} style={{ fontSize: '0.7rem' }}></i>
+            <span>{school.reports_released ? 'Lock Reports' : 'Release Reports'}</span>
           </button>
 
           <button
             onClick={handleToggleReadOnly}
             disabled={saving}
-            style={{ padding: '0.6rem 1.1rem', borderRadius: '10px', background: school.is_read_only ? '#EFF6FF' : '#FFFBEB', border: `1px solid ${school.is_read_only ? '#DBEAFE' : '#FEF3C7'}`, color: school.is_read_only ? '#2563eb' : '#F59E0B', fontWeight: 800, fontSize: '0.82rem', cursor: saving ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '0.45rem 0.8rem', borderRadius: '7px', background: '#18181c', border: '1px solid #27272a', color: school.is_read_only ? '#60a5fa' : '#fbbf24', fontWeight: 600, fontSize: '0.78rem', cursor: saving ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            <i className={`fas ${school.is_read_only ? 'fa-lock-open' : 'fa-shield-halved'}`}></i>
-            {school.is_read_only ? 'Unlock Edit Access' : 'Enable Read-Only'}
+            <i className={`fas ${school.is_read_only ? 'fa-lock-open' : 'fa-shield-halved'}`} style={{ fontSize: '0.7rem' }}></i>
+            <span>{school.is_read_only ? 'Unlock Edit' : 'Set Read-Only'}</span>
           </button>
 
           <button
             onClick={() => setShowSubModal(true)}
-            style={{ padding: '0.6rem 1.1rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#09090b', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '0.45rem 0.8rem', borderRadius: '7px', background: '#18181c', border: '1px solid #27272a', color: '#d4d4d8', fontWeight: 600, fontSize: '0.78rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            <i className="fas fa-credit-card" style={{ color: '#2563eb' }}></i>
-            Manage Subscription
+            <i className="fas fa-credit-card" style={{ fontSize: '0.7rem' }}></i>
+            <span>Subscription</span>
           </button>
 
           <button
             onClick={() => setShowMsgModal(true)}
-            style={{ padding: '0.6rem 1.1rem', borderRadius: '10px', background: '#09090b', border: 'none', color: '#FFFFFF', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 4px 12px rgba(9,9,11,0.2)' }}
+            style={{ padding: '0.45rem 0.85rem', borderRadius: '7px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontWeight: 600, fontSize: '0.78rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            <i className="fas fa-paper-plane"></i>
-            Send Support Notice
+            <i className="fas fa-paper-plane" style={{ fontSize: '0.7rem', color: '#3b82f6' }}></i>
+            <span>Send Notice</span>
           </button>
         </div>
       </div>
 
       {/* Quick Stats Bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.85rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
         {[
-          { label: 'Active Learners', value: school.learners_count, color: '#09090b' },
-          { label: 'Classes', value: school.classes_count || 0, color: '#2563eb' },
-          { label: 'Teaching Staff', value: school.staff_count, color: '#0284c7' },
-          { label: 'Wallet Balance', value: `GH₵ ${Number(school.wallet_balance || 0).toFixed(2)}`, color: Number(school.wallet_balance || 0) > 0 ? '#10B981' : '#EF4444' },
-          { label: 'Score Entry', value: `${scorePct}%`, color: scorePct >= 80 ? '#10B981' : scorePct >= 50 ? '#F59E0B' : '#EF4444' },
-          { label: 'Reports Released', value: school.reports_released ? 'Yes' : 'No', color: school.reports_released ? '#10B981' : '#71717a' },
-          { label: 'Access Mode', value: school.is_read_only ? 'Read Only' : 'Full Edit', color: school.is_read_only ? '#EF4444' : '#10B981' },
+          { label: 'Active Learners', value: school.learners_count, color: '#fafafa' },
+          { label: 'Classes', value: school.classes_count || 0, color: '#38bdf8' },
+          { label: 'Teaching Staff', value: school.staff_count, color: '#818cf8' },
+          { label: 'Wallet Balance', value: `GH₵ ${Number(school.wallet_balance || 0).toFixed(2)}`, color: Number(school.wallet_balance || 0) > 0 ? '#34d399' : '#f87171' },
+          { label: 'Score Entry', value: `${scorePct}%`, color: scorePct >= 80 ? '#34d399' : scorePct >= 50 ? '#fbbf24' : '#f87171' },
+          { label: 'Reports Released', value: school.reports_released ? 'Released' : 'Locked', color: school.reports_released ? '#34d399' : '#71717a' },
+          { label: 'Access Mode', value: school.is_read_only ? 'Read Only' : 'Full Edit', color: school.is_read_only ? '#f87171' : '#34d399' },
         ].map((stat, i) => (
-          <div key={i} style={{ padding: '0.85rem 1rem', borderRadius: '14px', background: '#FFFFFF', border: '1px solid #E4E4E7', textAlign: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
-            <div style={{ fontSize: '0.68rem', color: '#71717a', textTransform: 'uppercase', fontWeight: 700 }}>{stat.label}</div>
-            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.25rem', fontWeight: 800, color: stat.color, marginTop: '2px' }}>{stat.value}</div>
+          <div key={i} style={{ padding: '0.75rem 0.95rem', borderRadius: '10px', background: '#121215', border: '1px solid #222226', textAlign: 'center' }}>
+            <div style={{ fontSize: '0.68rem', color: '#a1a1aa', textTransform: 'uppercase', fontWeight: 600 }}>{stat.label}</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 700, color: stat.color, marginTop: '2px', letterSpacing: '-0.02em' }}>{stat.value}</div>
           </div>
         ))}
       </div>
 
-      {/* Comprehensive School Profile & Database Metadata Card */}
-      <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid #E4E4E7', padding: '1.25rem 1.5rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
+      {/* Metadata Card */}
+      <div style={{ background: '#121215', borderRadius: '10px', border: '1px solid #222226', padding: '1rem 1.25rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
         <div>
-          <div style={{ fontSize: '0.72rem', color: '#71717a', fontWeight: 800, textTransform: 'uppercase' }}>Database School ID</div>
-          <div style={{ fontFamily: 'monospace', fontSize: '0.88rem', fontWeight: 800, color: '#09090b', marginTop: '2px' }}>{school.id}</div>
-          <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '4px' }}>Registered: {new Date(school.created_at).toLocaleDateString('en-GH', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+          <div style={{ fontSize: '0.7rem', color: '#71717a', fontWeight: 600, textTransform: 'uppercase' }}>School ID</div>
+          <div style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600, color: '#fafafa', marginTop: '2px' }}>{school.id}</div>
+          <div style={{ fontSize: '0.7rem', color: '#71717a', marginTop: '3px' }}>Registered: {new Date(school.created_at).toLocaleDateString('en-GH', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
         </div>
 
         <div>
-          <div style={{ fontSize: '0.72rem', color: '#71717a', fontWeight: 800, textTransform: 'uppercase' }}>Category &amp; Session</div>
+          <div style={{ fontSize: '0.7rem', color: '#71717a', fontWeight: 600, textTransform: 'uppercase' }}>Category &amp; Session</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px', flexWrap: 'wrap' }}>
-            <span style={{ padding: '0.2rem 0.55rem', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 800, background: '#EFF6FF', color: '#2563eb', border: '1px solid #DBEAFE' }}>
+            <span style={{ padding: '0.15rem 0.45rem', borderRadius: '5px', fontSize: '0.7rem', fontWeight: 600, background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.25)' }}>
               {school.school_category || school.school_type || 'Private'}
             </span>
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#09090b' }}>
+            <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fafafa' }}>
               {school.current_term || 'Term 1'} ({school.current_academic_year || '2025/2026'})
             </span>
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '4px' }}>
-            Onboarding Term: <strong style={{ color: '#09090b' }}>{school.initial_term || 'Term 1'} ({school.initial_academic_year || '2025/2026'})</strong>
+        </div>
+
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#71717a', fontWeight: 600, textTransform: 'uppercase' }}>Contact &amp; Location</div>
+          <div style={{ fontSize: '0.82rem', color: '#d4d4d8', marginTop: '2px' }}>
+            {school.phone || 'N/A'} • {school.email || 'N/A'}
+          </div>
+          <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>
+            {school.location || `${school.district || ''}, ${school.region || ''}`}
           </div>
         </div>
 
         <div>
-          <div style={{ fontSize: '0.72rem', color: '#71717a', fontWeight: 800, textTransform: 'uppercase' }}>Contact Information</div>
-          <div style={{ fontSize: '0.85rem', color: '#09090b', fontWeight: 600, marginTop: '2px' }}>
-            📞 {school.phone || 'N/A'} • ✉️ {school.email || 'N/A'}
-          </div>
-          <div style={{ fontSize: '0.75rem', color: '#71717a', marginTop: '2px' }}>
-            📍 {school.location || `${school.district || ''}, ${school.region || ''}`}
-          </div>
-        </div>
-
-        <div>
-          <div style={{ fontSize: '0.72rem', color: '#71717a', fontWeight: 800, textTransform: 'uppercase' }}>Term Entitlement Status</div>
+          <div style={{ fontSize: '0.7rem', color: '#71717a', fontWeight: 600, textTransform: 'uppercase' }}>Entitlement Status</div>
           {(() => {
             const isInitial = (school.initial_academic_year === school.current_academic_year && school.initial_term === school.current_term) || (!school.initial_academic_year && !school.initial_term);
             const isFree = school.is_first_term_free && !school.first_term_free_terminated && isInitial;
@@ -363,18 +353,18 @@ const SchoolDetailView = () => {
               <>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
                   <span style={{
-                    padding: '0.2rem 0.6rem',
-                    borderRadius: '6px',
-                    fontSize: '0.75rem',
-                    fontWeight: 800,
-                    background: isFree ? '#EFF6FF' : school.subscription_status === 'Active' ? '#ECFDF5' : '#FEF2F2',
-                    color: isFree ? '#2563eb' : school.subscription_status === 'Active' ? '#10B981' : '#EF4444',
-                    border: `1px solid ${isFree ? '#DBEAFE' : school.subscription_status === 'Active' ? '#D1FAE5' : '#FEE2E2'}`
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: '5px',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    background: isFree ? 'rgba(59, 130, 246, 0.1)' : school.subscription_status === 'Active' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                    color: isFree ? '#60a5fa' : school.subscription_status === 'Active' ? '#34d399' : '#f87171',
+                    border: `1px solid ${isFree ? 'rgba(59, 130, 246, 0.25)' : school.subscription_status === 'Active' ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)'}`
                   }}>
-                    {isFree ? '🎁 Free First Term' : isInitial ? '⚠️ Trial Terminated (Paid)' : '💳 Subsequent Term (Paid)'}
+                    {isFree ? 'Free First Term' : isInitial ? 'Trial Ended (Paid)' : 'Subsequent Term (Paid)'}
                   </span>
                 </div>
-                <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '4px' }}>
+                <div style={{ fontSize: '0.7rem', color: '#71717a', marginTop: '3px' }}>
                   Rate: {school.per_learner_rate_override ? `GH₵ ${school.per_learner_rate_override}/learner (Override)` : 'Category Default'}
                 </div>
               </>
@@ -384,53 +374,82 @@ const SchoolDetailView = () => {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', background: '#FAFAFA', padding: '4px', borderRadius: '12px', border: '1px solid #E4E4E7', width: 'fit-content' }}>
-        {['health', 'timeline', 'support'].map(tab => (
+      <div className="tab-nav-row" style={{ display: 'flex', gap: '4px', background: '#121215', padding: '3px', borderRadius: '8px', border: '1px solid #222226', width: 'fit-content', maxWidth: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+        {[
+          { id: 'health', label: 'Health Score', icon: 'fa-chart-pie' },
+          { id: 'timeline', label: 'Activity Timeline', icon: 'fa-clock-rotate-left' },
+          { id: 'support', label: 'Support Tickets', icon: 'fa-ticket' }
+        ].map(tab => (
           <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{ padding: '0.5rem 1.1rem', borderRadius: '8px', border: 'none', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', background: activeTab === tab ? '#09090b' : 'transparent', color: activeTab === tab ? '#FFFFFF' : '#71717a', textTransform: 'capitalize', transition: 'all 0.15s' }}
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            style={{
+              padding: '0.45rem 0.95rem',
+              borderRadius: '6px',
+              border: 'none',
+              fontWeight: 600,
+              fontSize: '0.8rem',
+              cursor: 'pointer',
+              background: activeTab === tab.id ? '#1e1e24' : 'transparent',
+              color: activeTab === tab.id ? '#FFFFFF' : '#71717a',
+              transition: 'all 0.15s',
+              whiteSpace: 'nowrap',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
           >
-            {tab === 'health' ? '📊 Health Score' : tab === 'timeline' ? '📅 Activity Timeline' : '🎫 Support Tickets'}
+            <i className={`fas ${tab.icon}`} style={{ fontSize: '0.72rem', color: activeTab === tab.id ? '#3b82f6' : '#71717a' }}></i>
+            <span>{tab.label}</span>
           </button>
         ))}
       </div>
 
       {/* Health Score Tab */}
       {activeTab === 'health' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '1.5rem', background: '#FFFFFF', borderRadius: '20px', border: '1px solid #E4E4E7', padding: '2rem', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
+        <div className="content-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', background: '#121215', borderRadius: '10px', border: '1px solid #222226', padding: '1.25rem' }}>
           {/* Gauge */}
-          <div style={{ background: '#FAFAFA', borderRadius: '16px', padding: '1.5rem', border: '1px solid #E4E4E7', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-            <div style={{ fontSize: '3.5rem', fontFamily: 'Outfit, sans-serif', fontWeight: 800, color: health.healthStatus === 'Healthy' ? '#10B981' : health.healthStatus === 'Warning' ? '#F59E0B' : '#EF4444' }}>
+          <div style={{ background: '#0e0e11', borderRadius: '8px', padding: '1.5rem', border: '1px solid #1f1f23', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <div style={{ fontSize: '3rem', fontWeight: 800, color: health.healthStatus === 'Healthy' ? '#34d399' : health.healthStatus === 'Warning' ? '#fbbf24' : '#f87171', letterSpacing: '-0.03em' }}>
               {health.totalScore}%
             </div>
-            <div style={{ padding: '0.3rem 0.85rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', background: health.healthStatus === 'Healthy' ? '#ECFDF5' : health.healthStatus === 'Warning' ? '#FFFBEB' : '#FEF2F2', color: health.healthStatus === 'Healthy' ? '#10B981' : health.healthStatus === 'Warning' ? '#F59E0B' : '#EF4444', border: `1px solid ${health.healthStatus === 'Healthy' ? '#D1FAE5' : health.healthStatus === 'Warning' ? '#FEF3C7' : '#FEE2E2'}` }}>
-              ● {health.healthStatus} Health
+            <div style={{
+              padding: '0.25rem 0.75rem',
+              borderRadius: '999px',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+              background: health.healthStatus === 'Healthy' ? 'rgba(16, 185, 129, 0.1)' : health.healthStatus === 'Warning' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+              color: health.healthStatus === 'Healthy' ? '#34d399' : health.healthStatus === 'Warning' ? '#fbbf24' : '#f87171',
+              border: `1px solid ${health.healthStatus === 'Healthy' ? 'rgba(16, 185, 129, 0.25)' : health.healthStatus === 'Warning' ? 'rgba(245, 158, 11, 0.25)' : 'rgba(239, 68, 68, 0.25)'}`
+            }}>
+              {health.healthStatus} Health
             </div>
-            <div style={{ fontSize: '0.72rem', color: '#71717a', textAlign: 'center', fontWeight: 600 }}>
-              Computed from 6 live platform factors
+            <div style={{ fontSize: '0.72rem', color: '#71717a', textAlign: 'center' }}>
+              Computed from 6 platform telemetry factors
             </div>
           </div>
 
           {/* Factor Breakdown */}
           <div>
-            <h3 style={{ margin: '0 0 1rem', fontFamily: 'Outfit, sans-serif', color: '#09090b', fontSize: '1rem', fontWeight: 800 }}>
+            <h3 style={{ margin: '0 0 0.85rem', color: '#fafafa', fontSize: '0.92rem', fontWeight: 600 }}>
               Diagnostic Factor Breakdown
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
               {[
-                { label: 'SYNC HEALTH (20%)', value: health.breakdown?.syncHealth || 0, color: '#2563eb' },
-                { label: 'SCORE ENTRY (25%)', value: health.breakdown?.scoreCompletion || 0, color: '#10B981' },
-                { label: 'REPORTS GENERATED (20%)', value: health.breakdown?.reportStatus || 0, color: '#7c3aed' },
-                { label: 'SUPPORT ISSUES (15%)', value: health.breakdown?.supportStatus || 0, color: '#F59E0B' },
-                { label: 'SUBSCRIPTION (10%)', value: health.breakdown?.subStatus || 0, color: '#0284c7' },
-                { label: 'ACTIVE USERS (10%)', value: health.breakdown?.activeUsers || 0, color: '#10B981' },
+                { label: 'Sync Health (20%)', value: health.breakdown?.syncHealth || 0, color: '#3b82f6' },
+                { label: 'Score Entry (25%)', value: health.breakdown?.scoreCompletion || 0, color: '#34d399' },
+                { label: 'Reports Issued (20%)', value: health.breakdown?.reportStatus || 0, color: '#a78bfa' },
+                { label: 'Support Issues (15%)', value: health.breakdown?.supportStatus || 0, color: '#fbbf24' },
+                { label: 'Subscription (10%)', value: health.breakdown?.subStatus || 0, color: '#38bdf8' },
+                { label: 'Active Users (10%)', value: health.breakdown?.activeUsers || 0, color: '#34d399' },
               ].map((f, i) => (
-                <div key={i} style={{ background: '#FAFAFA', padding: '1rem', borderRadius: '12px', border: '1px solid #E4E4E7' }}>
-                  <div style={{ fontSize: '0.68rem', color: '#71717a', fontWeight: 700 }}>{f.label}</div>
-                  <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.4rem', fontWeight: 800, color: f.color, marginTop: '4px' }}>{f.value}%</div>
-                  <div style={{ height: '4px', background: '#E4E4E7', borderRadius: '4px', marginTop: '6px', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: `${f.value}%`, background: f.color, borderRadius: '4px' }} />
+                <div key={i} style={{ background: '#0e0e11', padding: '0.85rem', borderRadius: '8px', border: '1px solid #1f1f23' }}>
+                  <div style={{ fontSize: '0.68rem', color: '#71717a', fontWeight: 600 }}>{f.label}</div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 700, color: f.color, marginTop: '3px' }}>{f.value}%</div>
+                  <div style={{ height: '3px', background: '#1f1f23', borderRadius: '3px', marginTop: '6px', overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${f.value}%`, background: f.color, borderRadius: '3px' }} />
                   </div>
                 </div>
               ))}
@@ -441,39 +460,39 @@ const SchoolDetailView = () => {
 
       {/* Activity Timeline Tab */}
       {activeTab === 'timeline' && (
-        <div style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid #E4E4E7', padding: '1.75rem', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-            <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', color: '#09090b', fontSize: '1.1rem', fontWeight: 800 }}>
+        <div style={{ background: '#121215', borderRadius: '10px', border: '1px solid #222226', padding: '1.25rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <h3 style={{ margin: 0, color: '#fafafa', fontSize: '0.92rem', fontWeight: 600 }}>
               School Activity Timeline
             </h3>
-            <span style={{ fontSize: '0.75rem', color: '#71717a', fontWeight: 600 }}>
-              {timeline.length} events recorded
+            <span style={{ fontSize: '0.72rem', color: '#71717a' }}>
+              {timeline.length} recorded events
             </span>
           </div>
 
           {timeline.length === 0 ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: '#71717a' }}>
-              <i className="fas fa-history" style={{ fontSize: '2rem', marginBottom: '0.75rem', color: '#A1A1AA' }}></i>
-              <div style={{ color: '#09090b', fontWeight: 800 }}>No Timeline Events Yet</div>
-              <div style={{ fontSize: '0.82rem', marginTop: '0.5rem' }}>Events are automatically recorded when interventions, score entries, and reports occur.</div>
+            <div style={{ padding: '2.5rem', textAlign: 'center', color: '#71717a' }}>
+              <i className="fas fa-clock-rotate-left" style={{ fontSize: '1.75rem', marginBottom: '0.5rem', color: '#3f3f46', display: 'block' }}></i>
+              <div style={{ color: '#d4d4d8', fontWeight: 600, fontSize: '0.9rem' }}>No Timeline Events Recorded</div>
+              <div style={{ fontSize: '0.78rem', marginTop: '0.35rem' }}>Events appear when interventions, score submissions, or report card releases occur.</div>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderLeft: '2px solid #E4E4E7', paddingLeft: '1.5rem', marginLeft: '0.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderLeft: '2px solid #27272a', paddingLeft: '1.25rem', marginLeft: '0.5rem' }}>
               {timeline.map((evt, idx) => (
                 <div key={evt.id || idx} style={{ position: 'relative' }}>
-                  <span style={{ position: 'absolute', left: '-1.95rem', top: '0.35rem', width: '12px', height: '12px', borderRadius: '50%', background: '#2563eb', boxShadow: '0 0 8px rgba(37,99,235,0.4)' }} />
-                  <div style={{ background: '#FAFAFA', padding: '1rem 1.1rem', borderRadius: '12px', border: '1px solid #E4E4E7' }}>
+                  <span style={{ position: 'absolute', left: '-1.58rem', top: '0.4rem', width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6' }} />
+                  <div style={{ background: '#0e0e11', padding: '0.85rem 1rem', borderRadius: '8px', border: '1px solid #1f1f23' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <span style={{ color: '#09090b', fontWeight: 800, fontSize: '0.9rem' }}>{evt.title}</span>
-                      <span style={{ fontSize: '0.72rem', color: '#71717a', whiteSpace: 'nowrap', marginLeft: '1rem' }}>
+                      <span style={{ color: '#fafafa', fontWeight: 600, fontSize: '0.85rem' }}>{evt.title}</span>
+                      <span style={{ fontSize: '0.7rem', color: '#71717a', whiteSpace: 'nowrap', marginLeft: '1rem' }}>
                         {new Date(evt.created_at).toLocaleString('en-GH', { dateStyle: 'medium', timeStyle: 'short' })}
                       </span>
                     </div>
                     {evt.description && (
-                      <p style={{ color: '#71717a', fontSize: '0.83rem', margin: '0.3rem 0 0', lineHeight: 1.5 }}>{evt.description}</p>
+                      <p style={{ color: '#a1a1aa', fontSize: '0.78rem', margin: '0.25rem 0 0', lineHeight: 1.4 }}>{evt.description}</p>
                     )}
-                    <div style={{ fontSize: '0.7rem', color: '#2563eb', marginTop: '0.4rem', fontWeight: 700 }}>
-                      Actor: <strong>{evt.actor_name}</strong>
+                    <div style={{ fontSize: '0.68rem', color: '#60a5fa', marginTop: '0.35rem' }}>
+                      Actor: {evt.actor_name}
                     </div>
                   </div>
                 </div>
@@ -485,41 +504,42 @@ const SchoolDetailView = () => {
 
       {/* Support Tickets Tab */}
       {activeTab === 'support' && (
-        <div style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid #E4E4E7', padding: '1.75rem', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-            <h3 style={{ margin: 0, fontFamily: 'Outfit, sans-serif', color: '#09090b', fontSize: '1.1rem', fontWeight: 800 }}>
+        <div style={{ background: '#121215', borderRadius: '10px', border: '1px solid #222226', padding: '1.25rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <h3 style={{ margin: 0, color: '#fafafa', fontSize: '0.92rem', fontWeight: 600 }}>
               Support Tickets for this School
             </h3>
-            <span style={{ fontSize: '0.75rem', color: '#71717a', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.72rem', color: '#71717a' }}>
               {tickets.length} ticket{tickets.length !== 1 ? 's' : ''}
             </span>
           </div>
+
           {tickets.length === 0 ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: '#71717a' }}>
-              <i className="fas fa-ticket-simple" style={{ fontSize: '2rem', marginBottom: '0.75rem', color: '#A1A1AA' }}></i>
-              <div style={{ color: '#09090b', fontWeight: 800 }}>No Support Tickets</div>
-              <div style={{ fontSize: '0.82rem', marginTop: '0.5rem' }}>
-                Use the "Send Support Notice" button above to create a ticket for this school.
+            <div style={{ padding: '2.5rem', textAlign: 'center', color: '#71717a' }}>
+              <i className="fas fa-ticket" style={{ fontSize: '1.75rem', marginBottom: '0.5rem', color: '#3f3f46', display: 'block' }}></i>
+              <div style={{ color: '#d4d4d8', fontWeight: 600, fontSize: '0.9rem' }}>No Support Tickets</div>
+              <div style={{ fontSize: '0.78rem', marginTop: '0.35rem' }}>
+                Dispatch a notice using the button above to communicate directly with this school.
               </div>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {tickets.map(t => (
-                <div key={t.id} style={{ background: '#FAFAFA', padding: '1rem 1.25rem', borderRadius: '12px', border: '1px solid #E4E4E7' }}>
+                <div key={t.id} style={{ background: '#0e0e11', padding: '0.85rem 1rem', borderRadius: '8px', border: '1px solid #1f1f23' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                      <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: '#2563eb', fontWeight: 800 }}>{t.ticket_code}</span>
-                      <span style={{ marginLeft: '10px', fontWeight: 800, color: '#09090b' }}>{t.title}</span>
+                      <span style={{ fontFamily: 'monospace', fontSize: '0.72rem', color: '#38bdf8', fontWeight: 600 }}>{t.ticket_code}</span>
+                      <span style={{ marginLeft: '8px', fontWeight: 600, color: '#fafafa', fontSize: '0.85rem' }}>{t.title}</span>
                     </div>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 800, color: t.priority === 'High' || t.priority === 'Urgent' ? '#EF4444' : '#F59E0B' }}>{t.priority}</span>
-                      <span style={{ padding: '0.2rem 0.6rem', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 800, background: t.status === 'Resolved' ? '#ECFDF5' : '#EFF6FF', color: t.status === 'Resolved' ? '#10B981' : '#2563eb' }}>
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 600, color: t.priority === 'High' || t.priority === 'Urgent' ? '#f87171' : '#fbbf24' }}>{t.priority}</span>
+                      <span style={{ padding: '0.15rem 0.5rem', borderRadius: '5px', fontSize: '0.7rem', fontWeight: 600, background: t.status === 'Resolved' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(59, 130, 246, 0.1)', color: t.status === 'Resolved' ? '#34d399' : '#60a5fa' }}>
                         {t.status}
                       </span>
                     </div>
                   </div>
                   {t.messages?.length > 0 && (
-                    <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#71717a' }}>
+                    <div style={{ marginTop: '0.35rem', fontSize: '0.78rem', color: '#a1a1aa' }}>
                       {t.messages[0].sender}: "{t.messages[0].text?.substring(0, 120)}{t.messages[0].text?.length > 120 ? '…' : ''}"
                     </div>
                   )}
@@ -530,37 +550,33 @@ const SchoolDetailView = () => {
         </div>
       )}
 
-      {/* ── SUBSCRIPTION MODAL ── */}
+      {/* Subscription Modal */}
       {showSubModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(9, 9, 11, 0.7)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
-          <div style={{ background: '#FFFFFF', border: '1px solid #E4E4E7', borderRadius: '20px', padding: '2rem', width: '100%', maxWidth: '480px', color: '#18181b', boxShadow: '0 20px 50px rgba(0,0,0,0.2)' }}>
-            <h2 style={{ fontFamily: 'Outfit, sans-serif', margin: '0 0 1.25rem', fontWeight: 800, color: '#09090b' }}>Manage Subscription — {school.name}</h2>
-            <form onSubmit={handleSaveSubscription} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
+          <div style={{ background: '#141418', border: '1px solid #27272a', borderRadius: '14px', padding: '1.5rem', width: '100%', maxWidth: '440px', color: '#fafafa' }}>
+            <h2 style={{ margin: '0 0 1rem', fontWeight: 700, color: '#fafafa', fontSize: '1.1rem' }}>Subscription — {school.name}</h2>
+            <form onSubmit={handleSaveSubscription} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: '#09090b', marginBottom: '0.4rem', fontWeight: 700 }}>Subscription Tier</label>
-                <select value={subTier} onChange={e => setSubTier(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#18181b', outline: 'none' }}>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.35rem', fontWeight: 600 }}>Subscription Tier</label>
+                <select value={subTier} onChange={e => setSubTier(e.target.value)} style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', background: '#0e0e11', border: '1px solid #27272a', color: '#fafafa', outline: 'none', fontSize: '0.85rem' }}>
                   <option value="Basic">Basic (GH₵ 1,200 / yr)</option>
                   <option value="Standard">Standard (GH₵ 2,500 / yr)</option>
                   <option value="Enterprise">Enterprise (GH₵ 4,800 / yr)</option>
                 </select>
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: '#09090b', marginBottom: '0.4rem', fontWeight: 700 }}>Account Status</label>
-                <select value={subStatus} onChange={e => setSubStatus(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#18181b', outline: 'none' }}>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.35rem', fontWeight: 600 }}>Account Status</label>
+                <select value={subStatus} onChange={e => setSubStatus(e.target.value)} style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', background: '#0e0e11', border: '1px solid #27272a', color: '#fafafa', outline: 'none', fontSize: '0.85rem' }}>
                   <option value="Active">Active</option>
-                  <option value="Trial">Trial (30-day evaluation)</option>
+                  <option value="Trial">Trial</option>
                   <option value="Suspended">Suspended</option>
-                  <option value="Expired">Expired</option>
+                  <option value="Cancelled">Cancelled</option>
                 </select>
               </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: '#09090b', marginBottom: '0.4rem', fontWeight: 700 }}>Renewal Date</label>
-                <input type="date" value={subRenewal} onChange={e => setSubRenewal(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#18181b', outline: 'none' }} />
-              </div>
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
-                <button type="button" onClick={() => setShowSubModal(false)} style={{ padding: '0.65rem 1.25rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#71717a', cursor: 'pointer', fontWeight: 700 }}>Cancel</button>
-                <button type="submit" disabled={saving} style={{ padding: '0.65rem 1.25rem', borderRadius: '10px', background: '#09090b', border: 'none', color: '#FFFFFF', fontWeight: 800, cursor: saving ? 'not-allowed' : 'pointer' }}>
-                  {saving ? 'Saving…' : 'Save Subscription'}
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+                <button type="button" onClick={() => setShowSubModal(false)} style={{ padding: '0.45rem 0.85rem', borderRadius: '6px', background: '#1c1c22', border: '1px solid #27272a', color: '#a1a1aa', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>Cancel</button>
+                <button type="submit" disabled={saving} style={{ padding: '0.45rem 1rem', borderRadius: '6px', background: '#2563eb', border: 'none', color: '#ffffff', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>
+                  {saving ? 'Saving…' : 'Save Changes'}
                 </button>
               </div>
             </form>
@@ -568,48 +584,58 @@ const SchoolDetailView = () => {
         </div>
       )}
 
-      {/* ── SUPPORT NOTICE MODAL ── */}
+      {/* Support Notice Modal */}
       {showMsgModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(9, 9, 11, 0.7)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
-          <div style={{ background: '#FFFFFF', border: '1px solid #E4E4E7', borderRadius: '20px', padding: '2rem', width: '100%', maxWidth: '540px', color: '#18181b', boxShadow: '0 20px 50px rgba(0,0,0,0.2)' }}>
-            <h2 style={{ fontFamily: 'Outfit, sans-serif', margin: '0 0 0.5rem', fontWeight: 800, color: '#09090b' }}>Send Support Notice</h2>
-            <p style={{ color: '#71717a', fontSize: '0.85rem', margin: '0 0 1.25rem' }}>
-              Create a support ticket and dispatch an alert to headteacher <strong style={{ color: '#09090b' }}>{school.headteacher}</strong>.
-            </p>
-            <form onSubmit={handleSendSupportNotice} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
+          <div style={{ background: '#141418', border: '1px solid #27272a', borderRadius: '14px', padding: '1.5rem', width: '100%', maxWidth: '480px', color: '#fafafa' }}>
+            <h2 style={{ margin: '0 0 1rem', fontWeight: 700, color: '#fafafa', fontSize: '1.1rem' }}>Send Support Notice to {school.name}</h2>
+            <form onSubmit={handleSendSupportNotice} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: '#09090b', marginBottom: '0.4rem', fontWeight: 700 }}>Ticket Title</label>
-                <input type="text" required placeholder="e.g. Score Entry Sync Issue — Urgent" value={msgTitle} onChange={e => setMsgTitle(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#18181b', fontSize: '0.9rem', outline: 'none' }} />
+                <label style={{ display: 'block', fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.35rem', fontWeight: 600 }}>Notice Subject</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Action Required: Please verify Learner Continuous Assessment Marks"
+                  value={msgTitle}
+                  onChange={e => setMsgTitle(e.target.value)}
+                  style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', background: '#0e0e11', border: '1px solid #27272a', color: '#fafafa', outline: 'none', fontSize: '0.85rem', boxSizing: 'border-box' }}
+                />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#09090b', marginBottom: '0.4rem', fontWeight: 700 }}>Category</label>
-                  <select value={msgCategory} onChange={e => setMsgCategory(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#18181b', outline: 'none' }}>
-                    <option>General Support</option>
-                    <option>Sync &amp; Data Entry</option>
-                    <option>Billing &amp; License</option>
-                    <option>Report Release</option>
-                    <option>Access &amp; Security</option>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.35rem', fontWeight: 600 }}>Category</label>
+                  <select value={msgCategory} onChange={e => setMsgCategory(e.target.value)} style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', background: '#0e0e11', border: '1px solid #27272a', color: '#fafafa', outline: 'none', fontSize: '0.85rem' }}>
+                    <option value="System Notice">System Notice</option>
+                    <option value="Billing & Invoicing">Billing &amp; Invoicing</option>
+                    <option value="Score Entry Support">Score Entry Support</option>
+                    <option value="Report Card Generation">Report Card Generation</option>
                   </select>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#09090b', marginBottom: '0.4rem', fontWeight: 700 }}>Priority</label>
-                  <select value={msgPriority} onChange={e => setMsgPriority(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#18181b', outline: 'none' }}>
-                    <option>Low</option>
-                    <option>Medium</option>
-                    <option>High</option>
-                    <option>Urgent</option>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.35rem', fontWeight: 600 }}>Priority</label>
+                  <select value={msgPriority} onChange={e => setMsgPriority(e.target.value)} style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', background: '#0e0e11', border: '1px solid #27272a', color: '#fafafa', outline: 'none', fontSize: '0.85rem' }}>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Urgent">Urgent</option>
                   </select>
                 </div>
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: '#09090b', marginBottom: '0.4rem', fontWeight: 700 }}>Message</label>
-                <textarea rows={4} required placeholder="Describe the issue or support action in detail…" value={messageText} onChange={e => setMessageText(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#18181b', fontSize: '0.9rem', resize: 'vertical', outline: 'none' }} />
+                <label style={{ display: 'block', fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.35rem', fontWeight: 600 }}>Message Content</label>
+                <textarea
+                  rows={4}
+                  required
+                  placeholder="Type the message for the school's administration portal…"
+                  value={messageText}
+                  onChange={e => setMessageText(e.target.value)}
+                  style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', background: '#0e0e11', border: '1px solid #27272a', color: '#fafafa', outline: 'none', fontSize: '0.85rem', boxSizing: 'border-box', resize: 'vertical' }}
+                />
               </div>
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                <button type="button" onClick={() => setShowMsgModal(false)} style={{ padding: '0.65rem 1.25rem', borderRadius: '10px', background: '#FAFAFA', border: '1px solid #E4E4E7', color: '#71717a', cursor: 'pointer', fontWeight: 700 }}>Cancel</button>
-                <button type="submit" disabled={saving} style={{ padding: '0.65rem 1.25rem', borderRadius: '10px', background: '#09090b', border: 'none', color: '#FFFFFF', fontWeight: 800, cursor: saving ? 'not-allowed' : 'pointer' }}>
-                  {saving ? 'Sending…' : 'Send Notice'}
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '0.35rem' }}>
+                <button type="button" onClick={() => setShowMsgModal(false)} style={{ padding: '0.45rem 0.85rem', borderRadius: '6px', background: '#1c1c22', border: '1px solid #27272a', color: '#a1a1aa', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>Cancel</button>
+                <button type="submit" disabled={saving} style={{ padding: '0.45rem 1rem', borderRadius: '6px', background: '#2563eb', border: 'none', color: '#ffffff', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>
+                  {saving ? 'Sending…' : 'Send Message'}
                 </button>
               </div>
             </form>

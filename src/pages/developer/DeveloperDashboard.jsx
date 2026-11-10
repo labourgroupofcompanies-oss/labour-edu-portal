@@ -178,7 +178,7 @@ const DeveloperDashboard = () => {
               <i className="fas fa-bolt" style={{ color: '#10b981' }}></i> Direct Action Hub
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.1rem' }}>
               {quickActions.map((qa, i) => (
                 <div
                   key={i}
@@ -246,7 +246,7 @@ const DeveloperDashboard = () => {
                   <i className="fas fa-gauge" style={{ color: '#06b6d4' }}></i> Live Platform Telemetry
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.85rem' }}>
                   {summaryCards.map((card, idx) => (
                     <div key={idx} style={{ padding: '1.1rem', borderRadius: '14px', background: '#0b132b', border: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: '0.85rem', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
                       <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: card.bg, color: card.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.15rem', flexShrink: 0 }}>

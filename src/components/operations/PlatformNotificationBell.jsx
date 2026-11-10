@@ -118,7 +118,7 @@ const PlatformNotificationBell = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div style={{
+        <div className="notif-dropdown" style={{
           position: 'absolute',
           top: '48px',
           right: 0,

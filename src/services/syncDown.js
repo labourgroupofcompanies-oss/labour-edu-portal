@@ -81,15 +81,9 @@ async function runAdminSync(user) {
   const { schoolId } = user;
   console.log('[SyncDown] Admin sync start — school:', schoolId);
 
-  // 0. Self-heal: ensure auth metadata contains school_id for RLS
-  try {
-    const { data: { user: authUser } } = await supabase.auth.getUser();
-    if (authUser && (!authUser.user_metadata?.school_id || authUser.user_metadata.school_id !== schoolId)) {
-      await supabase.auth.updateUser({ data: { school_id: schoolId } });
-      await supabase.auth.refreshSession();
-      console.log('[SyncDown] Forced session refresh to apply school_id claim to JWT.');
-    }
-  } catch (_) { /* non-critical — skip silently */ }
+  // NOTE: School-to-user association is managed server-side via report_profiles table.
+  // Never write tenant IDs to user_metadata (client-writable) as it breaks tenant isolation.
+  // RLS policies must reference report_profiles.school_id via a secure RPC, not JWT claims.
 
   // 0a. Sync Category Pricing in background
   try {
@@ -526,7 +520,7 @@ async function runAdminSync(user) {
       // Asynchronously clean up ghost duplicate rows from Supabase if any exist
       if (duplicateRemoteIdsToDelete.length > 0) {
         console.warn(`[SyncDown] Found ${duplicateRemoteIdsToDelete.length} duplicate learner rows on Supabase. Purging duplicates...`);
-        supabase.from('report_learners').delete().in('id', duplicateRemoteIdsToDelete).catch(() => null);
+        supabase.from('report_learners').delete().in('id', duplicateRemoteIdsToDelete).then(null, () => null);
       }
 
       // Fetch all local learners for this school (type-safe check on string/number schoolId)

@@ -16,9 +16,23 @@ import { sha256 } from '../../utils/cryptoUtils';
 //
 // Current key hash below corresponds to the private key known only to you.
 // ─────────────────────────────────────────────────────────────────────────────
-const PLATFORM_KEY_HASH = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8';
-//                         ↑ This is the SHA-256 of "password" — CHANGE THIS
-//                           to the hash of your own private key (see above).
+
+// ⚠️ SECURITY: This constant MUST be set to the SHA-256 hash of your own strong secret key.
+// The previous value was SHA-256("password") which is a critical security vulnerability.
+// 
+// To generate a new hash:
+//   1. Choose a strong key (e.g. a random 32-character password from a password manager)
+//   2. In your browser console run:
+//      crypto.subtle.digest('SHA-256', new TextEncoder().encode('YourKeyHere'))
+//        .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
+//   3. Paste the resulting hash below — NEVER commit the plaintext key.
+//   4. Store the plaintext key securely in a password manager.
+//
+// ⚠️ IMPORTANT: The developer registration page should ideally be disabled in production
+//    or only accessible from a restricted network. Provision admin accounts via Supabase dashboard.
+//
+// Placeholder: SHA-256 of a unique sentinel (replace before deploying)
+const PLATFORM_KEY_HASH = 'REPLACE_WITH_YOUR_OWN_SHA256_HASH_SEE_INSTRUCTIONS_ABOVE_000000000000';
 
 const MAX_ATTEMPTS = 3;
 const STEPS = ['Verify', 'Identity', 'Password', 'Done'];
@@ -64,6 +78,11 @@ const PlatformDeveloperRegister = () => {
     e.preventDefault();
     if (locked) return;
     setError('');
+
+    if (PLATFORM_KEY_HASH.startsWith('REPLACE_WITH') || PLATFORM_KEY_HASH.length !== 64) {
+      setError('Platform registration is not configured. Contact the system administrator.');
+      return;
+    }
 
     const inputHash = await sha256(secretKey.trim());
 

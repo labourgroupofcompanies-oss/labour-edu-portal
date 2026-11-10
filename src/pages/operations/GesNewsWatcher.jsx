@@ -75,12 +75,12 @@ ${item.summary}
 
 ---
 
-## 🏛️ Official Verification & Reference Document
-This simplified breakdown is prepared by the **Labour Edu Editorial Team** to assist schools in understanding national educational directives.
+## Official Verification & Reference Document
+This simplified breakdown is prepared by the **Editorial Team** to assist schools in understanding national educational directives.
 
 For the complete official document, statutory tables, and signed government notices, please inspect the original official page:
 
-👉 **[View Original Directive on ${item.sourceName} (Direct Information Page)](${item.sourceUrl})**
+**[View Original Directive on ${item.sourceName}](${item.sourceUrl})**
 `;
 
     setBlogModalItem({
@@ -123,7 +123,7 @@ For the complete official document, statutory tables, and signed government noti
       if (blogModalItem.dispatchAsBroadcast) {
         try {
           await broadcastService.createBroadcast({
-            title: `🇬🇭 ${blogModalItem.title}`,
+            title: blogModalItem.title,
             content: blogModalItem.summary,
             targetAudience: 'all',
             severity: 'warning',
@@ -191,56 +191,54 @@ For the complete official document, statutory tables, and signed government noti
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', color: '#09090b' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', color: '#fafafa' }}>
       
       {/* Top Header Card */}
       <div style={{
-        padding: '2rem 2.25rem',
-        borderRadius: '20px',
+        padding: '1.75rem 2rem',
+        borderRadius: '16px',
         background: '#09090b',
-        border: '1px solid #27272a',
-        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.2)',
+        border: '1px solid #222226',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: '1.25rem',
-        color: '#FFFFFF'
+        color: '#fafafa'
       }}>
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(37, 99, 235, 0.2)', border: '1px solid rgba(37, 99, 235, 0.4)', padding: '0.25rem 0.75rem', borderRadius: '999px', color: '#60a5fa', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.6rem' }}>
-            <i className="fas fa-satellite-dish"></i> Real-Time Ghanaian Education Radar
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.2)', padding: '0.2rem 0.65rem', borderRadius: '4px', color: '#38bdf8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.5rem' }}>
+            <i className="fas fa-satellite-dish"></i> National Education Watcher
           </div>
-          <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.85rem', fontWeight: 900, margin: 0, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
-            GES &amp; National Education Watcher
+          <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.75rem', fontWeight: 700, margin: 0, color: '#fafafa', letterSpacing: '-0.02em' }}>
+            GES &amp; Regulatory Directives
           </h1>
-          <p style={{ margin: '0.4rem 0 0', color: '#A1A1AA', fontSize: '0.9rem', maxWidth: '650px', lineHeight: 1.5 }}>
-            Automated intelligence watcher monitoring official releases, curriculum directives, and exam guidelines across Ghana Education Service, Ministry of Education, NaCCA, WAEC, and NTC.
+          <p style={{ margin: '0.35rem 0 0', color: '#a1a1aa', fontSize: '0.88rem', maxWidth: '650px', lineHeight: 1.5 }}>
+            Automated intelligence monitoring official releases, curriculum directives, and exam guidelines across GES, MoE, NaCCA, WAEC, and NTC.
           </p>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
           <button
             onClick={handleScanNow}
             disabled={scanning}
             style={{
-              padding: '0.75rem 1.4rem',
-              borderRadius: '12px',
+              padding: '0.65rem 1.25rem',
+              borderRadius: '8px',
               border: 'none',
-              background: scanning ? '#4B5563' : '#2563eb',
+              background: scanning ? '#27272a' : '#2563eb',
               color: '#FFFFFF',
-              fontWeight: 800,
-              fontSize: '0.88rem',
+              fontWeight: 600,
+              fontSize: '0.85rem',
               cursor: scanning ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)',
-              transition: 'all 0.2s ease'
+              transition: 'background 0.15s ease'
             }}
           >
             <i className={`fas fa-arrows-rotate ${scanning ? 'fa-spin' : ''}`}></i>
-            {scanning ? 'Scanning 6 Official Portals...' : 'Scan All Portals Now'}
+            {scanning ? 'Scanning Portals...' : 'Scan Portals Now'}
           </button>
           
           <div style={{ fontSize: '0.74rem', color: '#71717a' }}>
@@ -252,34 +250,34 @@ For the complete official document, statutory tables, and signed government noti
       {/* Success Notification Alert with Direct Link to Blog */}
       {dispatchSuccess && (
         <div style={{
-          background: '#ECFDF5',
-          border: '1px solid #A7F3D0',
-          color: '#065F46',
-          padding: '1.1rem 1.25rem',
-          borderRadius: '14px',
-          fontWeight: 700,
-          fontSize: '0.88rem',
+          background: 'rgba(16, 185, 129, 0.1)',
+          border: '1px solid rgba(16, 185, 129, 0.25)',
+          color: '#34d399',
+          padding: '0.9rem 1.15rem',
+          borderRadius: '10px',
+          fontWeight: 600,
+          fontSize: '0.85rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '10px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <i className="fas fa-check-circle" style={{ fontSize: '1.2rem', color: '#10B981' }}></i>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <i className="fas fa-check-circle" style={{ fontSize: '1.1rem', color: '#34d399' }}></i>
             <span>{dispatchSuccess}</span>
           </div>
 
           <button
             onClick={() => navigate('/platform/operations/blog')}
             style={{
-              background: '#065F46',
-              color: '#FFFFFF',
-              border: 'none',
+              background: '#18181c',
+              border: '1px solid #27272a',
+              color: '#34d399',
               padding: '0.35rem 0.85rem',
-              borderRadius: '8px',
+              borderRadius: '6px',
               fontSize: '0.78rem',
-              fontWeight: 800,
+              fontWeight: 600,
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
@@ -293,11 +291,11 @@ For the complete official document, statutory tables, and signed government noti
       )}
 
       {/* Monitored Portals Directory Pills */}
-      <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid #E4E4E7', padding: '1.25rem', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)' }}>
-        <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
-          Monitored Government &amp; News Portals ({MONITORED_SOURCES.length})
+      <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.15rem' }}>
+        <div style={{ fontSize: '0.72rem', fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.65rem' }}>
+          Monitored Sources ({MONITORED_SOURCES.length})
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '8px' }}>
           {MONITORED_SOURCES.map(source => (
             <a
               key={source.id}
@@ -308,22 +306,22 @@ For the complete official document, statutory tables, and signed government noti
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px',
-                padding: '0.65rem 0.85rem',
-                borderRadius: '10px',
-                background: '#FAFAFA',
-                border: '1px solid #E4E4E7',
+                padding: '0.55rem 0.75rem',
+                borderRadius: '8px',
+                background: '#18181c',
+                border: '1px solid #27272a',
                 textDecoration: 'none',
-                color: '#09090b',
-                transition: 'all 0.2s ease'
+                color: '#fafafa',
+                transition: 'border-color 0.15s ease'
               }}
               onMouseEnter={e => e.currentTarget.style.borderColor = source.badgeColor}
-              onMouseLeave={e => e.currentTarget.style.borderColor = '#E4E4E7'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = '#27272a'}
             >
-              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: source.badgeColor, color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>
+              <div style={{ width: '26px', height: '26px', borderRadius: '6px', background: `${source.badgeColor}20`, color: source.badgeColor, border: `1px solid ${source.badgeColor}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', flexShrink: 0 }}>
                 <i className={`fas ${source.icon}`}></i>
               </div>
               <div style={{ overflow: 'hidden' }}>
-                <div style={{ fontWeight: 800, fontSize: '0.8rem', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                <div style={{ fontWeight: 600, fontSize: '0.8rem', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
                   {source.shortName}
                 </div>
                 <div style={{ fontSize: '0.68rem', color: '#71717a' }}>
@@ -336,10 +334,10 @@ For the complete official document, statutory tables, and signed government noti
       </div>
 
       {/* Main Feed Container */}
-      <div style={{ background: '#FFFFFF', borderRadius: '18px', border: '1px solid #E4E4E7', padding: '1.6rem', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)' }}>
+      <div style={{ background: '#121215', borderRadius: '12px', border: '1px solid #222226', padding: '1.25rem' }}>
         
         {/* Filter and Search Bar */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid #F4F4F5', paddingBottom: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem', borderBottom: '1px solid #222226', paddingBottom: '0.85rem' }}>
           
           {/* Source Tabs */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -347,12 +345,13 @@ For the complete official document, statutory tables, and signed government noti
               onClick={() => setSelectedSource('all')}
               style={{
                 padding: '0.4rem 0.85rem',
-                borderRadius: '8px',
-                border: 'none',
-                background: selectedSource === 'all' ? '#09090b' : '#F4F4F5',
-                color: selectedSource === 'all' ? '#FFFFFF' : '#71717a',
-                fontSize: '0.78rem',
-                fontWeight: 800,
+                borderRadius: '6px',
+                border: '1px solid',
+                borderColor: selectedSource === 'all' ? '#38bdf8' : '#27272a',
+                background: selectedSource === 'all' ? 'rgba(56, 189, 248, 0.12)' : '#18181c',
+                color: selectedSource === 'all' ? '#38bdf8' : '#a1a1aa',
+                fontSize: '0.76rem',
+                fontWeight: 600,
                 cursor: 'pointer'
               }}
             >
@@ -367,12 +366,13 @@ For the complete official document, statutory tables, and signed government noti
                   onClick={() => setSelectedSource(s.id)}
                   style={{
                     padding: '0.4rem 0.85rem',
-                    borderRadius: '8px',
-                    border: 'none',
-                    background: selectedSource === s.id ? s.badgeColor : '#F4F4F5',
-                    color: selectedSource === s.id ? '#FFFFFF' : '#71717a',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
+                    borderRadius: '6px',
+                    border: '1px solid',
+                    borderColor: selectedSource === s.id ? s.badgeColor : '#27272a',
+                    background: selectedSource === s.id ? `${s.badgeColor}15` : '#18181c',
+                    color: selectedSource === s.id ? s.badgeColor : '#a1a1aa',
+                    fontSize: '0.76rem',
+                    fontWeight: 600,
                     cursor: 'pointer'
                   }}
                 >
@@ -383,20 +383,23 @@ For the complete official document, statutory tables, and signed government noti
           </div>
 
           {/* Search Box */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: '240px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: '220px' }}>
             <div style={{ position: 'relative', width: '100%' }}>
-              <i className="fas fa-search" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#A1A1AA', fontSize: '0.8rem' }}></i>
+              <i className="fas fa-search" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#71717a', fontSize: '0.8rem' }}></i>
               <input
                 type="text"
-                placeholder="Search circulars, BECE, marks..."
+                placeholder="Search circulars, marks..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%',
                   padding: '0.45rem 0.75rem 0.45rem 2rem',
-                  borderRadius: '8px',
-                  border: '1px solid #D4D4D8',
-                  fontSize: '0.82rem'
+                  borderRadius: '6px',
+                  border: '1px solid #27272a',
+                  background: '#18181c',
+                  color: '#fafafa',
+                  fontSize: '0.82rem',
+                  outline: 'none'
                 }}
               />
             </div>
@@ -406,12 +409,12 @@ For the complete official document, statutory tables, and signed government noti
         {/* Circulars List */}
         {filteredNews.length === 0 ? (
           <div style={{ padding: '3.5rem', textAlign: 'center', color: '#71717a' }}>
-            <i className="fas fa-radar" style={{ fontSize: '2.5rem', color: '#D4D4D8', marginBottom: '0.75rem', display: 'block' }}></i>
-            <div style={{ fontWeight: 800, color: '#09090b' }}>No Matching Directives Found</div>
+            <i className="fas fa-radar" style={{ fontSize: '2.5rem', color: '#52525b', marginBottom: '0.75rem', display: 'block' }}></i>
+            <div style={{ fontWeight: 600, color: '#fafafa' }}>No Matching Directives Found</div>
             <p style={{ fontSize: '0.85rem', margin: '0.4rem 0 0 0' }}>Try changing the source filter or search query.</p>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             {filteredNews.map(item => {
               const urgency = getUrgencyBadge(item.urgency);
               const source = MONITORED_SOURCES.find(s => s.id === item.sourceId) || {};
@@ -420,32 +423,31 @@ For the complete official document, statutory tables, and signed government noti
                 <div
                   key={item.id}
                   style={{
-                    background: item.isRead ? '#FAFAFA' : '#FFFFFF',
-                    border: `1.5px solid ${item.isBreaking ? '#F59E0B' : '#E4E4E7'}`,
-                    borderLeft: `5px solid ${source.badgeColor || '#2563eb'}`,
-                    borderRadius: '14px',
-                    padding: '1.35rem',
+                    background: '#18181c',
+                    border: '1px solid #27272a',
+                    borderLeft: `3px solid ${source.badgeColor || '#38bdf8'}`,
+                    borderRadius: '8px',
+                    padding: '1.15rem',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '0.85rem',
-                    boxShadow: item.isBreaking ? '0 4px 14px rgba(245, 158, 11, 0.12)' : 'none'
+                    gap: '0.75rem'
                   }}
                 >
                   {/* Top Metadata */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: '999px', background: `${source.badgeColor}15`, color: source.badgeColor }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 600, padding: '0.15rem 0.5rem', borderRadius: '4px', background: `${source.badgeColor}15`, color: source.badgeColor, border: `1px solid ${source.badgeColor}30` }}>
                         {item.sourceName}
                       </span>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '0.2rem 0.55rem', borderRadius: '999px', background: urgency.bg, color: urgency.color, border: `1px solid ${urgency.border}` }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 600, padding: '0.15rem 0.5rem', borderRadius: '4px', background: urgency.bg, color: urgency.color, border: `1px solid ${urgency.border}` }}>
                         {urgency.label}
                       </span>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#71717a' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 500, color: '#71717a' }}>
                         {item.category}
                       </span>
                       {item.isBreaking && (
-                        <span style={{ fontSize: '0.68rem', fontWeight: 900, background: '#FEF3C7', color: '#B45309', padding: '0.15rem 0.5rem', borderRadius: '999px' }}>
-                          ⚡ BREAKING DIRECTIVE
+                        <span style={{ fontSize: '0.68rem', fontWeight: 600, background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', border: '1px solid rgba(245, 158, 11, 0.3)', padding: '0.15rem 0.45rem', borderRadius: '4px' }}>
+                          BREAKING DIRECTIVE
                         </span>
                       )}
                     </div>
@@ -457,16 +459,16 @@ For the complete official document, statutory tables, and signed government noti
 
                   {/* Title & Summary */}
                   <div>
-                    <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#09090b', marginBottom: '0.4rem', lineHeight: 1.4 }}>
+                    <div style={{ fontWeight: 600, fontSize: '1rem', color: '#fafafa', marginBottom: '0.35rem', lineHeight: 1.4 }}>
                       {item.title}
                     </div>
-                    <div style={{ fontSize: '0.88rem', color: '#374151', lineHeight: 1.55 }}>
+                    <div style={{ fontSize: '0.86rem', color: '#a1a1aa', lineHeight: 1.55 }}>
                       {item.summary}
                     </div>
                   </div>
 
                   {/* Actions Row */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #F4F4F5', paddingTop: '0.85rem', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #222226', paddingTop: '0.75rem', flexWrap: 'wrap', gap: '8px' }}>
                     
                     {/* Official Portal Source Link (Direct Page) */}
                     <a
@@ -479,13 +481,13 @@ For the complete official document, statutory tables, and signed government noti
                         alignItems: 'center',
                         gap: '6px',
                         fontSize: '0.78rem',
-                        fontWeight: 700,
-                        color: source.badgeColor || '#2563eb',
+                        fontWeight: 600,
+                        color: source.badgeColor || '#38bdf8',
                         textDecoration: 'none'
                       }}
                     >
-                      <i className="fas fa-arrow-up-right-from-square"></i>
-                      <span>Read Original Notice on {source.shortName || 'Official Website'}</span>
+                      <i className="fas fa-arrow-up-right-from-square" style={{ fontSize: '0.7rem' }}></i>
+                      <span>Read Notice on {source.shortName || 'Official Website'}</span>
                     </a>
 
                     {/* Action Buttons */}
@@ -495,44 +497,41 @@ For the complete official document, statutory tables, and signed government noti
                       <button
                         onClick={() => handleOpenConvertToBlogModal(item)}
                         style={{
-                          background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+                          background: '#2563eb',
                           color: '#FFFFFF',
                           border: 'none',
                           padding: '0.45rem 0.95rem',
-                          borderRadius: '8px',
+                          borderRadius: '6px',
                           fontSize: '0.78rem',
-                          fontWeight: 800,
+                          fontWeight: 600,
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '6px',
-                          boxShadow: '0 2px 10px rgba(37, 99, 235, 0.25)'
+                          gap: '6px'
                         }}
-                        title="Generate a simple blog post on Labour Edu Blog and Manuals"
                       >
                         <i className="fas fa-pen-nib"></i>
-                        <span>+ Convert to Blog</span>
+                        <span>Convert to Blog</span>
                       </button>
 
                       {/* Quick Broadcast Button */}
                       <button
                         onClick={() => handleConvertToBroadcast(item)}
                         style={{
-                          background: '#18181b',
-                          color: '#FFFFFF',
+                          background: '#121215',
+                          color: '#fafafa',
                           border: '1px solid #27272a',
                           padding: '0.45rem 0.85rem',
-                          borderRadius: '8px',
+                          borderRadius: '6px',
                           fontSize: '0.78rem',
-                          fontWeight: 700,
+                          fontWeight: 600,
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '6px'
                         }}
-                        title="Broadcast notice with direct official link"
                       >
-                        <i className="fas fa-bullhorn" style={{ color: '#F59E0B' }}></i>
+                        <i className="fas fa-bullhorn" style={{ color: '#fbbf24' }}></i>
                         <span>Quick Broadcast</span>
                       </button>
                     </div>
@@ -550,7 +549,7 @@ For the complete official document, statutory tables, and signed government noti
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.7)',
+          background: 'rgba(0, 0, 0, 0.75)',
           backdropFilter: 'blur(4px)',
           display: 'flex',
           alignItems: 'center',
@@ -559,39 +558,40 @@ For the complete official document, statutory tables, and signed government noti
           padding: '1.5rem'
         }}>
           <div style={{
-            background: '#FFFFFF',
-            borderRadius: '18px',
+            background: '#141418',
+            borderRadius: '14px',
+            border: '1px solid #27272a',
             width: '100%',
             maxWidth: '680px',
             maxHeight: '90vh',
             overflowY: 'auto',
-            padding: '1.85rem',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.35)',
+            padding: '1.5rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1.2rem'
+            gap: '1rem',
+            color: '#fafafa'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #E4E4E7', paddingBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #222226', paddingBottom: '0.85rem' }}>
               <div>
-                <div style={{ fontWeight: 900, fontSize: '1.2rem', color: '#09090b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <i className="fas fa-newspaper" style={{ color: '#2563eb' }}></i>
-                  Create Blog Post from GES Directive
+                <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#fafafa', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <i className="fas fa-newspaper" style={{ color: '#38bdf8' }}></i>
+                  Create Blog Post from Directive
                 </div>
-                <div style={{ fontSize: '0.78rem', color: '#71717a', marginTop: '2px' }}>
-                  This will generate a clean blog post in <strong>Blog &amp; Manuals</strong> with the official deep-link verification box.
+                <div style={{ fontSize: '0.76rem', color: '#a1a1aa', marginTop: '2px' }}>
+                  Generates an article in <strong>Blog &amp; Manuals</strong> with official citation.
                 </div>
               </div>
               <button
                 onClick={() => setBlogModalItem(null)}
-                style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#71717a' }}
+                style={{ background: 'transparent', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#71717a' }}
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handlePublishBlogPost} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={handlePublishBlogPost} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               <div>
-                <label style={{ display: 'block', fontWeight: 800, fontSize: '0.82rem', color: '#09090b', marginBottom: '0.35rem' }}>
+                <label style={{ display: 'block', fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
                   Blog Post Title *
                 </label>
                 <input
@@ -599,74 +599,74 @@ For the complete official document, statutory tables, and signed government noti
                   value={blogModalItem.title}
                   onChange={(e) => setBlogModalItem({ ...blogModalItem, title: e.target.value })}
                   required
-                  style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.88rem', fontWeight: 700 }}
+                  style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.85rem' }}
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.85rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontWeight: 800, fontSize: '0.82rem', color: '#09090b', marginBottom: '0.35rem' }}>
+                  <label style={{ display: 'block', fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
                     Category
                   </label>
                   <input
                     type="text"
                     value={blogModalItem.category}
                     onChange={(e) => setBlogModalItem({ ...blogModalItem, category: e.target.value })}
-                    style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.84rem', fontWeight: 600 }}
+                    style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.84rem' }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontWeight: 800, fontSize: '0.82rem', color: '#09090b', marginBottom: '0.35rem' }}>
+                  <label style={{ display: 'block', fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
                     Target Audience / Role
                   </label>
                   <input
                     type="text"
                     value={blogModalItem.targetRole}
                     onChange={(e) => setBlogModalItem({ ...blogModalItem, targetRole: e.target.value })}
-                    style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.84rem', fontWeight: 600 }}
+                    style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.84rem' }}
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontWeight: 800, fontSize: '0.82rem', color: '#09090b', marginBottom: '0.35rem' }}>
-                  Executive Summary (2-Minute Overview)
+                <label style={{ display: 'block', fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
+                  Executive Summary
                 </label>
                 <textarea
                   value={blogModalItem.summary}
                   onChange={(e) => setBlogModalItem({ ...blogModalItem, summary: e.target.value })}
                   rows={2}
-                  style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.85rem', lineHeight: 1.4, fontFamily: 'inherit' }}
+                  style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.85rem', lineHeight: 1.4, fontFamily: 'inherit' }}
                 />
               </div>
 
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                  <label style={{ fontWeight: 800, fontSize: '0.82rem', color: '#09090b' }}>
-                    Full Blog Article Content (Markdown)
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
+                  <label style={{ fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', textTransform: 'uppercase' }}>
+                    Article Content (Markdown)
                   </label>
                   <div style={{ display: 'flex', gap: '4px' }}>
                     <button
                       type="button"
                       onClick={() => {
-                        const imgUrl = prompt('Enter Image URL (or Unsplash link):', 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800');
+                        const imgUrl = prompt('Enter Image URL:');
                         if (imgUrl) {
-                          const caption = prompt('Enter Caption (e.g. Official Directive Seal):', 'Ghana Education Service Policy Guide');
+                          const caption = prompt('Enter Caption:');
                           setBlogModalItem(prev => ({
                             ...prev,
-                            content: `${prev.content}\n\n![${caption || 'Article illustration'} | center | 80%](${imgUrl})\n`
+                            content: `${prev.content}\n\n![${caption || 'Illustration'}](${imgUrl})\n`
                           }));
                         }
                       }}
                       style={{
                         padding: '0.25rem 0.6rem',
                         borderRadius: '6px',
-                        background: '#EFF6FF',
-                        border: '1px solid #BFDBFE',
-                        color: '#1D4ED8',
+                        background: '#18181c',
+                        border: '1px solid #27272a',
+                        color: '#38bdf8',
                         fontSize: '0.74rem',
-                        fontWeight: 800,
+                        fontWeight: 600,
                         cursor: 'pointer',
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -674,7 +674,7 @@ For the complete official document, statutory tables, and signed government noti
                       }}
                     >
                       <i className="fas fa-image"></i>
-                      <span>+ Insert Image</span>
+                      <span>+ Image</span>
                     </button>
                   </div>
                 </div>
@@ -682,22 +682,22 @@ For the complete official document, statutory tables, and signed government noti
                   value={blogModalItem.content}
                   onChange={(e) => setBlogModalItem({ ...blogModalItem, content: e.target.value })}
                   rows={7}
-                  style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.84rem', lineHeight: 1.45, fontFamily: 'monospace' }}
+                  style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.84rem', lineHeight: 1.45, fontFamily: 'monospace' }}
                 />
               </div>
 
               {/* Direct Official Link Citation Box */}
-              <div style={{ background: '#F8FAFC', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
-                <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', marginBottom: '3px' }}>
-                  Direct Official Deep-Link Citation:
+              <div style={{ background: '#18181c', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #27272a' }}>
+                <div style={{ fontSize: '0.72rem', color: '#71717a', fontWeight: 600, textTransform: 'uppercase', marginBottom: '3px' }}>
+                  Official Source Link:
                 </div>
-                <div style={{ fontSize: '0.8rem', color: '#2563eb', fontWeight: 700, wordBreak: 'break-all' }}>
+                <div style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: 500, wordBreak: 'break-all' }}>
                   {blogModalItem.sourceUrl}
                 </div>
               </div>
 
               {/* Optional Broadcast Checkbox */}
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.84rem', fontWeight: 700, color: '#09090b', cursor: 'pointer' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', fontWeight: 500, color: '#fafafa', cursor: 'pointer' }}>
                 <input
                   type="checkbox"
                   checked={blogModalItem.dispatchAsBroadcast}
@@ -706,11 +706,11 @@ For the complete official document, statutory tables, and signed government noti
                 <span>Also dispatch top notification banner across school portals with "Read Blog Guide" link</span>
               </label>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '0.75rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '0.5rem' }}>
                 <button
                   type="button"
                   onClick={() => setBlogModalItem(null)}
-                  style={{ padding: '0.65rem 1.25rem', borderRadius: '8px', background: '#F4F4F5', border: '1px solid #E4E4E7', fontWeight: 700, cursor: 'pointer' }}
+                  style={{ padding: '0.55rem 1.15rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#a1a1aa', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer' }}
                 >
                   Cancel
                 </button>
@@ -718,17 +718,17 @@ For the complete official document, statutory tables, and signed government noti
                   type="submit"
                   disabled={publishingBlog}
                   style={{
-                    padding: '0.65rem 1.5rem',
+                    padding: '0.55rem 1.25rem',
                     borderRadius: '8px',
                     background: '#2563eb',
                     border: 'none',
                     color: '#FFFFFF',
-                    fontWeight: 900,
+                    fontWeight: 600,
+                    fontSize: '0.82rem',
                     cursor: publishingBlog ? 'not-allowed' : 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '6px',
-                    boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)'
+                    gap: '6px'
                   }}
                 >
                   <i className="fas fa-check"></i>
@@ -745,7 +745,7 @@ For the complete official document, statutory tables, and signed government noti
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.65)',
+          background: 'rgba(0, 0, 0, 0.75)',
           backdropFilter: 'blur(4px)',
           display: 'flex',
           alignItems: 'center',
@@ -754,19 +754,20 @@ For the complete official document, statutory tables, and signed government noti
           padding: '1.5rem'
         }}>
           <div style={{
-            background: '#FFFFFF',
-            borderRadius: '18px',
+            background: '#141418',
+            borderRadius: '14px',
+            border: '1px solid #27272a',
             width: '100%',
             maxWidth: '600px',
-            padding: '1.75rem',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3)',
+            padding: '1.5rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1.2rem'
+            gap: '1rem',
+            color: '#fafafa'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ fontWeight: 900, fontSize: '1.15rem', color: '#09090b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <i className="fas fa-bullhorn" style={{ color: '#2563eb' }}></i>
+              <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#fafafa', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <i className="fas fa-bullhorn" style={{ color: '#38bdf8' }}></i>
                 Quick Direct Broadcast
               </div>
               <button
@@ -778,77 +779,77 @@ For the complete official document, statutory tables, and signed government noti
             </div>
 
             <div>
-              <label style={{ display: 'block', fontWeight: 800, fontSize: '0.8rem', color: '#09090b', marginBottom: '0.3rem' }}>
+              <label style={{ display: 'block', fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
                 Broadcast Title
               </label>
               <input
                 type="text"
                 value={broadcastModalItem.title}
                 onChange={(e) => setBroadcastModalItem({ ...broadcastModalItem, title: e.target.value })}
-                style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.88rem', fontWeight: 700 }}
+                style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.85rem' }}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', fontWeight: 800, fontSize: '0.8rem', color: '#09090b', marginBottom: '0.3rem' }}>
+              <label style={{ display: 'block', fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
                 Target Portals
               </label>
               <select
                 value={broadcastModalItem.targetAudience}
                 onChange={(e) => setBroadcastModalItem({ ...broadcastModalItem, targetAudience: e.target.value })}
-                style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.85rem', fontWeight: 700 }}
+                style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.85rem' }}
               >
-                <option value="all">🌐 All Schools &amp; Portals</option>
-                <option value="headteacher">🏫 Headteachers Only</option>
-                <option value="teacher">👨‍🏫 Teachers Only</option>
-                <option value="parent">👨‍👩‍👧 Parents Only</option>
+                <option value="all">All Schools &amp; Portals</option>
+                <option value="headteacher">Headteachers Only</option>
+                <option value="teacher">Teachers Only</option>
+                <option value="parent">Parents Only</option>
               </select>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.85rem' }}>
               <div>
-                <label style={{ display: 'block', fontWeight: 800, fontSize: '0.8rem', color: '#09090b', marginBottom: '0.3rem' }}>
+                <label style={{ display: 'block', fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
                   Button Action Text
                 </label>
                 <input
                   type="text"
                   value={broadcastModalItem.actionLabel}
                   onChange={(e) => setBroadcastModalItem({ ...broadcastModalItem, actionLabel: e.target.value })}
-                  style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.84rem', fontWeight: 700 }}
+                  style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.84rem' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontWeight: 800, fontSize: '0.8rem', color: '#09090b', marginBottom: '0.3rem' }}>
+                <label style={{ display: 'block', fontWeight: 600, fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
                   Destination Link (URL)
                 </label>
                 <input
                   type="text"
                   value={broadcastModalItem.actionUrl}
                   onChange={(e) => setBroadcastModalItem({ ...broadcastModalItem, actionUrl: e.target.value })}
-                  style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1.5px solid #D4D4D8', fontSize: '0.84rem', fontWeight: 700 }}
+                  style={{ width: '100%', padding: '0.6rem 0.85rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', fontSize: '0.84rem' }}
                 />
               </div>
             </div>
 
-            <div style={{ background: '#F8FAFC', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid #E2E8F0', fontSize: '0.76rem', color: '#475569' }}>
-              <i className="fas fa-circle-info" style={{ color: '#2563eb', marginRight: '5px' }}></i>
-              When readers click <strong>"{broadcastModalItem.actionLabel || 'Read'}"</strong> in their dashboard, they will be taken to read the full guide on your website at <code>{broadcastModalItem.actionUrl}</code>.
+            <div style={{ background: '#18181c', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid #27272a', fontSize: '0.76rem', color: '#a1a1aa' }}>
+              <i className="fas fa-circle-info" style={{ color: '#38bdf8', marginRight: '5px' }}></i>
+              Target users clicking <strong>"{broadcastModalItem.actionLabel || 'Read'}"</strong> will navigate to <code>{broadcastModalItem.actionUrl}</code>.
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '0.5rem' }}>
               <button
                 onClick={() => setBroadcastModalItem(null)}
-                style={{ padding: '0.65rem 1.2rem', borderRadius: '8px', background: '#F4F4F5', border: '1px solid #E4E4E7', fontWeight: 700, cursor: 'pointer' }}
+                style={{ padding: '0.55rem 1.15rem', borderRadius: '8px', background: '#18181c', border: '1px solid #27272a', color: '#a1a1aa', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer' }}
               >
                 Cancel
               </button>
               <button
                 onClick={handleDispatchPreparedBroadcast}
-                style={{ padding: '0.65rem 1.4rem', borderRadius: '8px', background: '#2563eb', border: 'none', color: '#FFFFFF', fontWeight: 900, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                style={{ padding: '0.55rem 1.25rem', borderRadius: '8px', background: '#2563eb', border: 'none', color: '#FFFFFF', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
               >
                 <i className="fas fa-paper-plane"></i>
-                <span>Dispatch Broadcast Now</span>
+                <span>Dispatch Broadcast</span>
               </button>
             </div>
           </div>

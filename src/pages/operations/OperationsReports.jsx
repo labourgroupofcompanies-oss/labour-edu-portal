@@ -318,7 +318,7 @@ const OperationsReports = () => {
   const currentReportObj = REPORT_TYPES.find(r => r.id === selectedReport);
 
   return (
-    <div className="operations-reports-page" style={{ padding: '1.75rem 2rem', width: '100%', boxSizing: 'border-box' }}>
+    <div className="operations-reports-page" style={{ padding: '1.75rem 2rem', width: '100%', boxSizing: 'border-box', color: '#fafafa' }}>
       <style>{`
         @media print {
           body {
@@ -332,6 +332,7 @@ const OperationsReports = () => {
             padding: 0 !important;
             margin: 0 !important;
             width: 100% !important;
+            color: #09090b !important;
           }
           .print-header {
             display: block !important;
@@ -348,10 +349,12 @@ const OperationsReports = () => {
           .report-table-wrap {
             border: 1px solid #cbd5e1 !important;
             box-shadow: none !important;
+            background: #fff !important;
           }
           .report-table th, .report-table td {
             padding: 6px 8px !important;
             font-size: 0.72rem !important;
+            color: #09090b !important;
           }
           .print-footer {
             display: flex !important;
@@ -372,50 +375,48 @@ const OperationsReports = () => {
         }
 
         .report-nav-card {
-          background: #fff;
-          border: 1px solid #e2e8f0;
-          border-radius: 14px;
-          padding: 1.25rem 1.5rem;
+          background: #121215;
+          border: 1px solid #222226;
+          border-radius: 12px;
+          padding: 1.15rem 1.25rem;
           display: flex;
           align-items: center;
           gap: 1rem;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.15s ease;
         }
         .report-nav-card:hover {
-          border-color: #3b82f6;
-          transform: translateY(-2px);
-          box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.1);
+          border-color: #38bdf8;
         }
         .report-nav-card.active {
-          border-color: #2563eb;
-          background: #eff6ff;
-          box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+          border-color: #38bdf8;
+          background: rgba(56, 189, 248, 0.08);
         }
 
         .report-table {
           width: 100%;
+          min-width: 680px;
           border-collapse: collapse;
           font-size: 0.82rem;
         }
         .report-table th {
-          background: #0f172a;
-          color: #fff;
+          background: #18181c;
+          color: #a1a1aa;
           text-align: left;
           padding: 0.75rem 1rem;
-          font-weight: 700;
-          letter-spacing: 0.03em;
+          font-weight: 600;
+          font-size: 0.72rem;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          border-bottom: 1px solid #222226;
         }
         .report-table td {
           padding: 0.75rem 1rem;
-          border-bottom: 1px solid #f1f5f9;
-          color: #1e293b;
-        }
-        .report-table tbody tr:nth-child(even) {
-          background: #f8fafc;
+          border-bottom: 1px solid #1f1f23;
+          color: #fafafa;
         }
         .report-table tbody tr:hover {
-          background: #f1f5f9;
+          background: #18181c;
         }
       `}</style>
 
@@ -442,14 +443,14 @@ const OperationsReports = () => {
       <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <i className="fa-solid fa-file-contract" style={{ color: '#2563eb', fontSize: '1.2rem' }}></i>
+            <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <i className="fa-solid fa-file-contract" style={{ color: '#38bdf8', fontSize: '1.1rem' }}></i>
             </div>
             <div>
-              <h2 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>
+              <h2 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 700, color: '#fafafa', letterSpacing: '-0.02em' }}>
                 Platform Reports &amp; Executive Audits
               </h2>
-              <p style={{ margin: '2px 0 0', fontSize: '0.85rem', color: '#64748b', fontWeight: 500 }}>
+              <p style={{ margin: '2px 0 0', fontSize: '0.85rem', color: '#a1a1aa' }}>
                 Generate official financial statements, billing ledgers, and academic census audits.
               </p>
             </div>
@@ -459,22 +460,19 @@ const OperationsReports = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <button
             onClick={loadData}
-            className="btn"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.55rem 1rem', background: '#fff', border: '1px solid #e2e8f0', color: '#475569', borderRadius: '10px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.55rem 1rem', background: '#18181c', border: '1px solid #27272a', color: '#fafafa', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
           >
-            <i className="fa-solid fa-rotate" /> Refresh
+            <i className="fa-solid fa-rotate" style={{ color: '#38bdf8' }} /> Refresh
           </button>
           <button
             onClick={handleExportCSV}
-            className="btn"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.55rem 1.1rem', background: '#059669', border: 'none', color: '#fff', borderRadius: '10px', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.55rem 1.1rem', background: '#059669', border: 'none', color: '#fff', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
           >
             <i className="fa-solid fa-file-excel" /> Export CSV
           </button>
           <button
             onClick={handlePrint}
-            className="btn"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.55rem 1.25rem', background: '#0f172a', border: 'none', color: '#fff', borderRadius: '10px', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(15, 23, 42, 0.2)' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.55rem 1.25rem', background: '#2563eb', border: 'none', color: '#fff', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
           >
             <i className="fa-solid fa-print" /> Print Report (PDF)
           </button>
@@ -482,7 +480,7 @@ const OperationsReports = () => {
       </div>
 
       {/* ── REPORT CATEGORY SELECTOR CARDS ── */}
-      <div className="no-print" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div className="no-print" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.85rem', marginBottom: '1.25rem' }}>
         {REPORT_TYPES.map(rep => {
           const isActive = selectedReport === rep.id;
           return (
@@ -491,14 +489,14 @@ const OperationsReports = () => {
               className={`report-nav-card ${isActive ? 'active' : ''}`}
               onClick={() => setSelectedReport(rep.id)}
             >
-              <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: `${rep.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <i className={`fa-solid ${rep.icon}`} style={{ color: rep.color, fontSize: '1.25rem' }}></i>
+              <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: `${rep.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: `1px solid ${rep.color}25` }}>
+                <i className={`fa-solid ${rep.icon}`} style={{ color: rep.color, fontSize: '1.15rem' }}></i>
               </div>
               <div style={{ minWidth: 0, flex: 1 }}>
-                <h4 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800, color: isActive ? '#1d4ed8' : '#0f172a' }}>
+                <h4 style={{ margin: 0, fontSize: '0.88rem', fontWeight: 600, color: isActive ? '#38bdf8' : '#fafafa' }}>
                   {rep.label}
                 </h4>
-                <p style={{ margin: '2px 0 0', fontSize: '0.72rem', color: '#64748b', lineHeight: 1.3 }}>
+                <p style={{ margin: '2px 0 0', fontSize: '0.72rem', color: '#71717a', lineHeight: 1.3 }}>
                   {rep.desc}
                 </p>
               </div>
@@ -508,16 +506,16 @@ const OperationsReports = () => {
       </div>
 
       {/* ── FILTER TOOLBAR ── */}
-      <div className="no-print" style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+      <div className="no-print" style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '0.9rem 1.15rem', marginBottom: '1.25rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <i className="fa-solid fa-filter" style={{ color: '#2563eb' }}></i> Filters:
+          <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#a1a1aa', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <i className="fa-solid fa-filter" style={{ color: '#38bdf8' }}></i> Filters:
           </div>
 
           <select
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
-            style={{ padding: '0.45rem 0.85rem', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.82rem', fontWeight: 600, background: '#fff', color: '#0f172a', outline: 'none' }}
+            style={{ padding: '0.45rem 0.85rem', borderRadius: '8px', border: '1px solid #27272a', fontSize: '0.82rem', fontWeight: 500, background: '#18181c', color: '#fafafa', outline: 'none' }}
           >
             {PERIOD_PRESETS.map(p => (
               <option key={p.id} value={p.id}>{p.label}</option>
@@ -530,14 +528,14 @@ const OperationsReports = () => {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                style={{ padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.8rem' }}
+                style={{ padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1px solid #27272a', fontSize: '0.8rem', background: '#18181c', color: '#fafafa' }}
               />
-              <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>to</span>
+              <span style={{ fontSize: '0.8rem', color: '#71717a' }}>to</span>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                style={{ padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.8rem' }}
+                style={{ padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1px solid #27272a', fontSize: '0.8rem', background: '#18181c', color: '#fafafa' }}
               />
             </div>
           )}
@@ -545,7 +543,7 @@ const OperationsReports = () => {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            style={{ padding: '0.45rem 0.85rem', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.82rem', fontWeight: 600, background: '#fff', color: '#0f172a', outline: 'none' }}
+            style={{ padding: '0.45rem 0.85rem', borderRadius: '8px', border: '1px solid #27272a', fontSize: '0.82rem', fontWeight: 500, background: '#18181c', color: '#fafafa', outline: 'none' }}
           >
             <option value="all">All School Categories</option>
             <option value="Private">Private Schools</option>
@@ -554,14 +552,14 @@ const OperationsReports = () => {
           </select>
         </div>
 
-        <div style={{ position: 'relative', minWidth: '240px' }}>
-          <i className="fa-solid fa-magnifying-glass" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', fontSize: '0.85rem' }}></i>
+        <div style={{ position: 'relative', minWidth: '220px' }}>
+          <i className="fa-solid fa-magnifying-glass" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#71717a', fontSize: '0.85rem' }}></i>
           <input
             type="text"
             placeholder="Search school or reference..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: '100%', padding: '0.45rem 0.85rem 0.45rem 2.25rem', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.82rem', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '0.45rem 0.85rem 0.45rem 2.25rem', borderRadius: '8px', border: '1px solid #27272a', background: '#18181c', color: '#fafafa', fontSize: '0.82rem', boxSizing: 'border-box' }}
           />
         </div>
       </div>
@@ -569,145 +567,145 @@ const OperationsReports = () => {
       {loading ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 0' }}>
           <LogoPreloader size={48} />
-          <p style={{ marginTop: '1rem', color: '#64748b', fontWeight: 600, fontSize: '0.9rem' }}>
+          <p style={{ marginTop: '1rem', color: '#a1a1aa', fontWeight: 500, fontSize: '0.9rem' }}>
             Compiling audit metrics from database...
           </p>
         </div>
       ) : (
         <>
           {/* ── KPI EXECUTIVE SUMMARY TILES ── */}
-          <div className="print-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div className="print-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.85rem', marginBottom: '1.25rem' }}>
             {selectedReport === 'financial' && (
               <>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Total Gross Credits</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#10B981', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Total Gross Credits</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#34d399', marginTop: '4px' }}>
                     GH₵ {financialData.totalCredits.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>{financialData.totalTransactions} total transactions</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>{financialData.totalTransactions} total transactions</div>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Total Debits / Deductions</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#EF4444', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Total Debits / Deductions</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#f87171', marginTop: '4px' }}>
                     GH₵ {financialData.totalDebits.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Term bills &amp; service charges</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Term bills &amp; service charges</div>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Platform Wallet Float</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#2563eb', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Platform Wallet Float</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#38bdf8', marginTop: '4px' }}>
                     GH₵ {financialData.totalPlatformFloat.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Prepaid credit held in schools</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Prepaid credit held in schools</div>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Active Participating Schools</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Active Schools</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#fafafa', marginTop: '4px' }}>
                     {schools.length} Schools
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Registered on platform</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Registered on platform</div>
                 </div>
               </>
             )}
 
             {selectedReport === 'billing' && (
               <>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Total Billable Students</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Total Billable Students</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#fafafa', marginTop: '4px' }}>
                     {billingData.totalBillableLearners.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Across {billingData.totalSchools} schools</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Across {billingData.totalSchools} schools</div>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Prepaid Wallet Float</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#10B981', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Prepaid Wallet Float</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#34d399', marginTop: '4px' }}>
                     GH₵ {billingData.totalPositiveBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Healthy funded accounts</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Healthy funded accounts</div>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Outstanding Arrears</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#EF4444', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Outstanding Arrears</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#f87171', marginTop: '4px' }}>
                     GH₵ {billingData.totalArrears.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Deficits awaiting settlement</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Deficits awaiting settlement</div>
                 </div>
               </>
             )}
 
             {selectedReport === 'census' && (
               <>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Total Enrolled Learners</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#2563eb', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Total Enrolled Learners</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#38bdf8', marginTop: '4px' }}>
                     {censusData.totalLearners.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Registered students</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Registered students</div>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Teaching &amp; Admin Staff</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Teaching &amp; Admin Staff</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#fafafa', marginTop: '4px' }}>
                     {censusData.totalStaff.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Authorized staff accounts</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Authorized staff accounts</div>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Total Subject Scores</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#10B981', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Total Subject Scores</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#34d399', marginTop: '4px' }}>
                     {censusData.totalScores.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Continuous assessment entries</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Assessment entries</div>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Reports Published</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#8B5CF6', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Reports Published</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#a78bfa', marginTop: '4px' }}>
                     {censusData.totalReports.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Released to parent portals</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Released to parent portals</div>
                 </div>
               </>
             )}
 
             {selectedReport === 'referrals' && (
               <>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Total Commissions Earned</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#10B981', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Total Commissions</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#34d399', marginTop: '4px' }}>
                     GH₵ {referralData.totalCommissionsEarned.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Across {referralData.totalReferrals} referral events</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Across {referralData.totalReferrals} events</div>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Disbursed Payouts</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#2563eb', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Disbursed Payouts</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#38bdf8', marginTop: '4px' }}>
                     GH₵ {referralData.totalPaidOut.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Paid to promoters</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Paid to promoters</div>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.25rem' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>Pending Claims</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#F59E0B', marginTop: '4px' }}>
+                <div style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', padding: '1rem 1.15rem' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: '#71717a', letterSpacing: '0.04em' }}>Pending Claims</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#fbbf24', marginTop: '4px' }}>
                     GH₵ {referralData.pendingPayout.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Awaiting disbursement</div>
+                  <div style={{ fontSize: '0.72rem', color: '#71717a', marginTop: '2px' }}>Awaiting disbursement</div>
                 </div>
               </>
             )}
           </div>
 
           {/* ── DETAILED REPORT TABLE ── */}
-          <div className="report-table-wrap" style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' }}>
-            <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="report-table-wrap" style={{ background: '#121215', border: '1px solid #222226', borderRadius: '12px', overflow: 'hidden' }}>
+            <div style={{ padding: '0.9rem 1.15rem', borderBottom: '1px solid #222226', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#0f172a' }}>
+                <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#fafafa' }}>
                   {currentReportObj?.label}
                 </h3>
-                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                  Showing authoritative live platform records
+                <span style={{ fontSize: '0.75rem', color: '#71717a' }}>
+                  Authoritative live platform records
                 </span>
               </div>
-              <span style={{ fontSize: '0.78rem', fontWeight: 700, background: '#f1f5f9', padding: '4px 10px', borderRadius: '20px', color: '#334155' }}>
+              <span style={{ fontSize: '0.78rem', fontWeight: 600, background: '#18181c', border: '1px solid #27272a', padding: '4px 10px', borderRadius: '6px', color: '#a1a1aa' }}>
                 {selectedReport === 'financial' && `${financialData.items.length} Entries`}
                 {selectedReport === 'billing' && `${billingData.schools.length} Schools`}
                 {selectedReport === 'census' && `${censusData.schools.length} Schools`}
@@ -715,7 +713,7 @@ const OperationsReports = () => {
               </span>
             </div>
 
-            <div style={{ overflowX: 'auto' }}>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
               {selectedReport === 'financial' && (
                 <table className="report-table">
                   <thead>
@@ -730,24 +728,24 @@ const OperationsReports = () => {
                   </thead>
                   <tbody>
                     {financialData.items.length === 0 ? (
-                      <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2.5rem', color: '#94a3b8' }}>No transactions recorded matching the selected filter.</td></tr>
+                      <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2.5rem', color: '#71717a' }}>No transactions recorded matching the selected filter.</td></tr>
                     ) : (
                       financialData.items.map((t, idx) => {
                         const isCredit = t.type === 'credit' || (t.amount > 0 && t.type !== 'debit');
                         return (
                           <tr key={t.id || idx}>
-                            <td>{new Date(t.created_at || t.paid_at).toLocaleDateString('en-GB')}</td>
-                            <td style={{ fontWeight: 700 }}>{t.report_schools?.name || t.school_name || `School #${t.school_id || t.schoolId}`}</td>
+                            <td style={{ color: '#a1a1aa' }}>{new Date(t.created_at || t.paid_at).toLocaleDateString('en-GB')}</td>
+                            <td style={{ fontWeight: 600 }}>{t.report_schools?.name || t.school_name || `School #${t.school_id || t.schoolId}`}</td>
                             <td>
-                              <span style={{ padding: '2px 8px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 800, background: isCredit ? '#dcfce7' : '#fee2e2', color: isCredit ? '#15803d' : '#b91c1c' }}>
+                              <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 600, background: isCredit ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)', color: isCredit ? '#34d399' : '#f87171', border: `1px solid ${isCredit ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}` }}>
                                 {t.type ? t.type.toUpperCase() : (isCredit ? 'CREDIT' : 'DEBIT')}
                               </span>
                             </td>
-                            <td>{t.description || t.reason || 'Wallet transaction'}</td>
-                            <td style={{ fontWeight: 800, color: isCredit ? '#15803d' : '#b91c1c' }}>
+                            <td style={{ color: '#a1a1aa' }}>{t.description || t.reason || 'Wallet transaction'}</td>
+                            <td style={{ fontWeight: 600, color: isCredit ? '#34d399' : '#f87171' }}>
                               {isCredit ? '+' : '-'} {Math.abs(Number(t.amount || 0)).toFixed(2)}
                             </td>
-                            <td style={{ fontFamily: 'monospace', fontSize: '0.72rem', color: '#64748b' }}>
+                            <td style={{ fontFamily: 'monospace', fontSize: '0.72rem', color: '#71717a' }}>
                               {t.reference || t.id}
                             </td>
                           </tr>
@@ -773,27 +771,27 @@ const OperationsReports = () => {
                   </thead>
                   <tbody>
                     {billingData.schools.length === 0 ? (
-                      <tr><td colSpan={7} style={{ textAlign: 'center', padding: '2.5rem', color: '#94a3b8' }}>No schools found matching the selected filter.</td></tr>
+                      <tr><td colSpan={7} style={{ textAlign: 'center', padding: '2.5rem', color: '#71717a' }}>No schools found matching the selected filter.</td></tr>
                     ) : (
                       billingData.schools.map(s => {
                         const bal = Number(s.wallet_balance || 0);
                         const isSufficient = bal >= 0;
                         return (
                           <tr key={s.id}>
-                            <td style={{ fontWeight: 700 }}>{s.name}</td>
+                            <td style={{ fontWeight: 600 }}>{s.name}</td>
                             <td>
-                              <span style={{ padding: '2px 8px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, background: '#f1f5f9', color: '#334155' }}>
+                              <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 500, background: '#18181c', border: '1px solid #27272a', color: '#a1a1aa' }}>
                                 {s.school_category || s.school_type || 'Private'}
                               </span>
                             </td>
-                            <td>{[s.region, s.district].filter(Boolean).join(' • ') || '—'}</td>
-                            <td style={{ fontWeight: 700 }}>{s.learners_count || 0}</td>
-                            <td>GH₵ {Number(s.subscription_rate || 5).toFixed(2)} / student</td>
-                            <td style={{ fontWeight: 800, color: isSufficient ? '#15803d' : '#b91c1c' }}>
+                            <td style={{ color: '#a1a1aa' }}>{[s.region, s.district].filter(Boolean).join(' • ') || '—'}</td>
+                            <td style={{ fontWeight: 600 }}>{s.learners_count || 0}</td>
+                            <td style={{ color: '#a1a1aa' }}>GH₵ {Number(s.subscription_rate || 5).toFixed(2)} / student</td>
+                            <td style={{ fontWeight: 600, color: isSufficient ? '#34d399' : '#f87171' }}>
                               GH₵ {bal.toFixed(2)}
                             </td>
                             <td>
-                              <span style={{ padding: '2px 8px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 800, background: isSufficient ? '#dcfce7' : '#fee2e2', color: isSufficient ? '#15803d' : '#b91c1c' }}>
+                              <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 600, background: isSufficient ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)', color: isSufficient ? '#34d399' : '#f87171', border: `1px solid ${isSufficient ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}` }}>
                                 {isSufficient ? 'Healthy Balance' : 'Arrears / Action Required'}
                               </span>
                             </td>
@@ -821,18 +819,22 @@ const OperationsReports = () => {
                   </thead>
                   <tbody>
                     {censusData.schools.length === 0 ? (
-                      <tr><td colSpan={8} style={{ textAlign: 'center', padding: '2.5rem', color: '#94a3b8' }}>No schools found matching the selected filter.</td></tr>
+                      <tr><td colSpan={8} style={{ textAlign: 'center', padding: '2.5rem', color: '#71717a' }}>No schools found matching the selected filter.</td></tr>
                     ) : (
                       censusData.schools.map(s => (
                         <tr key={s.id}>
-                          <td style={{ fontWeight: 700 }}>{s.name}</td>
-                          <td>{s.school_category || s.school_type || 'Private'}</td>
-                          <td>{[s.location, s.region].filter(Boolean).join(', ') || '—'}</td>
-                          <td style={{ fontWeight: 700 }}>{s.learners_count || 0}</td>
-                          <td>{s.staff_count || 0}</td>
-                          <td>{s.total_scores_count || 0}</td>
-                          <td style={{ fontWeight: 700, color: '#2563eb' }}>{s.reports_count || 0}</td>
-                          <td>{s.current_term || 'Term 1'} ({s.current_academic_year || 'Current'})</td>
+                          <td style={{ fontWeight: 600 }}>{s.name}</td>
+                          <td>
+                            <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 500, background: '#18181c', border: '1px solid #27272a', color: '#a1a1aa' }}>
+                              {s.school_category || s.school_type || 'Private'}
+                            </span>
+                          </td>
+                          <td style={{ color: '#a1a1aa' }}>{[s.location, s.region].filter(Boolean).join(', ') || '—'}</td>
+                          <td style={{ fontWeight: 600 }}>{s.learners_count || 0}</td>
+                          <td style={{ color: '#a1a1aa' }}>{s.staff_count || 0}</td>
+                          <td style={{ color: '#a1a1aa' }}>{s.total_scores_count || 0}</td>
+                          <td style={{ fontWeight: 600, color: '#38bdf8' }}>{s.reports_count || 0}</td>
+                          <td style={{ color: '#71717a' }}>{s.current_term || 'Term 1'} ({s.current_academic_year || 'Current'})</td>
                         </tr>
                       ))
                     )}
@@ -854,19 +856,19 @@ const OperationsReports = () => {
                   </thead>
                   <tbody>
                     {referralData.items.length === 0 ? (
-                      <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2.5rem', color: '#94a3b8' }}>No referral events recorded matching the selected filter.</td></tr>
+                      <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2.5rem', color: '#71717a' }}>No referral events recorded matching the selected filter.</td></tr>
                     ) : (
                       referralData.items.map((r, idx) => (
                         <tr key={r.id || idx}>
-                          <td>{new Date(r.created_at).toLocaleDateString('en-GB')}</td>
-                          <td style={{ fontFamily: 'monospace', fontWeight: 800, color: '#2563eb' }}>{r.referral_code || '—'}</td>
-                          <td style={{ fontWeight: 700 }}>{r.promoter_name || r.promoter_email || 'Direct Promoter'}</td>
-                          <td>{r.report_schools?.name || `School #${r.referred_school_id}`}</td>
-                          <td style={{ fontWeight: 800, color: '#15803d' }}>
+                          <td style={{ color: '#a1a1aa' }}>{new Date(r.created_at).toLocaleDateString('en-GB')}</td>
+                          <td style={{ fontFamily: 'monospace', fontWeight: 600, color: '#38bdf8' }}>{r.referral_code || '—'}</td>
+                          <td style={{ fontWeight: 600 }}>{r.promoter_name || r.promoter_email || 'Direct Promoter'}</td>
+                          <td style={{ color: '#a1a1aa' }}>{r.report_schools?.name || `School #${r.referred_school_id}`}</td>
+                          <td style={{ fontWeight: 600, color: '#34d399' }}>
                             GH₵ {Number(r.reward_amount || r.commission_amount || 0).toFixed(2)}
                           </td>
                           <td>
-                            <span style={{ padding: '2px 8px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 800, background: r.status === 'paid' ? '#dcfce7' : '#fef9c3', color: r.status === 'paid' ? '#15803d' : '#a16207' }}>
+                            <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 600, background: r.status === 'paid' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.12)', color: r.status === 'paid' ? '#34d399' : '#fbbf24', border: `1px solid ${r.status === 'paid' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)'}` }}>
                               {(r.status || 'pending').toUpperCase()}
                             </span>
                           </td>

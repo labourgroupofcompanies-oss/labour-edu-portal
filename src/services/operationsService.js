@@ -857,3 +857,29 @@ export const getSchoolSubscription = async (schoolId) => {
     price_ghs: 2500,
   };
 };
+
+export const getPlatformTelemetry = getOperationsAnalyticsMetrics;
+
+export const seedDemoSchoolTelemetry = async () => {
+  try {
+    const demoSchool = {
+      name: 'Achimota Basic School',
+      code: 'ACH-DEMO-01',
+      subscription_tier: 'Enterprise',
+      subscription_status: 'Active',
+      region: 'Greater Accra',
+      district: 'Okaikwei North',
+      contact_person: 'Mr. Emmanuel Osei',
+      contact_email: 'head@achimota-demo.edu.gh',
+      created_at: new Date().toISOString()
+    };
+    const { data, error } = await supabase.from('report_schools').insert([demoSchool]).select().single();
+    if (!error && data) {
+      _schoolsCache = null; // Invalidate cache
+      return data;
+    }
+  } catch (err) {
+    console.warn('[OperationsService] seedDemoSchoolTelemetry fallback:', err);
+  }
+  return null;
+};

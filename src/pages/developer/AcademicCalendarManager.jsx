@@ -152,7 +152,8 @@ const AcademicCalendarManager = () => {
             <div style={{ fontSize: '0.82rem', marginTop: '4px' }}>Click "Create Official Calendar" to establish baseline term dates.</div>
           </div>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <table style={{ width: '100%', minWidth: '700px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
             <thead>
               <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.08)', color: '#64748b', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 <th style={{ padding: '0.85rem 1rem' }}>Calendar Name</th>
@@ -217,14 +218,15 @@ const AcademicCalendarManager = () => {
               })}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 
       {/* CREATE/EDIT MODAL */}
       {showModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
-          <div style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '20px', padding: '2rem', width: '100%', maxWidth: '520px', color: 'white' }}>
-            <h2 style={{ fontFamily: 'Outfit, sans-serif', margin: '0 0 0.25rem', fontSize: '1.4rem' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem', overflowY: 'auto' }}>
+          <div style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '20px', padding: '1.5rem', width: '100%', maxWidth: '520px', color: 'white', maxHeight: '90vh', overflowY: 'auto' }}>
+            <h2 style={{ fontFamily: 'Outfit, sans-serif', margin: '0 0 0.25rem', fontSize: '1.3rem' }}>
               {editingCalendar ? 'Edit Official Calendar' : 'Create Official Academic Calendar'}
             </h2>
             <p style={{ color: '#94a3b8', fontSize: '0.83rem', margin: '0 0 1.25rem' }}>
@@ -243,7 +245,7 @@ const AcademicCalendarManager = () => {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+              <div className="content-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.75rem', color: '#94a3b8', marginBottom: '0.3rem', fontWeight: 700 }}>Category</label>
                   <select
@@ -280,7 +282,7 @@ const AcademicCalendarManager = () => {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div className="content-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.75rem', color: '#94a3b8', marginBottom: '0.3rem', fontWeight: 700 }}>Term Start Date</label>
                   <input

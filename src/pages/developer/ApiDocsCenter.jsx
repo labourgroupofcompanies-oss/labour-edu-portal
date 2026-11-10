@@ -23,7 +23,7 @@ const ApiDocsCenter = () => {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '1.5rem' }}>
+      <div className="api-docs-grid" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '1.5rem' }}>
         {/* Left Sidebar Menu */}
         <div style={{
           background: '#0f172a',

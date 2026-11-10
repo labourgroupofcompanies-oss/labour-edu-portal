@@ -254,7 +254,7 @@ class RecycleBinService {
                 remarks: s.remarks || '',
                 is_submitted: s.isSubmitted ?? true
               }));
-              await supabase.from('report_scores').insert(cloudScores).catch(console.warn);
+              await supabase.from('report_scores').insert(cloudScores).then(null, console.warn);
             }
 
             // Restore summaries
@@ -275,7 +275,7 @@ class RecycleBinService {
                 promotion_status: sm.promotionStatus || sm.promotion_status || null,
                 is_released: sm.isReleased ?? false
               }));
-              await supabase.from('report_summaries').insert(cloudSummaries).catch(console.warn);
+              await supabase.from('report_summaries').insert(cloudSummaries).then(null, console.warn);
             }
           }
         } else {
@@ -450,7 +450,7 @@ class RecycleBinService {
 
       const cloudId = item.supabaseId || item.id;
       if (navigator.onLine && cloudId && typeof cloudId === 'string' && cloudId.length > 20) {
-        await supabase.from('recycle_bin').delete().eq('id', cloudId).catch(console.warn);
+        await supabase.from('recycle_bin').delete().eq('id', cloudId).then(null, console.warn);
       }
 
       if (cloudId) {
@@ -475,7 +475,7 @@ class RecycleBinService {
       await db.recycleBin.where('schoolId').equals(schoolId).delete();
 
       if (navigator.onLine && schoolId) {
-        await supabase.from('recycle_bin').delete().eq('school_id', schoolId).catch(console.warn);
+        await supabase.from('recycle_bin').delete().eq('school_id', schoolId).then(null, console.warn);
       }
 
       return { success: true };

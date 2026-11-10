@@ -10,7 +10,13 @@ export async function generateSalt() {
   return generateRandomSalt(16);
 }
 
-export async function hashUserPassword(password, salt = 'labour_edu_salt_2026') {
+export async function hashUserPassword(password, salt) {
+  if (!salt) {
+    // SECURITY: A per-user salt must always be provided. This should not use a static default.
+    // This path only exists for legacy offline accounts that have not yet logged in online.
+    console.warn('[AuthService] No per-user salt provided for password hash. Using legacy static salt as last resort.');
+    salt = 'labour_edu_salt_2026';
+  }
   return sha256(`${password}:${salt}`);
 }
 
@@ -386,7 +392,7 @@ export const authService = {
     if (matchedLearners.length === 0) {
       loginRateLimitService.recordFailedAttempt(`phone_verify_${cleanInput}`);
       // Generic error — don't reveal whether the number exists or not
-      throw new Error('This phone number is not registered. Please contact the school administration.');
+      throw new Error('Unable to locate a matching account with this phone number. Please verify your number or contact administration.');
     }
 
     // Clear any previous failed lookups on successful find
@@ -685,7 +691,10 @@ export const authService = {
 
     // Verify current password
     if (cached.passwordHash) {
-      const salt = cached.passwordSalt || 'labour_edu_salt_2026';
+      const salt = cached.passwordSalt;
+      if (!salt) {
+        throw new Error('Cannot change password: account is using an insecure legacy salt. Please contact support to reset your account.');
+      }
       const inputHash = await hashUserPassword(currentPassword, salt);
       if (inputHash !== cached.passwordHash) {
         throw new Error("Incorrect current password.");
@@ -708,7 +717,10 @@ export const authService = {
     }
 
     // Update local hash & salt for offline access
-    const salt = cached.passwordSalt || 'labour_edu_salt_2026';
+    const salt = cached.passwordSalt;
+    if (!salt) {
+      throw new Error('Cannot change password: account is using an insecure legacy salt. Please contact support to reset your account.');
+    }
     const newHash = await hashUserPassword(newPassword, salt);
     cached.passwordHash = newHash;
     await db.profiles.put(cached);

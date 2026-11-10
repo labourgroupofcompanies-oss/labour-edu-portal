@@ -43,9 +43,9 @@ const BADGES = [
 const PRESET_TEMPLATES = [
   {
     id: 'ges_circular',
-    name: '🇬🇭 GES Official Circular Breakdown',
+    name: 'GES Official Circular Breakdown',
     desc: 'Executive summary, school action checklist, and direct official government link box.',
-    title: '🇬🇭 GES Management Circular: [Topic Name Here]',
+    title: 'GES Management Circular: [Topic Name Here]',
     category: 'GES Directives & Policy',
     featured_badge: 'Official Policy Guide',
     target_role: 'All Schools & Parents',
@@ -55,28 +55,28 @@ const PRESET_TEMPLATES = [
 ## Executive Summary
 A concise, 2-minute explanation of the key directive issued by Ghana Education Service and what it means for basic schools nationwide.
 
-## 🎯 Key Takeaways for Schools
+## Key Takeaways for Schools
 - **For Headteachers:** Verify that all academic records and broadsheets comply with the updated assessment policies.
 - **For Subject Teachers:** Ensure that continuous assessment marks (Class Exercises, Homework, Projects) are recorded promptly.
 - **For Parents & Guardians:** Terminal report cards and attendance records can be monitored live via the Labour Edu Parent Portal.
 
 ---
 
-> ℹ️ **Important Note:** District Education Directorates and Circuit Supervisors require all registered basic schools to finalize and lock terminal records before published deadlines.
+> **Important Note:** District Education Directorates and Circuit Supervisors require all registered basic schools to finalize and lock terminal records before published deadlines.
 
 ---
 
-## 🏛️ Official Verification & Reference Document
-This simplified breakdown is prepared by the **Labour Edu Editorial Team** to assist schools in understanding national curriculum directives.
+## Official Verification & Reference Document
+This simplified breakdown is prepared by the **Editorial Team** to assist schools in understanding national curriculum directives.
 
 For the full official document, statutory tables, and signed government notices, please inspect the original official page:
 
-👉 **[View Original Directive on Ghana Education Service (Direct Notice)](https://ges.gov.gh)**
+**[View Original Directive on Ghana Education Service](https://ges.gov.gh)**
 `
   },
   {
     id: 'system_manual',
-    name: '📘 Step-by-Step Software User Manual',
+    name: 'Step-by-Step Software User Manual',
     desc: 'How-to operational instructions with step numbers and troubleshooting tips.',
     title: 'How to [Perform Action Name] in Labour Edu',
     category: 'User Guides',
@@ -88,14 +88,14 @@ For the full official document, statutory tables, and signed government notices,
 ## Overview
 Learn how to quickly execute this action in your Labour Edu portal with zero errors.
 
-## 📋 Prerequisites
+## Prerequisites
 Before starting, ensure that:
 - You are logged in with appropriate administrative permissions.
 - Your internet connection is active (or offline mode is enabled).
 
 ---
 
-## 🚀 Step-by-Step Action Guide
+## Step-by-Step Action Guide
 
 Step 1. Navigate to the desired module on your left navigation sidebar.
 
@@ -107,11 +107,11 @@ Step 4. Click **Save & Synchronize** to update records across the system.
 
 ---
 
-> 💡 **Pro Tip:** You can use keyboard shortcuts (\`Tab\` and \`Enter\`) to rapidly move between score entry cells.
+> **Pro Tip:** You can use keyboard shortcuts (\`Tab\` and \`Enter\`) to rapidly move between score entry cells.
 
 ---
 
-## ❓ Frequently Asked Questions (FAQ)
+## Frequently Asked Questions (FAQ)
 
 **Q: Can I edit marks after approving reports?**  
 A: Yes, Headteachers can unlock reports from the **Reports & Broadsheet** panel at any time before publishing.
@@ -119,7 +119,7 @@ A: Yes, Headteachers can unlock reports from the **Reports & Broadsheet** panel 
   },
   {
     id: 'curriculum_guide',
-    name: '📊 Curriculum & Assessment Analysis',
+    name: 'Curriculum & Assessment Analysis',
     desc: 'Insightful pedagogical guide on SBC competencies, SBA weighting, and terminal grading.',
     title: 'Understanding the Standard-Based Curriculum Grading Policy',
     category: 'Curriculum & Assessment',
@@ -131,7 +131,7 @@ A: Yes, Headteachers can unlock reports from the **Reports & Broadsheet** panel 
 ## Background & Philosophy
 The National Council for Curriculum and Assessment (NaCCA) Standard-Based Curriculum focuses on learner-centered competencies, continuous assessment, and remedial intervention.
 
-## 📊 Assessment Weighting Breakdown
+## Assessment Weighting Breakdown
 
 | Assessment Type | Weight (%) | Description |
 | :--- | :---: | :--- |
@@ -143,7 +143,7 @@ The National Council for Curriculum and Assessment (NaCCA) Standard-Based Curric
 
 ---
 
-## 🏆 Core Competencies Evaluated
+## Core Competencies Evaluated
 1. **Critical Thinking & Problem Solving**
 2. **Digital & Numerical Literacy**
 3. **Collaboration & Leadership**
@@ -151,31 +151,31 @@ The National Council for Curriculum and Assessment (NaCCA) Standard-Based Curric
 
 ---
 
-> ⚠️ **Compliance Advisory:** Never combine continuous assessment marks with exam marks on a single column. Labour Edu computes weighted scores automatically according to GES standards.
+> **Compliance Advisory:** Never combine continuous assessment marks with exam marks on a single column. Labour Edu computes weighted scores automatically according to GES standards.
 `
   },
   {
     id: 'announcement',
-    name: '🚀 Platform Feature Release & Notice',
+    name: 'Platform Feature Release & Notice',
     desc: 'Product updates, improvements, and notifications for school administrators.',
-    title: '🚀 New Update: [Feature Name] is Now Live',
+    title: 'New Update: [Feature Name] is Now Live',
     category: 'Platform Updates',
     featured_badge: 'Release Note',
     target_role: 'All Users',
     summary: 'Discover what is new in the latest release of Labour Edu Report System and how it benefits your school.',
-    content: `# 🚀 New Feature Release: [Feature Name]
+    content: `# New Feature Release: [Feature Name]
 
 ## What Is New?
 We are excited to announce the release of our latest enhancement designed to make school report card management even faster and simpler.
 
-## 🌟 Key Highlights
+## Key Highlights
 - **Faster Score Sync:** Offline recording speeds improved by 40%.
 - **Automated Broadcasts:** Instant alerts for staff and parents.
 - **Enhanced Mobile UI:** Cleaner experience on all smartphones.
 
 ---
 
-## 🛠️ How to Start Using It Today
+## How to Start Using It Today
 Simply refresh your app or log into your school dashboard. The new tools are immediately active for all registered basic schools.
 `
   }
@@ -518,7 +518,7 @@ const BlogManager = () => {
           // 1. School Notification for Headteachers, Teachers, and Parents
           schoolNotificationService.addNotification({
             id: `blog_post_${savedPost.id}_${Date.now()}`,
-            title: `📰 New Blog Post: ${savedPost.title}`,
+            title: `New Blog Post: ${savedPost.title}`,
             message: savedPost.summary || 'A new educational guide & article has just been published on Labour Edu.',
             category: 'blog',
             actionUrl: `/blog/${savedPost.slug || savedPost.id}`,
@@ -529,7 +529,7 @@ const BlogManager = () => {
           // 2. Super Admin Platform Notification
           platformNotificationService.addNotification({
             id: `blog_admin_${savedPost.id}_${Date.now()}`,
-            title: `📰 New Article Published: ${savedPost.title}`,
+            title: `New Article Published: ${savedPost.title}`,
             message: `Category: ${savedPost.category || 'General'} • Target: ${savedPost.target_role || 'All'}`,
             category: 'blog',
             actionUrl: `/platform/operations/blog`,
@@ -545,7 +545,7 @@ const BlogManager = () => {
       if (formData.dispatch_broadcast && savedPost && savedPost.is_published !== false) {
         try {
           await broadcastService.createBroadcast({
-            title: `📢 ${savedPost.title}`,
+            title: savedPost.title,
             content: savedPost.summary || 'Read the latest educational update and guide on Labour Edu.',
             targetAudience: 'all',
             severity: 'info',
@@ -704,7 +704,7 @@ const BlogManager = () => {
 
           elements.push(
             <div key={`table-${i}`} style={{ overflowX: 'auto', margin: '1.25rem 0', borderRadius: '12px', border: '1.5px solid #CBD5E1', boxShadow: '0 2px 10px rgba(0,0,0,0.03)', background: '#FFFFFF' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.86rem' }}>
+              <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.86rem' }}>
                 <thead>
                   <tr style={{ background: '#F8FAFC', borderBottom: '2px solid #CBD5E1' }}>
                     {headerCells.map((th, thIdx) => (
@@ -1082,7 +1082,7 @@ const BlogManager = () => {
             onChange={(e) => setSelectedCategory(e.target.value)}
             style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', border: '1px solid #D4D4D8', fontSize: '0.82rem', fontWeight: 600 }}
           >
-            <option value="ALL">📁 All Categories ({posts.length})</option>
+            <option value="ALL">All Categories ({posts.length})</option>
             {CATEGORIES.map(c => (
               <option key={c} value={c}>{c}</option>
             ))}
@@ -1094,8 +1094,8 @@ const BlogManager = () => {
             style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', border: '1px solid #D4D4D8', fontSize: '0.82rem', fontWeight: 600 }}
           >
             <option value="ALL">All Status</option>
-            <option value="PUBLISHED">🟢 Published Only</option>
-            <option value="DRAFT">🟡 Drafts Only</option>
+            <option value="PUBLISHED">Published Only</option>
+            <option value="DRAFT">Drafts Only</option>
           </select>
         </div>
       </div>
@@ -1118,7 +1118,7 @@ const BlogManager = () => {
           </button>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.25rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
           {filteredPosts.map(post => (
             <div
               key={post.id}
@@ -1138,7 +1138,7 @@ const BlogManager = () => {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '6px' }}>
                   <span style={{ fontSize: '0.72rem', fontWeight: 800, padding: '0.2rem 0.55rem', borderRadius: '6px', background: '#EFF6FF', color: '#2563EB', border: '1px solid #DBEAFE' }}>
-                    📁 {post.category || 'General'}
+                    {post.category || 'General'}
                   </span>
                   <span style={{ fontSize: '0.72rem', fontWeight: 700, color: post.is_published !== false ? '#059669' : '#D97706', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <i className={`fas fa-circle ${post.is_published !== false ? 'text-emerald-500' : 'text-amber-500'}`} style={{ fontSize: '0.5rem' }}></i>
@@ -1343,7 +1343,7 @@ const BlogManager = () => {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. 🇬🇭 GES Directive: 30% Continuous Assessment & 70% Terminal Exam Policy"
+                    placeholder="e.g. GES Directive: 30% Continuous Assessment & 70% Terminal Exam Policy"
                     value={formData.title}
                     onChange={handleTitleChange}
                     style={{ width: '100%', padding: '0.75rem 0.85rem', borderRadius: '10px', border: '1.5px solid #CBD5E1', fontSize: '1rem', fontWeight: 800 }}
@@ -1409,7 +1409,7 @@ const BlogManager = () => {
                 {/* Interactive Tags & Topic Classification */}
                 <div style={{ background: '#F8FAFC', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
                   <label style={{ display: 'block', fontWeight: 800, fontSize: '0.78rem', color: '#09090B', marginBottom: '0.35rem' }}>
-                    🏷️ Tags &amp; Topic Classifications
+                    Tags &amp; Topic Classifications
                   </label>
                   
                   {/* Current Tags Pill List */}
@@ -1516,14 +1516,14 @@ const BlogManager = () => {
 
                     <div style={{ width: '1px', height: '20px', background: '#CBD5E1', margin: '0 3px' }} />
 
-                    <button type="button" title="Info Alert Box" onClick={() => insertMarkdown('> ℹ️ **Important:** ', '', 'Alert message text here')} style={{ padding: '0.3rem 0.55rem', borderRadius: '6px', border: '1px solid #BFDBFE', background: '#EFF6FF', color: '#1E40AF', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>ℹ️ Info Box</button>
-                    <button type="button" title="Warning Box" onClick={() => insertMarkdown('> ⚠️ **Warning:** ', '', 'Compliance warning text here')} style={{ padding: '0.3rem 0.55rem', borderRadius: '6px', border: '1px solid #FECACA', background: '#FEF2F2', color: '#991B1B', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>⚠️ Warning Box</button>
-                    <button type="button" title="Tip Box" onClick={() => insertMarkdown('> 💡 **Pro Tip:** ', '', 'Helpful tip text here')} style={{ padding: '0.3rem 0.55rem', borderRadius: '6px', border: '1px solid #A7F3D0', background: '#ECFDF5', color: '#065F46', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>💡 Tip Box</button>
+                    <button type="button" title="Info Alert Box" onClick={() => insertMarkdown('> **Important:** ', '', 'Alert message text here')} style={{ padding: '0.3rem 0.55rem', borderRadius: '6px', border: '1px solid #BFDBFE', background: '#EFF6FF', color: '#1E40AF', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>Info Box</button>
+                    <button type="button" title="Warning Box" onClick={() => insertMarkdown('> **Warning:** ', '', 'Compliance warning text here')} style={{ padding: '0.3rem 0.55rem', borderRadius: '6px', border: '1px solid #FECACA', background: '#FEF2F2', color: '#991B1B', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>Warning Box</button>
+                    <button type="button" title="Tip Box" onClick={() => insertMarkdown('> **Pro Tip:** ', '', 'Helpful tip text here')} style={{ padding: '0.3rem 0.55rem', borderRadius: '6px', border: '1px solid #A7F3D0', background: '#ECFDF5', color: '#065F46', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>Tip Box</button>
 
                     <div style={{ width: '1px', height: '20px', background: '#CBD5E1', margin: '0 3px' }} />
 
-                    <button type="button" title="Table Generator" onClick={() => insertMarkdown('\n| Item | Description | Weight |\n| :--- | :--- | :---: |\n| Class Exercise | Formative Assessment | 10% |\n| Mid-Term Exam | Continuous Check | 20% |\n| Terminal Exam | Final Exam Score | 70% |\n', '', '')} style={{ padding: '0.3rem 0.55rem', borderRadius: '6px', border: '1px solid #CBD5E1', background: '#FFFFFF', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>📊 Table</button>
-                    <button type="button" title="Insert Link" onClick={() => insertMarkdown('[', '](https://ges.gov.gh)', 'Read Official Notice')} style={{ padding: '0.3rem 0.55rem', borderRadius: '6px', border: '1px solid #CBD5E1', background: '#FFFFFF', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>🔗 Link</button>
+                    <button type="button" title="Table Generator" onClick={() => insertMarkdown('\n| Item | Description | Weight |\n| :--- | :--- | :---: |\n| Class Exercise | Formative Assessment | 10% |\n| Mid-Term Exam | Continuous Check | 20% |\n| Terminal Exam | Final Exam Score | 70% |\n', '', '')} style={{ padding: '0.3rem 0.55rem', borderRadius: '6px', border: '1px solid #CBD5E1', background: '#FFFFFF', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>Table</button>
+                    <button type="button" title="Insert Link" onClick={() => insertMarkdown('[', '](https://ges.gov.gh)', 'Read Official Notice')} style={{ padding: '0.3rem 0.55rem', borderRadius: '6px', border: '1px solid #CBD5E1', background: '#FFFFFF', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>Link</button>
                     
                     <div style={{ width: '1px', height: '20px', background: '#CBD5E1', margin: '0 3px' }} />
 
@@ -1577,7 +1577,7 @@ const BlogManager = () => {
                 </div>
 
                 {/* Additional Blogger Options (Cover Image, Broadcast Dispatch) */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem', background: '#F8FAFC', padding: '1rem', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.85rem', background: '#F8FAFC', padding: '1rem', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
                       <label style={{ fontWeight: 800, fontSize: '0.76rem', color: '#09090B' }}>
@@ -1896,7 +1896,7 @@ const BlogManager = () => {
             </div>
 
             {/* Alignment & Width Controls */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#09090B', marginBottom: '0.35rem' }}>
                   Alignment &amp; Flow

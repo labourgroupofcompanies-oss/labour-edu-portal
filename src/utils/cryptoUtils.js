@@ -120,10 +120,8 @@ export function generateRandomSalt(length = 16) {
       return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
     } catch (_) {}
   }
-  let result = '';
-  const hexChars = '0123456789abcdef';
-  for (let i = 0; i < length * 2; i++) {
-    result += hexChars.charAt(Math.floor(Math.random() * hexChars.length));
-  }
-  return result;
+  // SECURITY: Math.random() is NOT cryptographically secure.
+  // This should never be reached in modern browsers — throw to fail closed.
+  console.error('[CryptoUtils] CRITICAL: window.crypto.getRandomValues is unavailable. Cannot generate a secure salt.');
+  throw new Error('Cryptographically secure random number generation is unavailable in this environment. Please use a modern browser over HTTPS.');
 }

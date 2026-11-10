@@ -1337,7 +1337,7 @@ export default function IndividualAgentsTab() {
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.82rem' }}>
                 <thead>
                   <tr style={{ background: '#0e0e11', color: '#71717a', borderBottom: '1px solid #222226', textTransform: 'uppercase', fontSize: '0.7rem', letterSpacing: '0.04em' }}>
-                    <th style={{ padding: '0.8rem 1.15rem' }}>Promoter</th>
+                    <th style={{ padding: '0.8rem 1.15rem', maxWidth: '220px', width: '220px' }}>Promoter</th>
                     <th style={{ padding: '0.8rem 0.95rem', maxWidth: '220px', width: '220px' }}>Referral Code &amp; Link</th>
                     <th style={{ padding: '0.8rem 0.75rem' }}>Rate</th>
                     <th style={{ padding: '0.8rem 0.75rem' }}>Schools</th>
@@ -1358,11 +1358,12 @@ export default function IndividualAgentsTab() {
                       <tr key={a.id} style={{ borderBottom: '1px solid #1f1f23', background: isSuspended ? 'rgba(239, 68, 68, 0.03)' : 'transparent', transition: 'background 0.15s' }}>
                         
                         {/* Referrer Details */}
-                        <td style={{ padding: '0.9rem 1.15rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <td style={{ padding: '0.9rem 1.15rem', maxWidth: '220px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
                             <div style={{
                               width: '32px',
                               height: '32px',
+                              flexShrink: 0,
                               borderRadius: '8px',
                               background: isSuspended ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.12)',
                               color: isSuspended ? '#f87171' : '#f59e0b',
@@ -1374,22 +1375,23 @@ export default function IndividualAgentsTab() {
                             }}>
                               {a.fullName?.charAt(0)?.toUpperCase() || 'P'}
                             </div>
-                            <div>
-                              <div style={{ fontWeight: 600, color: '#fafafa', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <span>{a.fullName}</span>
+                            <div style={{ minWidth: 0, overflow: 'hidden' }}>
+                              <div style={{ fontWeight: 600, color: '#fafafa', display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden' }}>
+                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={a.fullName}>{a.fullName}</span>
                                 {a.region && (
-                                  <span style={{ fontSize: '0.68rem', background: '#1c1c20', color: '#a1a1aa', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
+                                  <span style={{ fontSize: '0.68rem', background: '#1c1c20', color: '#a1a1aa', padding: '0.1rem 0.4rem', borderRadius: '4px', flexShrink: 0 }}>
                                     {a.region}
                                   </span>
                                 )}
                               </div>
-                              <div style={{ fontSize: '0.73rem', color: '#71717a', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <span><i className="fa-solid fa-phone" style={{ fontSize: '0.65rem', marginRight: '3px' }}></i>{a.phone}</span>
+                              <div style={{ fontSize: '0.73rem', color: '#71717a', marginTop: '2px', display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={a.phone}>
+                                  <i className="fa-solid fa-phone" style={{ fontSize: '0.65rem', marginRight: '3px' }}></i>{a.phone}
+                                </span>
                                 {a.email && (
-                                  <>
-                                    <span>•</span>
-                                    <span><i className="fa-regular fa-envelope" style={{ fontSize: '0.65rem', marginRight: '3px' }}></i>{a.email}</span>
-                                  </>
+                                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={a.email}>
+                                    <i className="fa-regular fa-envelope" style={{ fontSize: '0.65rem', marginRight: '3px' }}></i>{a.email}
+                                  </span>
                                 )}
                               </div>
                             </div>

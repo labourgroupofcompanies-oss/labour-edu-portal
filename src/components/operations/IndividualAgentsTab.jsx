@@ -1338,7 +1338,7 @@ export default function IndividualAgentsTab() {
                 <thead>
                   <tr style={{ background: '#0e0e11', color: '#71717a', borderBottom: '1px solid #222226', textTransform: 'uppercase', fontSize: '0.7rem', letterSpacing: '0.04em' }}>
                     <th style={{ padding: '0.8rem 1.15rem' }}>Promoter</th>
-                    <th style={{ padding: '0.8rem 0.95rem' }}>Referral Code &amp; Link</th>
+                    <th style={{ padding: '0.8rem 0.95rem', maxWidth: '220px', width: '220px' }}>Referral Code &amp; Link</th>
                     <th style={{ padding: '0.8rem 0.75rem' }}>Rate</th>
                     <th style={{ padding: '0.8rem 0.75rem' }}>Schools</th>
                     <th style={{ padding: '0.8rem 0.95rem' }}>Total Earned</th>
@@ -1397,9 +1397,27 @@ export default function IndividualAgentsTab() {
                         </td>
 
                         {/* Referral Code & Action Links */}
-                        <td style={{ padding: '0.9rem 0.95rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <code style={{ background: '#09090b', border: '1px solid #27272a', padding: '0.2rem 0.5rem', borderRadius: '5px', color: '#f59e0b', fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.02em' }}>
+                        <td style={{ padding: '0.9rem 0.95rem', maxWidth: '220px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'nowrap' }}>
+                            <code
+                              title={a.referralCode}
+                              style={{
+                                background: '#09090b',
+                                border: '1px solid #27272a',
+                                padding: '0.2rem 0.5rem',
+                                borderRadius: '5px',
+                                color: '#f59e0b',
+                                fontWeight: 700,
+                                fontSize: '0.8rem',
+                                letterSpacing: '0.02em',
+                                maxWidth: '110px',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                display: 'inline-block',
+                                verticalAlign: 'middle',
+                              }}
+                            >
                               {a.referralCode}
                             </code>
                             

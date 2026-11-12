@@ -150,14 +150,14 @@ export default function AgentPortal() {
 
   const getReferralUrl = () => {
     const code = portalData?.agent?.referralCode || '';
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://app.laboureducation.com';
-    return `${origin}/register?ref=${code}`;
+    const schoolBase = import.meta.env.VITE_SCHOOL_PORTAL_URL || 'https://app.labouredu.com';
+    return `${schoolBase}/onboarding?ref=${code}`;
   };
 
   const getDemoUrl = () => {
     const code = portalData?.agent?.referralCode || '';
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://app.laboureducation.com';
-    return `${origin}/demo?ref=${code}`;
+    const schoolBase = import.meta.env.VITE_SCHOOL_PORTAL_URL || 'https://app.labouredu.com';
+    return `${schoolBase}/onboarding?ref=${code}`;
   };
 
   const copyToClipboard = (text, type = 'link') => {
@@ -815,7 +815,7 @@ export default function AgentPortal() {
 
                     {/* Footer note */}
                     <div style={{ marginTop: '16px', borderTop: '1px solid #e5e7eb', paddingTop: '12px', textAlign: 'center', fontSize: '11px', color: '#9ca3af' }}>
-                      Register at <strong style={{ color: '#374151' }}>{window.location.origin}</strong> &nbsp;·&nbsp; Labour Educational System &nbsp;·&nbsp; Ghana
+                      Register at <strong style={{ color: '#374151' }}>app.labouredu.com/onboarding</strong> &nbsp;·&nbsp; Labour Educational System &nbsp;·&nbsp; Ghana
                     </div>
                   </div>
                 </div>

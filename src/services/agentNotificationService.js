@@ -35,6 +35,7 @@ export const agentNotificationService = {
     const agentName = agent.fullName || 'Partner';
     const code = agent.referralCode || '';
 
+    const hostUrl = typeof window !== 'undefined' ? window.location.origin : 'https://app.labouredu.com';
     const text = 
 `🔔 *Labour Edu Partner Update*
 
@@ -45,7 +46,7 @@ Hello *${agentName}*, great news! 🎉
 💰 *Your Benefit:* When this school pays their first term subscription fee, you will receive *50% of the entire fee* credited to your partner balance!
 
 Log in to track your schools:
-https://app.laboureducation.com/agent/portal`;
+${hostUrl}/agent/portal`;
 
     return {
       recipientPhone: agent.phone,
@@ -64,6 +65,7 @@ https://app.laboureducation.com/agent/portal`;
     const subPaid = Number(commission.schoolSubscriptionPaid || 0).toFixed(2);
     const term = `${commission.term || 'Term 1'} (${commission.academicYear || ''})`;
 
+    const hostUrl = typeof window !== 'undefined' ? window.location.origin : 'https://app.labouredu.com';
     const text = 
 `🎉 *Cha-Ching! 50% Commission Received!*
 
@@ -74,7 +76,7 @@ Congratulations *${agentName}*! 🥳
 Your partner wallet has been credited and is *available for immediate withdrawal*!
 
 📲 *Request your payment now to your MoMo:*
-https://app.laboureducation.com/agent/portal`;
+${hostUrl}/agent/portal`;
 
     return {
       recipientPhone: agent.phone,
@@ -93,6 +95,7 @@ https://app.laboureducation.com/agent/portal`;
     const network = payoutRequest.payoutNetwork || 'Mobile Money';
     const ref = payoutRequest.disbursalReference || 'MM-CONFIRMED';
 
+    const hostUrl = typeof window !== 'undefined' ? window.location.origin : 'https://app.labouredu.com';
     const text = 
 `✅ *Labour Edu Partner Payout Disbursed!*
 
@@ -104,13 +107,18 @@ Your withdrawal request of *GH₵ ${amount}* has been successfully processed and
 ⏰ *Date:* ${new Date().toLocaleDateString()}
 
 Thank you for being a valued education partner! Continue referring schools to earn 50% per school.
-https://app.laboureducation.com/agent/portal`;
+${hostUrl}/agent/portal`;
 
     return {
       recipientPhone: contact,
       text,
       url: this.createWhatsAppUrl(contact, text)
     };
+  },
+
+  getSchoolOnboardingUrl(code = '') {
+    const base = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SCHOOL_PORTAL_URL) || 'https://app.labouredu.com';
+    return code ? `${base}/onboarding?ref=${encodeURIComponent(code)}` : `${base}/onboarding`;
   },
 
   /**
@@ -120,9 +128,10 @@ https://app.laboureducation.com/agent/portal`;
     const agentName = agent.fullName || 'Partner';
     const code = agent.referralCode || '';
     const phone = agent.phone || '';
-    const portalUrl = `${window.location.origin}/agent/portal/${code}`;
-    const signupUrl = `${window.location.origin}/register?ref=${code}`;
-    const demoUrl = `${window.location.origin}/demo?ref=${code}`;
+    const portalOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://app.labouredu.com';
+    const portalUrl = `${portalOrigin}/agent/portal/${code}`;
+    const signupUrl = this.getSchoolOnboardingUrl(code);
+    const demoUrl = `${portalOrigin}/demo?ref=${code}`;
 
     const displayPwd = (password && !password.startsWith('pbkdf2$'))
       ? password
@@ -162,8 +171,9 @@ Share your link or partner code with schools and earn 50% commission on every sc
   getMarketingScripts(agent) {
     const name = agent.fullName || 'Education Representative';
     const code = agent.referralCode || 'PARTNER';
-    const regLink = `https://app.laboureducation.com/register?ref=${code}`;
-    const demoLink = `https://app.laboureducation.com/demo?ref=${code}`;
+    const regLink = this.getSchoolOnboardingUrl(code);
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://app.labouredu.com';
+    const demoLink = `${origin}/demo?ref=${code}`;
 
     return [
       {

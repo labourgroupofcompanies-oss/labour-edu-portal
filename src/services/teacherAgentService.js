@@ -327,7 +327,7 @@ Use the quick action buttons below or ask me anytime if you need help with a spe
       if (!code && user.schoolId) {
         code = await referralService.getSchoolReferralCode(user.schoolId).catch(() => null);
       }
-      const origin = typeof window !== 'undefined' ? window.location.origin : 'https://laboureducation.com';
+      const origin = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SCHOOL_PORTAL_URL) || (typeof window !== 'undefined' ? window.location.origin : 'https://app.labouredu.com');
       const shareUrl = code ? `${origin}/onboarding?ref=${code}` : `${origin}/onboarding`;
 
       return {

@@ -1427,7 +1427,8 @@ export default function IndividualAgentsTab() {
                             <button
                               title="Copy School Registration Link"
                               onClick={() => {
-                                const refUrl = `${window.location.origin}/register?ref=${a.referralCode}`;
+                                const schoolBase = import.meta.env.VITE_SCHOOL_PORTAL_URL || 'https://app.labouredu.com';
+                                const refUrl = `${schoolBase}/onboarding?ref=${a.referralCode}`;
                                 navigator.clipboard.writeText(refUrl);
                                 showNotification('success', `Copied school signup link for ${a.fullName}`);
                               }}
